@@ -21,3 +21,8 @@ perl -pe '
   for my $k (sort { length($b) <=> length($a) } keys %map) { my $q=quotemeta($k); s/$q/$map{$k}/g; }
 ' index.html > dist/studio-silo-artifact.html
 ls -la dist/studio-silo-artifact.html
+
+# Version « page » pour l'artefact Claude : même fichier sans doctype / html / head / body
+# (l'artefact fournit lui-même cette enveloppe).
+perl -0777 -CSD -Mutf8 -pe 's/^\s*<!doctype html>\s*//i; s/^\s*<html[^>]*>\s*//i; s/<\/html>\s*$//i; s/^\s*<head>\s*//i; s/\s*<\/head>\s*//i; s/<body[^>]*>\s*//i; s/\s*<\/body>\s*$//i' dist/studio-silo-artifact.html > dist/studio-silo-artifact-page.html
+echo "→ dist/studio-silo-artifact-page.html ($(du -h dist/studio-silo-artifact-page.html | cut -f1))"
