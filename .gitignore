@@ -1,0 +1,10 @@
+# Fichiers système et outils
+.DS_Store
+.claude/
+
+# Sources lourdes et fichiers de travail (restent dans le Drive, pas sur GitHub)
+Sources plans/
+ref/
+dist/
+Logo/
+Neue Montreal/
