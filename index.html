@@ -476,10 +476,20 @@ main{position:relative}
 .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .field{display:flex;flex-direction:column;gap:6px}
 .field.full{grid-column:1/-1}
-.field label{font-size:12.5px;font-weight:500;color:var(--ink-3)}
+.field label,.field .f-label{font-size:12.5px;font-weight:500;color:var(--ink-3)}
 .field input,.field select,.field textarea{font:inherit;font-size:15.5px;padding:12px 14px;border-radius:12px;border:1px solid rgba(15,14,12,.25);background:#fff;color:var(--ink);width:100%}
 .field textarea{min-height:92px;resize:vertical}
 .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--ink);outline-offset:1px;border-color:transparent}
+.f-chips{display:flex;flex-wrap:wrap;gap:8px;padding-top:2px}
+.f-chip{position:relative;display:inline-flex;align-items:center;gap:9px;height:38px;padding:0 14px 0 12px;border-radius:999px;border:1px solid rgba(15,14,12,.28);background:#fff;color:var(--ink);font-size:14px;font-weight:500;cursor:pointer;user-select:none;transition:background .2s,color .2s,border-color .2s}
+.f-chip input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.f-chip::before{content:"";width:9px;height:9px;border-radius:50%;border:1.5px solid currentColor;flex:0 0 auto;transition:background .2s,border-color .2s}
+.f-chip:hover{border-color:var(--ink)}
+.f-chip.on{background:var(--ink);color:#EFE8DD;border-color:var(--ink)}
+.f-chip.on::before{background:var(--kraft);border-color:var(--kraft)}
+.f-chip:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:2px}
+.f-chip .s{display:none}
+@media (max-width:600px){.f-chip .l{display:none}.f-chip .s{display:inline}}
 .form .actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:18px}
 .form .status{margin-top:14px;font-size:14px;color:var(--ink-2);min-height:1.4em}
 .form .status.ok{color:var(--vert);font-weight:500}
@@ -853,10 +863,10 @@ footer .bottom a{color:inherit}
         <div class="fields">
           <div class="field"><label for="f-name">Nom et prénom</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
           <div class="field"><label for="f-org">Structure</label><input id="f-org" name="org" type="text" autocomplete="organization" placeholder="CHU, clinique, EHPAD, MedTech, laboratoire…" required></div>
-          <div class="field"><label for="f-role">Fonction</label><input id="f-role" name="role" type="text" autocomplete="organization-title"></div>
-          <div class="field"><label for="f-parcours">Parcours concerné</label><select id="f-parcours" name="parcours"><option value="">Je ne sais pas encore</option><option value="patient">Parcours patient</option><option value="onboarding">Onboarding collaborateur / soignant</option><option value="prescripteur">Parcours prescripteur</option><option value="deploiement">Déploiement client B2B</option><option value="support">Support &amp; SAV</option></select></div>
           <div class="field"><label for="f-email">E-mail professionnel</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
           <div class="field"><label for="f-phone">Téléphone (facultatif)</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field full"><label for="f-role">Fonction</label><input id="f-role" name="role" type="text" autocomplete="organization-title" placeholder="Directeur des soins, chef de produit, responsable formation…"></div>
+          <div class="field full" role="group" aria-labelledby="f-parcours-l"><span class="f-label" id="f-parcours-l">Parcours concernés (un ou plusieurs, facultatif)</span><div class="f-chips" id="f-parcours"><label class="f-chip"><input type="checkbox" name="parcours" value="patient"><span class="l">Parcours patient</span><span class="s">Patient</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="onboarding"><span class="l">Onboarding soignant</span><span class="s">Onboarding</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="prescripteur"><span class="l">Parcours prescripteur</span><span class="s">Prescripteur</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="deploiement"><span class="l">Déploiement client B2B</span><span class="s">Déploiement B2B</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="support"><span class="l">Support &amp; SAV</span><span class="s">Support &amp; SAV</span></label></div></div>
           <div class="field full"><label for="f-msg">La friction, en une phrase (facultatif)</label><textarea id="f-msg" name="message" placeholder="Ex. : nos ingénieurs d'application refont la même formation dans chaque service."></textarea></div>
         </div>
         <div class="actions">
@@ -1210,7 +1220,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     $$("#rp-tabs .tab").forEach(t => { const on = t.dataset.p === key; t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); });
     { const rt = $("#rp-tabs"), on = rt && rt.querySelector(".tab.on"); if (on && rt.scrollWidth > rt.clientWidth + 1) { const x = on.getBoundingClientRect().left - rt.getBoundingClientRect().left + rt.scrollLeft; rt.scrollTo({ left: Math.max(0, x - (rt.clientWidth - on.offsetWidth) / 2), behavior: "smooth" }); } }
     // Form
-    const sel = $("#f-parcours"); if (sel) sel.value = key === "all" ? "" : key;
+    const grp = $("#f-parcours"); if (grp && !grp.dataset.touched) $$("input", grp).forEach(i => { i.checked = i.value === key; i.closest(".f-chip").classList.toggle("on", i.checked); });
     // Chat
     chat.setContext(key);
   }
@@ -1572,21 +1582,24 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   if (cfg.bookingUrl) { bookBtn.hidden = false; bookBtn.href = cfg.bookingUrl; }
   let dbReady = Promise.resolve(null);
   if (window.claude && typeof window.claude.use === "function") { dbReady = window.claude.use("db").catch(() => null); }
+  const pGroup = $("#f-parcours");
+  if (pGroup) pGroup.addEventListener("change", e => { pGroup.dataset.touched = "1"; const c = e.target.closest(".f-chip"); if (c) c.classList.toggle("on", e.target.checked); });
+
   form.addEventListener("submit", async e => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(form).entries());
+    const fd = new FormData(form), data = Object.fromEntries(fd.entries()); const pk = fd.getAll("parcours").filter(Boolean); data.parcours = pk.join(", "); data.parcours_libelles = pk.map(k => (SILO.parcours[k] || {}).label || k).join(", ");
     if (!data.name || !data.org || !data.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
       status.className = "status err"; status.textContent = "Il manque votre nom, votre structure ou un e-mail valide."; return;
     }
     $("#f-submit").disabled = true; status.className = "status"; status.textContent = "Envoi…";
-    data.page_parcours = current; data.submitted_at = new Date().toISOString();
+    data.page_parcours = current; data.submitted_at = new Date().toISOString(); data._subject = "Session d'exploration – " + data.org;
     let stored = false;
     try {
       if (cfg.formEndpoint) { const r = await fetch(cfg.formEndpoint, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(data) }); stored = r.ok; }
       else { const db = await dbReady; if (db) { await db.collection("leads").add(data); stored = true; } }
     } catch (err) { stored = false; }
     const subject = encodeURIComponent("Session d'exploration – " + data.org);
-    const body = encodeURIComponent(`Nom : ${data.name}\nStructure : ${data.org}\nFonction : ${data.role || "-"}\nParcours : ${data.parcours || "à définir"}\nE-mail : ${data.email}\nTéléphone : ${data.phone || "-"}\n\nLa friction :\n${data.message || "-"}`);
+    const body = encodeURIComponent(`Nom : ${data.name}\nStructure : ${data.org}\nFonction : ${data.role || "-"}\nParcours : ${data.parcours_libelles || "à définir"}\nE-mail : ${data.email}\nTéléphone : ${data.phone || "-"}\n\nLa friction :\n${data.message || "-"}`);
     const mailto = `mailto:${cfg.email}?subject=${subject}&body=${body}`;
     if (stored) { status.className = "status ok"; status.innerHTML = `Demande reçue. Schmidt vous répond sous 48 h ouvrées. <a href="${mailto}">Envoyer aussi un e-mail</a> si vous préférez.`; }
     else { status.className = "status ok"; status.innerHTML = `Votre messagerie va s'ouvrir avec la demande pré-remplie. Si rien ne se passe, <a href="${mailto}">cliquez ici</a>.`; setTimeout(() => { location.href = mailto; }, 400); }
