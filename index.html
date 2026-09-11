@@ -223,6 +223,13 @@ main{position:relative}
 .pair.on{background:var(--ink);color:#EFE8DD;border-radius:18px;padding:18px 18px;margin:0 -18px;border-bottom-color:transparent}
 .pair.on .pf,.pair.on .pn{color:rgba(239,232,221,.72)}
 .pair.on .parrow{color:var(--kraft)}
+.pair{position:relative;isolation:isolate}
+.pair:not(.on){cursor:pointer}
+.pair::before{content:"";position:absolute;inset:0;border-radius:18px;background:rgba(15,14,12,.06);opacity:0;transition:opacity .25s;z-index:-1;pointer-events:none}
+@media (min-width:821px){.pair::before{inset:0 -18px}}
+.pair:not(.on):hover::before,.pair:not(.on).hov::before{opacity:1}
+.pair:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;border-radius:18px}
+.rp-tabs .tab.hov{background:rgba(15,14,12,.07)}
 .why{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,48px);margin-top:clamp(36px,6vh,64px)}
 .why > div{border-top:1px solid var(--ink);padding-top:16px}
 .why b{display:block;font-size:clamp(17px,1.3vw,20px);letter-spacing:-.01em;margin-bottom:8px}
@@ -1363,6 +1370,23 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
 
   /* (les cartes de parcours vivent désormais dans « Chez vous », #intro) */
   $$("#rp-tabs .tab").forEach(t => t.addEventListener("click", () => applyParcours(t.dataset.p, { forceCalc: true })));
+  // Lignes du tableau « sans / avec la vidéo » : survol lié à l'onglet du parcours, clic (ou Entrée) = changer de parcours
+  const rpPairs = $("#rp-pairs");
+  if (rpPairs) {
+    const tabOf = k => $(`#rp-tabs .tab[data-p="${k}"]`), pairOf = k => $(`.pair[data-p="${k}"]`, rpPairs);
+    $$(".pair", rpPairs).forEach(p => { p.setAttribute("role", "button"); p.tabIndex = 0; });
+    rpPairs.addEventListener("mouseover", e => { const p = e.target.closest(".pair"); if (p && !p.classList.contains("on")) { const t = tabOf(p.dataset.p); if (t) t.classList.add("hov"); } });
+    rpPairs.addEventListener("mouseout", e => { const p = e.target.closest(".pair"); if (p && !p.contains(e.relatedTarget)) { const t = tabOf(p.dataset.p); if (t) t.classList.remove("hov"); } });
+    const pick = p => { if (p && !p.classList.contains("on")) { applyParcours(p.dataset.p, { forceCalc: true }); $$("#rp-tabs .tab.hov").forEach(t => t.classList.remove("hov")); } };
+    rpPairs.addEventListener("click", e => pick(e.target.closest(".pair")));
+    rpPairs.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { const p = e.target.closest(".pair"); if (p) { e.preventDefault(); pick(p); } } });
+    // et dans l'autre sens : survoler un onglet éclaire sa ligne
+    $$("#rp-tabs .tab").forEach(t => {
+      t.addEventListener("mouseenter", () => { const p = pairOf(t.dataset.p); if (p) p.classList.add("hov"); });
+      t.addEventListener("mouseleave", () => { const p = pairOf(t.dataset.p); if (p) p.classList.remove("hov"); });
+    });
+  }
+
 
   /* ---------- Galerie justifiée : chaque tuile prend une largeur proportionnelle à son ratio ---------- */
   const galleryEl = $("#gallery"), lightbox = $("#lightbox"), lbImg = $("#lb-img"), lbCap = $("#lb-cap");
