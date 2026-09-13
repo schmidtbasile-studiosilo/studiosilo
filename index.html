@@ -418,8 +418,9 @@ main{position:relative}
 .step:hover{border-top-color:var(--ink)}
 .step:hover .n{color:var(--ink-2)}
 .step:hover p{color:var(--ink)}
-a.step{display:block;color:inherit;text-decoration:none;cursor:pointer}
-a.step:hover .lbl{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+a.step{display:block;color:inherit;text-decoration:none;cursor:pointer;position:relative;isolation:isolate}
+a.step::before{content:"";position:absolute;inset:8px -14px -10px;border-radius:18px;background:rgba(15,14,12,.06);opacity:0;transition:opacity .25s;z-index:-1;pointer-events:none}
+a.step:hover::before{opacity:1}
 a.step:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:8px}
 @media (prefers-reduced-motion:reduce){.step{transition:none}}
 
@@ -841,7 +842,7 @@ footer .bottom a{color:inherit}
     <div class="eyebrow"><span class="pill">Notre méthode</span></div>
     <h2 class="t-h1">Six étapes, de l'exploration au suivi</h2>
     <div class="steps">
-      <a class="step first" href="#exploration"><div class="n">01</div><h3><span class="lbl">Exploration</span></h3><p>Une session de diagnostic pour identifier les frictions et les chiffrer.</p></a>
+      <a class="step first" href="#exploration"><div class="n">01</div><h3>Exploration</h3><p>Une session de diagnostic pour identifier les frictions et les chiffrer.</p></a>
       <div class="step"><div class="n">02</div><h3>Immersion</h3><p>Terrain, métier, contraintes réglementaires, supports existants : on apprend votre univers auprès de ceux qui le vivent.</p></div>
       <div class="step"><div class="n">03</div><h3>Conception</h3><p>Architecture du Silo, écriture des scénarios, validation QARA avant le moindre tournage.</p></div>
       <div class="step"><div class="n">04</div><h3>Création</h3><p>Tournage et montage, avec un minimum de mobilisation de vos équipes, et le soin de réalisation qui fait qu'un support est regardé jusqu'au bout.</p></div>
