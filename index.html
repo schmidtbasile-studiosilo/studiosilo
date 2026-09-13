@@ -184,6 +184,7 @@ main{position:relative}
 .hero-title{transition:opacity .35s var(--ease)}
 .hero-title.swap{opacity:0}
 .ask .hint{margin-top:18px;color:var(--ink-2)}
+.ask .note{margin-top:18px;font-size:14px;color:var(--ink-3);line-height:1.45;max-width:64ch}
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:clamp(24px,4vh,40px)}
 .chip{display:flex;flex-direction:column;align-items:flex-start;gap:14px;min-height:clamp(104px,13vh,140px);padding:18px 20px 18px;border-radius:22px;border:1px solid var(--ink);background:transparent;font-size:clamp(18px,1.5vw,23px);font-weight:700;letter-spacing:-.02em;line-height:1.1;text-align:left;transition:background .25s,color .25s,transform .25s var(--ease),box-shadow .25s}
 .chip .n{display:inline-flex;width:28px;height:28px;border-radius:50%;border:1px solid currentColor;align-items:center;justify-content:center;font-size:12px;font-weight:500;letter-spacing:0;margin-bottom:auto}
@@ -484,6 +485,8 @@ main{position:relative}
 .field input,.field select,.field textarea{font:inherit;font-size:15.5px;padding:12px 14px;border-radius:12px;border:1px solid rgba(15,14,12,.25);background:#fff;color:var(--ink);width:100%}
 .field textarea{min-height:92px;resize:vertical}
 .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--ink);outline-offset:1px;border-color:transparent}
+.field.hl label{color:var(--ink)}
+.field.hl textarea{outline:2px solid var(--ink);outline-offset:1px;border-color:transparent}
 .f-chips{display:flex;flex-wrap:wrap;gap:8px;padding-top:2px}
 .f-chip{position:relative;display:inline-flex;align-items:center;gap:9px;height:38px;padding:0 14px 0 12px;border-radius:999px;border:1px solid rgba(15,14,12,.28);background:#fff;color:var(--ink);font-size:14px;font-weight:500;cursor:pointer;user-select:none;transition:background .2s,color .2s,border-color .2s}
 .f-chip input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
@@ -585,7 +588,7 @@ footer .bottom a{color:inherit}
 </div>
 <div class="chapter" id="chapter" aria-hidden="true"><span class="who" id="chapter-who"></span><span id="chapter-name">Constat</span></div>
 <div class="menu" id="menu" aria-hidden="true">
-  <a href="#constat">Constat</a><a href="#intro">Les cinq parcours</a><a href="#quotidien">Le quotidien</a><a href="#chiffres">Les chiffres</a><a href="#etapes">Parcours client</a>
+  <a href="#constat">Constat</a><a href="#intro">Les cinq parcours</a><a href="#quotidien">Le quotidien</a><a href="#chiffres">Les chiffres</a><a href="#etapes">Notre méthode</a>
   <a class="m-cta" href="#exploration">Nous contacter →</a>
 </div>
 
@@ -652,7 +655,7 @@ footer .bottom a{color:inherit}
     <div class="ask" id="ask">
       <h2 class="t-h1 q">Chez vous, où l'information <span class="mk">se perd-elle</span>&#8239;?</h2>
       <p class="hero-title t-lead mt-2 maxw-60" id="hero-title">Nous existons pour que vos équipes arrêtent de se répéter, que vos patients arrêtent de se perdre, que vos prescripteurs arrêtent de décrocher.</p>
-      <p class="hint t-body">Choisissez un parcours : la page s'adapte à votre quotidien.</p>
+      <p class="hint t-body">Voici les cinq endroits où elle se perd le plus souvent. Choisissez le vôtre : la page s'adapte à votre quotidien.</p>
       <div class="chips" role="group" aria-label="Choisir un parcours">
         <button class="chip" type="button" data-p="patient" aria-pressed="false"><span class="n">01</span><span class="chip-t">Parcours patient</span><span class="chip-d">Expliquer un traitement, un examen, un retour à domicile, dans les mots du patient et de ses proches.</span></button>
         <button class="chip" type="button" data-p="onboarding" aria-pressed="false"><span class="n">02</span><span class="chip-t">Onboarding soignant</span><span class="chip-d">Remplacer la dépendance à un tuteur disponible par un parcours autonome, identique pour chaque arrivée.</span></button>
@@ -660,7 +663,9 @@ footer .bottom a{color:inherit}
         <button class="chip" type="button" data-p="deploiement" aria-pressed="false"><span class="n">04</span><span class="chip-t">Déploiement client B2B</span><span class="chip-d">Installer un produit ou un logiciel dans un nouveau service sans y envoyer une équipe entière.</span></button>
         <button class="chip" type="button" data-p="support" aria-pressed="false"><span class="n">05</span><span class="chip-t">Support &amp; SAV</span><span class="chip-d">Absorber le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes.</span></button>
         <button class="chip ghost" type="button" data-p="all" aria-pressed="false">Je ne sais pas encore</button>
+        <button class="chip ghost" type="button" data-action="autre">Un autre parcours</button>
       </div>
+      <p class="note">D'autres transmissions se perdent ailleurs : une mise à jour de protocole pour une équipe déjà en place, un produit à faire comprendre à un financeur. Le diagnostic part de là où ça fait mal chez vous.</p>
       <div class="after">
         <button class="btn line" type="button" id="ask-chat">Poser une question sur ce parcours</button>
       </div>
@@ -821,10 +826,10 @@ footer .bottom a{color:inherit}
   </div>
 </section>
 
-<!-- ===== 9. Parcours client ===== -->
-<section class="panel flow sheet grain bg-paper" id="etapes" data-chapter="Parcours client">
+<!-- ===== 9. Notre méthode ===== -->
+<section class="panel flow sheet grain bg-paper" id="etapes" data-chapter="Notre méthode">
   <div class="in px" data-px="56">
-    <div class="eyebrow"><span class="pill">Parcours client</span></div>
+    <div class="eyebrow"><span class="pill">Notre méthode</span></div>
     <h2 class="t-h1">Six étapes, de l'exploration au suivi</h2>
     <div class="steps">
       <div class="step first"><div class="n">01</div><h3>Exploration</h3><p>Une session de diagnostic pour identifier les frictions et les chiffrer.</p></div>
@@ -870,7 +875,7 @@ footer .bottom a{color:inherit}
           <div class="field"><label for="f-email">E-mail professionnel</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
           <div class="field"><label for="f-phone">Téléphone (facultatif)</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
           <div class="field full"><label for="f-role">Fonction</label><input id="f-role" name="role" type="text" autocomplete="organization-title" placeholder="Directeur des soins, chef de produit, responsable formation…"></div>
-          <div class="field full" role="group" aria-labelledby="f-parcours-l"><span class="f-label" id="f-parcours-l">Parcours concernés (un ou plusieurs, facultatif)</span><div class="f-chips" id="f-parcours"><label class="f-chip"><input type="checkbox" name="parcours" value="patient"><span class="l">Parcours patient</span><span class="s">Patient</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="onboarding"><span class="l">Onboarding soignant</span><span class="s">Onboarding</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="prescripteur"><span class="l">Parcours prescripteur</span><span class="s">Prescripteur</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="deploiement"><span class="l">Déploiement client B2B</span><span class="s">Déploiement B2B</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="support"><span class="l">Support &amp; SAV</span><span class="s">Support &amp; SAV</span></label></div></div>
+          <div class="field full" role="group" aria-labelledby="f-parcours-l"><span class="f-label" id="f-parcours-l">Parcours concernés (un ou plusieurs, facultatif)</span><div class="f-chips" id="f-parcours"><label class="f-chip"><input type="checkbox" name="parcours" value="patient"><span class="l">Parcours patient</span><span class="s">Patient</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="onboarding"><span class="l">Onboarding soignant</span><span class="s">Onboarding</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="prescripteur"><span class="l">Parcours prescripteur</span><span class="s">Prescripteur</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="deploiement"><span class="l">Déploiement client B2B</span><span class="s">Déploiement B2B</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="support"><span class="l">Support &amp; SAV</span><span class="s">Support &amp; SAV</span></label><label class="f-chip"><input type="checkbox" name="parcours" value="autre"><span class="l">Autre</span><span class="s">Autre</span></label></div></div>
           <div class="field full"><label for="f-msg">La friction, en une phrase (facultatif)</label><textarea id="f-msg" name="message" placeholder="Ex. : nos ingénieurs d'application refont la même formation dans chaque service."></textarea></div>
         </div>
         <div class="actions">
@@ -1191,7 +1196,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   try { const s = localStorage.getItem("silo.parcours"); if (s && (SILO.parcours[s] || s === "all")) current = s; } catch (e) {}
   let userTouchedCalc = false;
 
-  const chips = $$(".chip");
+  const chips = $$(".chip[data-p]");
   const ask = $("#ask");
   const heroTitle = $("#hero-title");
 
@@ -1229,6 +1234,8 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
 
   // Choisir un parcours adapte la page sans la faire défiler : c'est le bouton « Regardons ce que ça donne au quotidien » qui mène à la suite
   chips.forEach(c => c.addEventListener("click", () => applyParcours(c.dataset.p, { forceCalc: true })));
+  const otherChip = $("#ask .chip[data-action=\"autre\"]");
+  if (otherChip) otherChip.addEventListener("click", () => { scrollToId("f-msg", true); history.replaceState(null, "", "#exploration"); const f = $("#f-msg"); if (f) f.focus({ preventScroll: true }); });
 
   /* ---------- Day timeline ---------- */
   const tl = $("#timeline");
@@ -1614,11 +1621,11 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   let dbReady = Promise.resolve(null);
   if (window.claude && typeof window.claude.use === "function") { dbReady = window.claude.use("db").catch(() => null); }
   const pGroup = $("#f-parcours");
-  if (pGroup) pGroup.addEventListener("change", e => { pGroup.dataset.touched = "1"; const c = e.target.closest(".f-chip"); if (c) c.classList.toggle("on", e.target.checked); });
+  if (pGroup) pGroup.addEventListener("change", e => { pGroup.dataset.touched = "1"; const c = e.target.closest(".f-chip"); if (c) c.classList.toggle("on", e.target.checked); const au = pGroup.querySelector('input[value="autre"]'), fm = $("#f-msg"); if (au && fm) fm.closest(".field").classList.toggle("hl", au.checked); });
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
-    const fd = new FormData(form), data = Object.fromEntries(fd.entries()); const pk = fd.getAll("parcours").filter(Boolean); data.parcours = pk.join(", "); data.parcours_libelles = pk.map(k => (SILO.parcours[k] || {}).label || k).join(", ");
+    const fd = new FormData(form), data = Object.fromEntries(fd.entries()); const pk = fd.getAll("parcours").filter(Boolean); data.parcours = pk.join(", "); data.parcours_libelles = pk.map(k => k === "autre" ? "Autre" : ((SILO.parcours[k] || {}).label || k)).join(", ");
     if (!data.name || !data.org || !data.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
       status.className = "status err"; status.textContent = "Il manque votre nom, votre structure ou un e-mail valide."; return;
     }
