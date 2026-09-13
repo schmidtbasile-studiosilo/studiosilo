@@ -1132,6 +1132,7 @@ SILO.next = {
   constat: "Examinons où cette hémorragie se trouve chez vous",
   intro: "Regardons ce que ça donne au quotidien",
   introAll: "Regardons un exemple de quotidien",
+  introOther: "Voyons pourquoi la vidéo répond à toute friction",
   quotidien: "Voyons la réponse, friction par friction",
   reponse: "Vérifions avec ce que dit la littérature",
   chiffres: "Parlons conformité",
@@ -1144,6 +1145,7 @@ SILO.nextShort = {
   constat: "Et chez vous ?",
   intro: "Au quotidien",
   introAll: "Un exemple de quotidien",
+  introOther: "Pourquoi la vidéo répond",
   quotidien: "Voyons la réponse",
   reponse: "Ce que dit la littérature",
   chiffres: "Parlons conformité",
@@ -1240,11 +1242,11 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   // Choisir un parcours adapte la page sans la faire défiler : c'est le bouton « Regardons ce que ça donne au quotidien » qui mène à la suite
   chips.forEach(c => c.addEventListener("click", () => applyParcours(c.dataset.p, { forceCalc: true })));
   // « Un autre parcours » : même bascule que « Je ne sais pas encore » (page en mode transversal), mais le bouton « suite »
-  // de la section mène aux chiffres, et la case « Autre » du formulaire est pré-cochée (le visiteur peut la décocher).
-  // Bouton « suite » de « Chez vous » selon l'état : un parcours → le quotidien ; « Je ne sais pas encore » → un exemple de quotidien ; « Un autre parcours » → les chiffres
+  // de la section mène à « La réponse » (argument universel), et la case « Autre » du formulaire est pré-cochée (le visiteur peut la décocher).
+  // Bouton « suite » de « Chez vous » selon l'état : un parcours → le quotidien ; « Je ne sais pas encore » → un exemple de quotidien ; « Un autre parcours » → « La réponse »
   function syncIntroNext() {
     const a = $("#intro .next-cta"); if (!a) return;
-    const alt = otherMode ? { href: "#chiffres", l: SILO.next.reponse, s: SILO.nextShort.reponse } : current === "all" ? { href: "#quotidien", l: SILO.next.introAll, s: SILO.nextShort.introAll } : { href: "#quotidien", l: SILO.next.intro, s: SILO.nextShort.intro };
+    const alt = otherMode ? { href: "#reponse", l: SILO.next.introOther, s: SILO.nextShort.introOther } : current === "all" ? { href: "#quotidien", l: SILO.next.introAll, s: SILO.nextShort.introAll } : { href: "#quotidien", l: SILO.next.intro, s: SILO.nextShort.intro };
     a.href = alt.href; a.querySelector(".long").textContent = alt.l; a.querySelector(".short").textContent = alt.s;
   }
   function setOther(on) {
