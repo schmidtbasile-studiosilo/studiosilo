@@ -191,6 +191,7 @@ main{position:relative}
 .chip:hover{background:rgba(15,14,12,.06);transform:translateY(-3px);box-shadow:0 16px 34px rgba(15,14,12,.12)}
 .chip.on{background:var(--ink);color:var(--kraft);border-color:var(--ink)}
 .chip.ghost{justify-content:flex-end;border-style:dashed;border-color:rgba(15,14,12,.4);color:var(--ink-2);font-weight:500}
+.chip.ghost[data-action="autre"]{border-style:solid;border-color:var(--ink);color:var(--ink)}
 .chip.ghost.on{color:var(--kraft);border-color:var(--ink);border-style:solid}
 .chip .chip-t{display:block}
 .chip .chip-d{display:block;font-size:clamp(14px,1.05vw,15.5px);font-weight:400;letter-spacing:0;line-height:1.35;margin-top:8px;color:var(--ink-2)}
@@ -662,8 +663,8 @@ footer .bottom a{color:inherit}
         <button class="chip" type="button" data-p="prescripteur" aria-pressed="false"><span class="n">03</span><span class="chip-t">Parcours prescripteur</span><span class="chip-d">Donner au médecin de quoi comprendre, se projeter et prescrire, sans dépendre d'une visite.</span></button>
         <button class="chip" type="button" data-p="deploiement" aria-pressed="false"><span class="n">04</span><span class="chip-t">Déploiement client B2B</span><span class="chip-d">Installer un produit ou un logiciel dans un nouveau service sans y envoyer une équipe entière.</span></button>
         <button class="chip" type="button" data-p="support" aria-pressed="false"><span class="n">05</span><span class="chip-t">Support &amp; SAV</span><span class="chip-d">Absorber le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes.</span></button>
-        <button class="chip ghost" type="button" data-p="all" aria-pressed="false">Je ne sais pas encore</button>
         <button class="chip ghost" type="button" data-action="autre">Un autre parcours</button>
+        <button class="chip ghost" type="button" data-p="all" aria-pressed="false">Je ne sais pas encore</button>
       </div>
       <p class="note">D'autres transmissions se perdent ailleurs : une mise à jour de protocole pour une équipe déjà en place, un produit à faire comprendre à un financeur. Le diagnostic part de là où ça fait mal chez vous.</p>
       <div class="after">
@@ -1130,6 +1131,7 @@ SILO.terrains = ["Hôpitaux et GHT","Cliniques","EHPAD","Laboratoires d'analyses
 SILO.next = {
   constat: "Examinons où cette hémorragie se trouve chez vous",
   intro: "Regardons ce que ça donne au quotidien",
+  introAll: "Regardons un exemple de quotidien",
   quotidien: "Voyons la réponse, friction par friction",
   reponse: "Vérifions avec ce que dit la littérature",
   chiffres: "Parlons conformité",
@@ -1141,6 +1143,7 @@ SILO.next = {
 SILO.nextShort = {
   constat: "Et chez vous ?",
   intro: "Au quotidien",
+  introAll: "Un exemple de quotidien",
   quotidien: "Voyons la réponse",
   reponse: "Ce que dit la littérature",
   chiffres: "Parlons conformité",
@@ -1193,6 +1196,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
 
    /* ---------- State : parcours ---------- */
   let current = "all";
+  let otherMode = false;
   try { const s = localStorage.getItem("silo.parcours"); if (s && (SILO.parcours[s] || s === "all")) current = s; } catch (e) {}
   let userTouchedCalc = false;
 
@@ -1204,6 +1208,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
 
   function applyParcours(key, opts = {}) {
     current = key;
+    setOther(false);
     try { localStorage.setItem("silo.parcours", key); } catch (e) {}
     const d = dataFor(key);
     chips.forEach(c => { const on = c.dataset.p === key; c.classList.toggle("on", on); c.setAttribute("aria-pressed", on); });
@@ -1234,8 +1239,30 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
 
   // Choisir un parcours adapte la page sans la faire défiler : c'est le bouton « Regardons ce que ça donne au quotidien » qui mène à la suite
   chips.forEach(c => c.addEventListener("click", () => applyParcours(c.dataset.p, { forceCalc: true })));
+  // « Un autre parcours » : même bascule que « Je ne sais pas encore » (page en mode transversal), mais le bouton « suite »
+  // de la section mène aux chiffres, et la case « Autre » du formulaire est pré-cochée (le visiteur peut la décocher).
+  // Bouton « suite » de « Chez vous » selon l'état : un parcours → le quotidien ; « Je ne sais pas encore » → un exemple de quotidien ; « Un autre parcours » → les chiffres
+  function syncIntroNext() {
+    const a = $("#intro .next-cta"); if (!a) return;
+    const alt = otherMode ? { href: "#chiffres", l: SILO.next.reponse, s: SILO.nextShort.reponse } : current === "all" ? { href: "#quotidien", l: SILO.next.introAll, s: SILO.nextShort.introAll } : { href: "#quotidien", l: SILO.next.intro, s: SILO.nextShort.intro };
+    a.href = alt.href; a.querySelector(".long").textContent = alt.l; a.querySelector(".short").textContent = alt.s;
+  }
+  function setOther(on) {
+    otherMode = on;
+    const oc = $("#ask .chip[data-action=\"autre\"]");
+    if (oc) { oc.classList.toggle("on", on); oc.setAttribute("aria-pressed", on); }
+    syncIntroNext();
+    const au = $("#f-parcours input[value=\"autre\"]"), fm = $("#f-msg");
+    if (au) { au.checked = on; au.closest(".f-chip").classList.toggle("on", on); }
+    if (fm) fm.closest(".field").classList.toggle("hl", on);
+  }
   const otherChip = $("#ask .chip[data-action=\"autre\"]");
-  if (otherChip) otherChip.addEventListener("click", () => { scrollToId("f-msg", true); history.replaceState(null, "", "#exploration"); const f = $("#f-msg"); if (f) f.focus({ preventScroll: true }); });
+  if (otherChip) otherChip.addEventListener("click", () => {
+    applyParcours("all", { forceCalc: true });
+    const allChip = chips.find(c => c.dataset.p === "all"); if (allChip) { allChip.classList.remove("on"); allChip.setAttribute("aria-pressed", "false"); }
+    setOther(true);
+  });
+
 
   /* ---------- Day timeline ---------- */
   const tl = $("#timeline");
@@ -1469,6 +1496,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     box.innerHTML = `<a class="hero-cta next-cta" href="#${next.id}"><span class="long">${escHtml(txt)}</span><span class="short">${escHtml(short)}</span> <span class="arr" aria-hidden="true">↓</span></a>`;
     inEl.appendChild(box);
   });
+  syncIntroNext(); // libellé initial selon la sélection mémorisée
   /* Verrou : on ne défile pas au-delà du bas de la dernière section atteinte par un bouton, une flèche, le rail ou le menu.
      (Toute navigation explicite passe par scrollToId, qui déverrouille la section visée.) */
   let unlockedIdx = 0;
