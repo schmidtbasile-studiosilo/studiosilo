@@ -1073,11 +1073,13 @@ footer{background:#0E0D0C}
   border-top:1px solid rgba(237,228,214,.18);text-align:center}
 /* Plan d'entretien en fond, très en retrait : il donne le sujet sans disputer le texte.
    Le voile radial garde le contraste de lecture au centre, là où court le paragraphe. */
-.wv-bg{position:absolute;left:50%;top:0;transform:translateX(-50%);width:100vw;max-width:none;height:100%;
-  object-fit:cover;object-position:50% 38%;z-index:-2;opacity:.16;
+.wv-bg{position:absolute;left:50%;top:0;transform:translateX(calc(-50% - 16vw));width:130vw;max-width:none;height:100%;
+  object-fit:cover;object-position:50% 38%;z-index:-2;opacity:.2;
   filter:grayscale(.3) brightness(.9) contrast(1.02);pointer-events:none;
   --wv-fade:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.6) 9%,#000 20%,#000 74%,rgba(0,0,0,.6) 90%,transparent 100%);
-  -webkit-mask-image:var(--wv-fade);mask-image:var(--wv-fade)}
+  --wv-blob:radial-gradient(42% 62% at 35% 46%,#000 0%,rgba(0,0,0,.72) 40%,rgba(0,0,0,.28) 72%,transparent 100%);
+  -webkit-mask-image:var(--wv-fade),var(--wv-blob);-webkit-mask-composite:source-in;
+  mask-image:var(--wv-fade),var(--wv-blob);mask-composite:intersect}
 .why-video::before{content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);width:100vw;height:100%;
   z-index:-1;pointer-events:none;
   background:radial-gradient(62% 58% at 50% 46%,rgba(19,18,17,.72) 0%,rgba(19,18,17,.5) 55%,rgba(19,18,17,.12) 100%)}
