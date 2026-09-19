@@ -1076,7 +1076,7 @@ footer{background:#0E0D0C}
 .wv-bg{position:absolute;left:50%;top:0;transform:translateX(calc(-50% - 3vw));width:130vw;max-width:none;height:100%;
   object-fit:cover;object-position:50% 38%;z-index:-2;opacity:.1;
   filter:grayscale(.3) brightness(.9) contrast(1.02);pointer-events:none;
-  --wv-fade:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.55) 4%,#000 10%,#000 38%,rgba(0,0,0,.5) 52%,transparent 66%);
+  --wv-fade:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.28) 10%,#000 26%,#000 44%,rgba(0,0,0,.5) 54%,transparent 64%);
   --wv-blob:radial-gradient(80% 70% at 35% 32%,#000 0%,rgba(0,0,0,.92) 45%,rgba(0,0,0,.6) 75%,rgba(0,0,0,.06) 100%);
   -webkit-mask-image:var(--wv-fade),var(--wv-blob);-webkit-mask-composite:source-in;
   mask-image:var(--wv-fade),var(--wv-blob);mask-composite:intersect}
@@ -1289,7 +1289,11 @@ footer{background:#0E0D0C}
   --play-line-h:transparent;--play-cap:#F6F1E8;--play-cap-ink:#141312}
 /* ---------- Le constat respire : plus d'air sous la barre et entre ses deux temps ---------- */
 #constat > .in{padding-top:calc(var(--bar-h) + clamp(48px,10svh,104px))}
-#constat .why-video{margin-top:clamp(50px,10svh,116px);padding-top:clamp(34px,5.6svh,62px)}
+#constat .why-video{margin-top:clamp(50px,10svh,116px);padding-top:clamp(46px,8.4svh,98px)}
+/* Sur mobile le bloc est bien plus haut (preuves empilées) : le fondu doit finir plus tôt. */
+@media (max-width:820px){
+  .wv-bg{--wv-fade:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.28) 8%,#000 19%,#000 32%,rgba(0,0,0,.5) 39%,transparent 46%)}
+}
 </style>
 </head>
 <body>
