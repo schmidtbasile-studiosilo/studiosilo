@@ -1241,6 +1241,30 @@ footer{background:#0E0D0C}
   .cm-list b{min-width:0}
 }
 @media (prefers-reduced-motion:reduce){.cm-list li{transition:none}}
+/* ---------- Le bouton « inspection » se pose sur la carte choisie ---------- */
+#intro .prail .pslot{position:relative;flex:0 0 clamp(200px,19vw,290px);scroll-snap-align:center;
+  transition:transform .45s var(--ease)}
+#intro .prail .pslot:hover{transform:translateY(-4px)}
+#intro .prail .chip{flex:none;width:100%;scroll-snap-align:none}
+#intro .prail .chip:hover{transform:none}
+#intro .prail .pc-conf{position:absolute;left:50%;transform:translateX(-50%);z-index:2;
+  bottom:clamp(12px,1.3vw,18px);display:inline-flex;align-items:center;gap:8px;
+  height:32px;padding:0 5px 0 13px;border-radius:999px;white-space:nowrap;
+  border:1.5px solid rgba(246,241,232,.55);background:rgba(15,14,12,.42);color:#F6F1E8;
+  font-size:12.5px;font-weight:500;letter-spacing:-.005em;cursor:pointer;
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  transition:background .3s var(--ease),border-color .3s var(--ease)}
+#intro .prail .pc-conf:hover,#intro .prail .pc-conf:focus-visible{background:rgba(246,241,232,.2);border-color:#F6F1E8}
+#intro .prail .pc-conf .b{width:21px;height:21px;border-radius:50%;background:#F6F1E8;color:#141312;
+  display:grid;place-items:center;font-size:12.5px;font-weight:700;line-height:1}
+#intro .prail .pc-conf[hidden]{display:none}
+/* La carte qui porte le bouton remonte un peu son texte pour ne pas le toucher. */
+#intro .prail .pslot:has(.pc-conf:not([hidden])) .pc-in{top:49%}
+@media (max-width:820px){
+  #intro .prail .pc-conf{height:29px;font-size:11.5px;padding:0 4px 0 11px}
+  #intro .prail .pslot:has(.pc-conf:not([hidden])) .pc-in{top:39%}
+}
+@media (prefers-reduced-motion:reduce){#intro .prail .pslot,#intro .prail .pc-conf{transition:none}}
 </style>
 </head>
 <body>
@@ -1349,32 +1373,44 @@ footer{background:#0E0D0C}
       <p class="hero-title t-body" id="hero-title">Nous existons pour que vos équipes arrêtent de se répéter, que vos patients arrêtent de se perdre, que vos prescripteurs arrêtent de décrocher.</p>
       <div class="prail-wrap">
         <div class="chips prail" id="parcours-rail" role="group" aria-label="Choisir un parcours, défilement horizontal" tabindex="0">
-        <button class="chip" type="button" data-p="patient" aria-pressed="false">
-          <img class="pc-img" src="assets/img/gallery/realisation-04.jpg" alt="" loading="lazy" decoding="async">
-          <span class="pc-in"><span class="chip-t">Parcours patient</span><span class="chip-d"><span>Des vidéos qui expliquent un traitement, un examen, un retour à domicile, dans les mots du patient et de ses proches.</span></span></span>
-        </button>
-        <button class="chip" type="button" data-p="onboarding" aria-pressed="false">
-          <img class="pc-img" src="assets/img/gallery/realisation-05.jpg" alt="" loading="lazy" decoding="async">
-          <span class="pc-in"><span class="chip-t">Onboarding soignant</span><span class="chip-d"><span>Un parcours vidéo qui remplace la dépendance à un tuteur disponible : autonome, identique pour chaque arrivée.</span></span></span>
-        </button>
-        <button class="chip" type="button" data-p="prescripteur" aria-pressed="false">
-          <img class="pc-img" src="assets/img/gallery/realisation-08.jpg" alt="" loading="lazy" decoding="async">
-          <span class="pc-in"><span class="chip-t">Parcours prescripteur</span><span class="chip-d"><span>Des vidéos qui donnent au médecin de quoi comprendre, se projeter et prescrire, sans dépendre d'une visite.</span></span></span>
-        </button>
-        <button class="chip" type="button" data-p="deploiement" aria-pressed="false">
-          <img class="pc-img" src="assets/img/gallery/realisation-01.jpg" alt="" loading="lazy" decoding="async">
-          <span class="pc-in"><span class="chip-t">Déploiement client B2B</span><span class="chip-d"><span>Un parcours vidéo qui installe un produit ou un logiciel dans un nouveau service, sans y envoyer une équipe entière.</span></span></span>
-        </button>
-        <button class="chip" type="button" data-p="support" aria-pressed="false">
-          <img class="pc-img" src="assets/img/gallery/realisation-02.jpg" alt="" loading="lazy" decoding="async">
-          <span class="pc-in"><span class="chip-t">Support &amp; SAV</span><span class="chip-d"><span>Des vidéos qui absorbent le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes.</span></span></span>
-        </button>
+        <div class="pslot">
+          <button class="chip" type="button" data-p="patient" aria-pressed="false">
+            <img class="pc-img" src="assets/img/gallery/realisation-04.jpg" alt="" loading="lazy" decoding="async">
+            <span class="pc-in"><span class="chip-t">Parcours patient</span><span class="chip-d"><span>Des vidéos qui expliquent un traitement, un examen, un retour à domicile, dans les mots du patient et de ses proches.</span></span></span>
+          </button>
+        </div>
+        <div class="pslot">
+          <button class="chip" type="button" data-p="onboarding" aria-pressed="false">
+            <img class="pc-img" src="assets/img/gallery/realisation-05.jpg" alt="" loading="lazy" decoding="async">
+            <span class="pc-in"><span class="chip-t">Onboarding soignant</span><span class="chip-d"><span>Un parcours vidéo qui remplace la dépendance à un tuteur disponible : autonome, identique pour chaque arrivée.</span></span></span>
+          </button>
+          <button class="pc-conf" type="button" data-for="onboarding" hidden>Ce qu'exige l'inspection<span class="b" aria-hidden="true">!</span></button>
+        </div>
+        <div class="pslot">
+          <button class="chip" type="button" data-p="prescripteur" aria-pressed="false">
+            <img class="pc-img" src="assets/img/gallery/realisation-08.jpg" alt="" loading="lazy" decoding="async">
+            <span class="pc-in"><span class="chip-t">Parcours prescripteur</span><span class="chip-d"><span>Des vidéos qui donnent au médecin de quoi comprendre, se projeter et prescrire, sans dépendre d'une visite.</span></span></span>
+          </button>
+        </div>
+        <div class="pslot">
+          <button class="chip" type="button" data-p="deploiement" aria-pressed="false">
+            <img class="pc-img" src="assets/img/gallery/realisation-01.jpg" alt="" loading="lazy" decoding="async">
+            <span class="pc-in"><span class="chip-t">Déploiement client B2B</span><span class="chip-d"><span>Un parcours vidéo qui installe un produit ou un logiciel dans un nouveau service, sans y envoyer une équipe entière.</span></span></span>
+          </button>
+          <button class="pc-conf" type="button" data-for="deploiement" hidden>Ce qu'exige l'inspection<span class="b" aria-hidden="true">!</span></button>
+        </div>
+        <div class="pslot">
+          <button class="chip" type="button" data-p="support" aria-pressed="false">
+            <img class="pc-img" src="assets/img/gallery/realisation-02.jpg" alt="" loading="lazy" decoding="async">
+            <span class="pc-in"><span class="chip-t">Support &amp; SAV</span><span class="chip-d"><span>Des vidéos qui absorbent le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes.</span></span></span>
+          </button>
+          <button class="pc-conf" type="button" data-for="support" hidden>Ce qu'exige l'inspection<span class="b" aria-hidden="true">!</span></button>
+        </div>
         </div>
       </div>
       <div class="pmore">
         <button class="chip ghost" type="button" data-action="autre">Un autre parcours</button>
         <button class="chip ghost" type="button" data-p="all" aria-pressed="false">Je ne sais pas encore</button>
-        <button class="btn line conf-open" type="button" id="conf-open" hidden>Ce qu'exige l'inspection</button>
       </div>
     </div>
   </div>
@@ -1969,8 +2005,8 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     { const norme = { onboarding: "dpc", deploiement: "iso13485", support: "iso13485" }[key] || null;
       $$("#chiffres .norms > div").forEach(d => d.classList.toggle("on", !!norme && d.dataset.norme === norme));
       $$("#conf-modal .cm-list li").forEach(li => li.classList.toggle("on", !!norme && li.dataset.norme === norme));
-      // Le bouton n'apparaît que pour les parcours dont la formation se prouve en inspection.
-      const cb = $("#conf-open"); if (cb) cb.hidden = !norme; }
+      // Le bouton ne s'affiche que sur la carte choisie, et seulement pour les parcours concernés.
+      $$(".pc-conf").forEach(b => { b.hidden = b.dataset.for !== key; }); }
     // Filtre de parcours du « Quotidien » : l'onglet actif suit le parcours choisi
     $$("#rp-tabs .tab").forEach(t => { const on = t.dataset.p === key; t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); });
     { const rt = $("#rp-tabs"), on = rt && rt.querySelector(".tab.on"); if (on && rt.scrollWidth > rt.clientWidth + 1) { const x = on.getBoundingClientRect().left - rt.getBoundingClientRect().left + rt.scrollLeft; rt.scrollTo({ left: Math.max(0, x - (rt.clientWidth - on.offsetWidth) / 2), behavior: "smooth" }); } }
@@ -2505,10 +2541,10 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   }
 
   /* ---------- Pop-up « contrainte commune » ---------- */
-  const cm = $("#conf-modal"), cmOpen = $("#conf-open");
-  if (cm && cmOpen && typeof cm.showModal === "function") {
+  const cm = $("#conf-modal");
+  if (cm && typeof cm.showModal === "function") {
     const closeCm = () => { if (cm.open) cm.close(); };
-    cmOpen.addEventListener("click", () => { cm.showModal(); $("#cm-close").focus(); });
+    $$(".pc-conf").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); cm.showModal(); $("#cm-close").focus(); }));
     $("#cm-close").addEventListener("click", closeCm);
     cm.addEventListener("click", e => { if (e.target === cm) closeCm(); });
     $(".cm-cta", cm).addEventListener("click", closeCm); // on referme avant d'aller à la méthode
