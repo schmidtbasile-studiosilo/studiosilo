@@ -1167,9 +1167,10 @@ footer{background:#0E0D0C}
 @media (max-width:900px){.bloc-nuit{padding:18px 20px}}
 /* ---------- La répétition se lit de gauche à droite, la réponse passe dessous ---------- */
 #quotidien .stack{flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:space-between;
-  gap:.1em .3em;line-height:1.02}
+  gap:.2em .3em;line-height:1.02;
+  margin-top:clamp(40px,8svh,86px);margin-bottom:clamp(22px,3.6svh,44px)}
 #quotidien .stack .w{transform:none;font-size:clamp(15px,3.2vw,46px);white-space:nowrap}
-#quotidien .stack .w.last{flex:0 0 100%;white-space:normal;margin-top:.1em;
+#quotidien .stack .w.last{flex:0 0 100%;white-space:normal;margin-top:.22em;
   font-size:clamp(22px,4.7vw,68px);text-align:right}
 /* Sur mobile, la répétition reprend sa colonne : de haut en bas, en escalier. */
 @media (max-width:820px){
