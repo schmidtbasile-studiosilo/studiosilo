@@ -8,3 +8,7 @@ ref/
 dist/
 Logo/
 Neue Montreal/
+
+# Dossiers de travail design (hors site publié)
+design_handoff_pages_foncees/
+*.zip
