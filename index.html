@@ -1281,10 +1281,6 @@ footer{background:#0E0D0C}
         <button class="chip ghost" type="button" data-action="autre">Un autre parcours</button>
         <button class="chip ghost" type="button" data-p="all" aria-pressed="false">Je ne sais pas encore</button>
       </div>
-      <p class="note">D'autres transmissions se perdent ailleurs : une mise à jour de protocole pour une équipe déjà en place, un produit à faire comprendre à un financeur. Le diagnostic part de là où ça fait mal chez vous ; le parcours vidéo suit.</p>
-      <div class="after">
-        <button class="btn line" type="button" id="ask-chat">Poser une question sur ce parcours</button>
-      </div>
     </div>
   </div>
 </section>
@@ -2313,7 +2309,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     }
     function open() { box.classList.add("open"); box.setAttribute("aria-hidden", "false"); fab.style.display = "none"; setTimeout(() => input.focus(), 50); }
     function close() { const wasOpen = box.classList.contains("open"); box.classList.remove("open"); box.setAttribute("aria-hidden", "true"); fab.style.display = ""; if (wasOpen) fab.focus(); }
-    fab.addEventListener("click", open); $("#chat-close").addEventListener("click", close); $("#ask-chat").addEventListener("click", open);
+    fab.addEventListener("click", open); $("#chat-close").addEventListener("click", close);
 
     function rules() {
       const d = dataFor(ctx);
