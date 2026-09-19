@@ -961,6 +961,24 @@ footer{background:#0E0D0C}
 .pc-cta.ghost .arr{width:calc((var(--h) - 16px) * 1.5);height:calc(var(--h) - 16px);border-radius:calc((var(--h) - 16px) / 2.8);background:#F6F1E8;color:#141312}
 .pc-cta.ghost{padding:0 6px 0 clamp(16px,1.6vw,22px)}
 
+
+/* ---- Bouton vidéo : pilule plus compacte, capsule à bouts ronds ---- */
+.hero-cta.play{--gapv:10px;padding:0 5px 0 clamp(16px,1.6vw,22px);gap:clamp(9px,1vw,13px)}
+.section-play{--h:clamp(44px,4.6svh,52px)}
+.pc-cta{--h:clamp(44px,4.4vw,52px)}
+.pcard.wide .pc-cta{--h:52px}
+.hero-cta.play .arr{
+  height:calc(var(--h) - var(--gapv));
+  width:calc((var(--h) - var(--gapv)) * 1.5);
+  border-radius:calc((var(--h) - var(--gapv)) / 2)}
+.hero-cta.play:hover .arr,.hero-cta.play:focus-visible .arr{
+  border-radius:calc((var(--h) - var(--gapv)) / 3.4)}
+.pc-cta.ghost{--gapv:10px;padding:0 5px 0 clamp(16px,1.6vw,22px)}
+.pc-cta.ghost .arr{
+  height:calc(var(--h) - var(--gapv));
+  width:calc((var(--h) - var(--gapv)) * 1.5);
+  border-radius:calc((var(--h) - var(--gapv)) / 2)}
+
 </style>
 </head>
 <body>
