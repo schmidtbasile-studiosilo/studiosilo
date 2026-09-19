@@ -155,7 +155,7 @@ main{position:relative}
 .hero-veil{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(44% 40% at 50% 47%,rgba(240,234,226,.18) 0%,rgba(240,234,226,0) 100%),linear-gradient(180deg,rgba(15,14,12,.1) 0%,rgba(15,14,12,0) 22%,rgba(15,14,12,0) 70%,rgba(15,14,12,.26) 100%)}
 #hero .in{align-items:center;text-align:center;padding-top:calc(var(--bar-h) + 40px);padding-bottom:clamp(110px,16vh,160px)}
 .hero-logo{--logo-w:clamp(230px,31vw,560px);animation:rise .9s var(--ease) both}
-.hero-tag{font-size:clamp(18px,1.75vw,26px);font-weight:500;line-height:1.3;letter-spacing:-.01em;margin-top:clamp(18px,3vh,34px);max-width:36ch;margin-inline:auto}
+.hero-tag{font-size:clamp(18px,1.75vw,26px);font-weight:500;line-height:1.3;letter-spacing:-.01em;margin-top:clamp(18px,3vh,34px);max-width:min(100%,70ch);margin-inline:auto;text-wrap:balance}
 /* La tagline apparaît en deux temps : première ligne, puis seconde, en fondu */
 .hero-tag .l1,.hero-tag .l2{display:block;opacity:0;animation:fadeIn 1.1s var(--ease) forwards}
 .hero-tag .l1{animation-delay:.35s}
@@ -1165,8 +1165,7 @@ footer{background:#0E0D0C}
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="in">
     <h1 class="wordmark hero-logo"><svg class="logo" viewBox="0 0 259 54" aria-hidden="true" focusable="false"><use href="#silo-logo"/></svg><span class="visually-hidden">Studio Silo, agence de stratégie vidéo dédiée aux acteurs de la santé</span></h1>
-    <p class="hero-tag"><span class="l1">Nous concevons et réalisons les <strong>parcours vidéo</strong></span><span class="l2">qui transmettent ce que vos équipes répètent aujourd'hui de vive voix.</span></p>
-    <p class="hero-sub" aria-label="Les cinq parcours">Parcours patient · Onboarding soignant · Prescripteurs · Déploiement B2B · Support</p>
+    <p class="hero-tag"><span class="l1">Nous concevons la vidéo là où son absence vous coûte le plus</span></p>
     <div class="hero-actions">
       <button class="hero-cta play" type="button" data-video="v3"><span class="lbl">Voir un parcours en 60&nbsp;s</span><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span></button>
       <a class="hero-cta" href="#constat">Explorer <span class="arr" aria-hidden="true">↓</span></a>
