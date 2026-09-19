@@ -1174,7 +1174,9 @@ footer{background:#0E0D0C}
   font-size:clamp(22px,4.7vw,68px);text-align:right}
 /* Sur mobile, la répétition reprend sa colonne : de haut en bas, en escalier. */
 @media (max-width:820px){
-  #quotidien .stack{flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;gap:0;line-height:.98}
+  /* Sur mobile, on garde le rythme serré d'avant : l'air ajouté est pour le grand écran. */
+  #quotidien .stack{flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;gap:0;line-height:.98;
+    margin-top:clamp(22px,4svh,44px);margin-bottom:0}
   #quotidien .stack .w{font-size:clamp(20px,6.2vw,34px);transform:translateX(calc(var(--i) * .2em))}
   #quotidien .stack .w.last{flex:0 0 auto;white-space:normal;margin-top:.12em;
     font-size:clamp(20px,6.2vw,34px);text-align:left}
