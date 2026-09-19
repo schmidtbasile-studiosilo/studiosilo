@@ -1141,6 +1141,12 @@ footer{background:#0E0D0C}
   #intro .prail .chip{flex:0 0 min(64vw,240px)}
   #intro .prail .chip-d{font-size:13px}
 }
+/* ---------- Chez vous : sous-titre sous la question, phrase du parcours au-dessus des cartes ---------- */
+#intro .q-sub{color:var(--ink-2);margin-top:clamp(10px,1.8svh,18px)}
+#intro .hero-title{margin-top:clamp(18px,3svh,34px);margin-bottom:0;max-width:52ch;
+  font-size:clamp(15px,1.15vw,18px);font-weight:500;line-height:1.35;letter-spacing:-.01em;color:var(--ink)}
+#intro .prail-wrap{margin-top:clamp(10px,1.6svh,18px)}
+@media (max-width:820px){#intro .hero-title{font-size:15px}}
 </style>
 </head>
 <body>
@@ -1245,9 +1251,8 @@ footer{background:#0E0D0C}
     <div class="eyebrow"><span class="pill">Chez vous</span></div>
     <div class="ask" id="ask">
       <h2 class="t-h1 q">Chez vous, où l'information <span class="mk">se perd-elle</span>&#8239;?</h2>
-      <p class="hero-title t-lead mt-2 maxw-60" id="hero-title">Nous existons pour que vos équipes arrêtent de se répéter, que vos patients arrêtent de se perdre, que vos prescripteurs arrêtent de décrocher.</p>
-      <p class="t-body mt-1 maxw-60 offer">Pour ça, nous fabriquons une seule chose : des parcours vidéo. Une série de vidéos courtes, ordonnées, dites par vos équipes, que l'on regarde depuis un téléphone au moment du besoin.</p>
-      <p class="hint t-body">Voici les cinq endroits où l'information se perd le plus souvent. Choisissez le vôtre : la page s'adapte à votre quotidien.</p>
+      <p class="q-sub t-lead mt-2 maxw-60">Voici les cinq endroits où l'information se perd le plus souvent. Choisissez le vôtre : la page s'adapte à votre quotidien.</p>
+      <p class="hero-title t-body" id="hero-title">Nous existons pour que vos équipes arrêtent de se répéter, que vos patients arrêtent de se perdre, que vos prescripteurs arrêtent de décrocher.</p>
       <div class="prail-wrap">
         <div class="chips prail" id="parcours-rail" role="group" aria-label="Choisir un parcours, défilement horizontal" tabindex="0">
         <button class="chip" type="button" data-p="patient" aria-pressed="false">
