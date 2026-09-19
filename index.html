@@ -706,12 +706,12 @@ footer{background:#0E0D0C}
 #quotidien .stack{margin-top:clamp(12px,2.2svh,28px)}
 #quotidien .stack .w{font-size:clamp(24px,3.4vw,54px)}
 
-#calcul .calc{margin-top:0;padding:clamp(20px,2.8svh,34px) var(--gut) clamp(22px,3svh,38px)}
-#calcul .in2{gap:clamp(18px,3vw,48px)}
-#calcul .sliders{gap:clamp(10px,1.8svh,18px);margin-top:4px}
-#calcul .result{padding:clamp(16px,2.4svh,28px)}
-#calcul .after-result{margin-top:12px;font-size:14px;line-height:1.4}
-#calcul .note{font-size:12.5px;line-height:1.35;margin-top:12px}
+#quotidien .calc{padding:clamp(20px,2.8svh,34px) var(--gut) clamp(22px,3svh,38px)}
+#quotidien .in2{gap:clamp(18px,3vw,48px)}
+#quotidien .sliders{gap:clamp(10px,1.8svh,18px);margin-top:4px}
+#quotidien .result{padding:clamp(16px,2.4svh,28px)}
+#quotidien .after-result{margin-top:12px;font-size:14px;line-height:1.4}
+#quotidien .note{font-size:12.5px;line-height:1.35;margin-top:12px}
 
 #reponse .pair-head{margin-top:clamp(12px,2svh,24px);padding-bottom:6px}
 #reponse .pairs{margin-top:0}
@@ -809,23 +809,23 @@ footer{background:#0E0D0C}
 
 /* ---- Réserver : le formulaire occupe son propre écran ---- */
 .session.solo{grid-template-columns:1fr;max-width:860px;margin-inline:auto}
-#reserver .form{padding:clamp(18px,2.6svh,32px)}
-#reserver .fields{gap:clamp(9px,1.5svh,16px)}
-#reserver .field input,#reserver .field select{height:clamp(42px,5.6svh,46px)}
-#reserver .field textarea{height:clamp(52px,8svh,88px)}
-#reserver .f-chip{height:34px;font-size:13px}
-#reserver .form .status:empty{display:none}
+#exploration .form{padding:clamp(18px,2.6svh,32px)}
+#exploration .fields{gap:clamp(9px,1.5svh,16px)}
+#exploration .field input,#exploration .field select{height:clamp(42px,5.6svh,46px)}
+#exploration .field textarea{height:clamp(52px,8svh,88px)}
+#exploration .f-chip{height:34px;font-size:13px}
+#exploration .form .status:empty{display:none}
 
 /* ---- Derniers ajustements de hauteur ---- */
 @media (max-height:820px){
-  #jour .day{gap:clamp(16px,2.4vw,40px)}
-  #jour .timeline li .t-body{font-size:13px;line-height:1.35}
-  #jour .lead-title{font-size:clamp(19px,2vw,28px)}
+  #quotidien .day{gap:clamp(16px,2.4vw,40px)}
+  #quotidien .timeline li .t-body{font-size:13px;line-height:1.35}
+  #quotidien .lead-title{font-size:clamp(19px,2vw,28px)}
   #chiffres .split{gap:clamp(14px,2.4vw,48px)}
   #chiffres .stats-head{margin-top:clamp(10px,1.8svh,22px)}
   #chiffres .stats-wrap{margin-top:clamp(10px,1.6svh,18px)}
-  #reserver .field input,#reserver .field select{height:42px}
-  #reserver .field textarea{height:56px}
+  #exploration .field input,#exploration .field select{height:42px}
+  #exploration .field textarea{height:56px}
 }
 
 
@@ -834,35 +834,35 @@ footer{background:#0E0D0C}
 #reponse .pair{padding:clamp(5px,1svh,11px) 0}
 #reponse .why b{font-size:14px}
 #reponse .why .t-body{font-size:12px}
-#reserver .session{margin-top:clamp(10px,1.8svh,20px)}
-#reserver .form{padding:clamp(16px,2.2svh,24px)}
-#reserver .f-head{margin-bottom:clamp(8px,1.4svh,14px)}
-#reserver .f-head h3{font-size:18px}
-#reserver .f-head .t-small{font-size:12px}
-#reserver .fields{gap:clamp(8px,1.3svh,12px)}
-#reserver .field{gap:4px}
-#reserver .field label,#reserver .f-label{font-size:12px}
-#reserver .field input,#reserver .field select{height:clamp(40px,5svh,44px)}
-#reserver .field textarea{height:clamp(48px,6.5svh,64px)}
-#reserver .f-chips{gap:6px}
-#reserver .f-chip{height:31px;font-size:12.5px}
-#reserver .actions{margin-top:clamp(8px,1.4svh,14px)}
-#reserver .form .alt{font-size:12px}
+#exploration .session{margin-top:clamp(10px,1.8svh,20px)}
+#exploration .form{padding:clamp(16px,2.2svh,24px)}
+#exploration .f-head{margin-bottom:clamp(8px,1.4svh,14px)}
+#exploration .f-head h3{font-size:18px}
+#exploration .f-head .t-small{font-size:12px}
+#exploration .fields{gap:clamp(8px,1.3svh,12px)}
+#exploration .field{gap:4px}
+#exploration .field label,#exploration .f-label{font-size:12px}
+#exploration .field input,#exploration .field select{height:clamp(40px,5svh,44px)}
+#exploration .field textarea{height:clamp(48px,6.5svh,64px)}
+#exploration .f-chips{gap:6px}
+#exploration .f-chip{height:31px;font-size:12.5px}
+#exploration .actions{margin-top:clamp(8px,1.4svh,14px)}
+#exploration .form .alt{font-size:12px}
 @media (max-height:820px){
   #reponse .t-h1{font-size:clamp(24px,2.8vw,40px)}
-  #reserver .form{padding:16px}
-  #reserver .fields{gap:8px}
-  #reserver .field input,#reserver .field select{height:40px}
-  #reserver .field textarea{height:48px}
-  #reserver .f-chip{height:29px}
-  #reserver .f-head h3{font-size:17px}
+  #exploration .form{padding:16px}
+  #exploration .fields{gap:8px}
+  #exploration .field input,#exploration .field select{height:40px}
+  #exploration .field textarea{height:48px}
+  #exploration .f-chip{height:29px}
+  #exploration .f-head h3{font-size:17px}
 }
 
 
 /* ---- Réserver : le champ libre ne doit pas imposer sa hauteur ---- */
 .session.solo{max-width:1000px}
-#reserver .field textarea{min-height:0;height:clamp(48px,6.5svh,64px)}
-#reserver .f-chips{flex-wrap:wrap}
+#exploration .field textarea{min-height:0;height:clamp(48px,6.5svh,64px)}
+#exploration .f-chips{flex-wrap:wrap}
 
 /* ---- Session d'exploration : trois temps + « Pour qui ? » ---- */
 #exploration .t-h1{font-size:clamp(24px,2.7vw,40px)}
@@ -876,19 +876,19 @@ footer{background:#0E0D0C}
   #exploration .session .after{margin-top:10px;padding:12px 14px}
   #exploration .session .after .t-body{font-size:12.5px}
   #exploration .session{margin-top:10px}
-  #reserver .session{margin-top:10px}
-  #reserver .form{padding:12px}
-  #reserver .f-head{margin-bottom:8px}
-  #reserver .f-head h3{font-size:16.5px}
-  #reserver .fields{gap:6px}
-  #reserver .field{gap:3px}
-  #reserver .field label,#reserver .f-label{font-size:11.5px}
-  #reserver .field input,#reserver .field select{height:38px}
-  #reserver .field textarea{height:44px}
-  #reserver .f-chips{gap:5px}
-  #reserver .f-chip{height:28px;font-size:12px;padding:0 10px 0 9px}
-  #reserver .actions{margin-top:8px}
-  #reserver .form .alt{font-size:11.5px}
+  #exploration .session{margin-top:10px}
+  #exploration .form{padding:12px}
+  #exploration .f-head{margin-bottom:8px}
+  #exploration .f-head h3{font-size:16.5px}
+  #exploration .fields{gap:6px}
+  #exploration .field{gap:3px}
+  #exploration .field label,#exploration .f-label{font-size:11.5px}
+  #exploration .field input,#exploration .field select{height:38px}
+  #exploration .field textarea{height:44px}
+  #exploration .f-chips{gap:5px}
+  #exploration .f-chip{height:28px;font-size:12px;padding:0 10px 0 9px}
+  #exploration .actions{margin-top:8px}
+  #exploration .form .alt{font-size:11.5px}
 }
 
 
@@ -1005,15 +1005,15 @@ footer{background:#0E0D0C}
 #quotidien .stack .w{font-size:clamp(26px,3.9vw,64px)}
 #quotidien .stack{margin-top:clamp(16px,2.8svh,36px)}
 
-#jour .day{gap:clamp(24px,3.4vw,56px)}
-#jour .timeline li .t-body{font-size:14.5px}
-#jour .lead-title{font-size:clamp(22px,2.4vw,34px)}
+#quotidien .day{gap:clamp(24px,3.4vw,56px)}
+#quotidien .timeline li .t-body{font-size:14.5px}
+#quotidien .lead-title{font-size:clamp(22px,2.4vw,34px)}
 
-#calcul .calc{padding:clamp(26px,3.4svh,44px) var(--gut) clamp(28px,3.6svh,48px)}
-#calcul .sliders{gap:clamp(14px,2.2svh,22px)}
-#calcul .result{padding:clamp(20px,3svh,34px)}
-#calcul .note{font-size:13px}
-#calcul .after-result{font-size:15px}
+#quotidien .calc{padding:clamp(26px,3.4svh,44px) var(--gut) clamp(28px,3.6svh,48px)}
+#quotidien .sliders{gap:clamp(14px,2.2svh,22px)}
+#quotidien .result{padding:clamp(20px,3svh,34px)}
+#quotidien .note{font-size:13px}
+#quotidien .after-result{font-size:15px}
 
 #reponse .t-h1{font-size:clamp(28px,3.8vw,58px)}
 #reponse .rp-tabs{margin-top:clamp(16px,2.6svh,32px)}
@@ -1045,19 +1045,19 @@ footer{background:#0E0D0C}
 #exploration .session .after{margin-top:clamp(16px,2.6svh,28px);padding:clamp(16px,2.6svh,24px) clamp(18px,2vw,26px)}
 #exploration .session .after .t-body{font-size:14px}
 
-#reserver .session{margin-top:clamp(14px,2.4svh,28px)}
-#reserver .form{padding:clamp(20px,3svh,34px)}
-#reserver .f-head{margin-bottom:clamp(12px,2svh,18px)}
-#reserver .f-head h3{font-size:19px}
-#reserver .f-head .t-small{font-size:12.5px}
-#reserver .fields{gap:clamp(11px,1.8svh,16px)}
-#reserver .field{gap:5px}
-#reserver .field label,#reserver .f-label{font-size:12.5px}
-#reserver .field input,#reserver .field select{height:46px}
-#reserver .field textarea{min-height:0;height:clamp(72px,10svh,110px)}
-#reserver .f-chip{height:34px;font-size:13px;padding:0 13px 0 11px}
-#reserver .actions{margin-top:clamp(12px,2svh,18px)}
-#reserver .form .alt{font-size:12.5px}
+#exploration .session{margin-top:clamp(14px,2.4svh,28px)}
+#exploration .form{padding:clamp(20px,3svh,34px)}
+#exploration .f-head{margin-bottom:clamp(12px,2svh,18px)}
+#exploration .f-head h3{font-size:19px}
+#exploration .f-head .t-small{font-size:12.5px}
+#exploration .fields{gap:clamp(11px,1.8svh,16px)}
+#exploration .field{gap:5px}
+#exploration .field label,#exploration .f-label{font-size:12.5px}
+#exploration .field input,#exploration .field select{height:46px}
+#exploration .field textarea{min-height:0;height:clamp(72px,10svh,110px)}
+#exploration .f-chip{height:34px;font-size:13px;padding:0 13px 0 11px}
+#exploration .actions{margin-top:clamp(12px,2svh,18px)}
+#exploration .form .alt{font-size:12.5px}
 
 #signature-panel .split .t-lead{font-size:15px}
 #signature-panel .confid{margin-top:clamp(20px,3.2svh,40px);padding:clamp(20px,3svh,34px)}
@@ -1083,8 +1083,8 @@ footer{background:#0E0D0C}
 #exploration .moment{padding:clamp(7px,1.3svh,14px) 0}
 #exploration .session .after{margin-top:clamp(13px,2.2svh,24px)}
 
-#reserver .fields{gap:clamp(9px,1.5svh,13px)}
-#reserver .form{padding:clamp(17px,2.6svh,28px)}
+#exploration .fields{gap:clamp(9px,1.5svh,13px)}
+#exploration .form{padding:clamp(17px,2.6svh,28px)}
 
 
 /* ---- Écrans courts : on resserre les espacements, jamais les textes ---- */
@@ -1096,10 +1096,10 @@ footer{background:#0E0D0C}
   #intro .chip{padding:10px 15px}
   #intro .note{margin-top:12px}
   #quotidien .stack{margin-top:14px}
-  #jour .day{gap:24px}
-  #calcul .calc{padding:22px var(--gut) 24px}
-  #calcul .sliders{gap:12px}
-  #calcul .result{padding:18px}
+  #quotidien .day{gap:24px}
+  #quotidien .calc{padding:22px var(--gut) 24px}
+  #quotidien .sliders{gap:12px}
+  #quotidien .result{padding:18px}
   #reponse .rp-tabs{margin-top:12px}
   #reponse .pair-head{margin-top:10px}
   #reponse .pair{padding:6px 0}
@@ -1112,14 +1112,20 @@ footer{background:#0E0D0C}
   #exploration .session{margin-top:12px}
   #exploration .moment{padding:6px 0}
   #exploration .session .after{margin-top:12px;padding:14px 18px}
-  #reserver .session{margin-top:12px}
-  #reserver .form{padding:16px}
-  #reserver .fields{gap:8px}
-  #reserver .f-head{margin-bottom:10px}
+  #exploration .session{margin-top:12px}
+  #exploration .form{padding:16px}
+  #exploration .fields{gap:8px}
+  #exploration .f-head{margin-bottom:10px}
   #signature-panel .confid{margin-top:16px;padding:18px}
   .gallery{height:clamp(150px,26svh,250px);margin-top:16px}
   .pcard{min-height:clamp(150px,30svh,300px)}
 }
+
+
+/* ---- Le quotidien et la session redeviennent des sections uniques ---- */
+#quotidien .calc{margin-top:clamp(36px,6svh,86px)}
+#quotidien .in{padding-bottom:calc(40px + clamp(72px,12vh,140px))}
+@media (max-height:800px){#quotidien .calc{margin-top:clamp(24px,4svh,52px)}}
 
 </style>
 </head>
@@ -1241,13 +1247,6 @@ footer{background:#0E0D0C}
     </div>
     <div class="row play-row"><button class="hero-cta play section-play" type="button" data-video="v2"><span class="lbl">La même journée, en vidéo (40&nbsp;s)</span><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span></button></div>
 
-  </div>
-</section>
-
-<!-- ===== 3b. La journée type ===== -->
-<section class="panel flow sheet grain bg-paper" id="jour" data-chapter="Le quotidien">
-  <div class="in px" data-px="56">
-    <div class="eyebrow"><span class="pill">Le quotidien</span></div>
     <div class="day" id="journee">
       <div>
         <p class="who"><i></i><span id="day-who">Une journée ordinaire, vue du terrain</span></p>
@@ -1261,13 +1260,7 @@ footer{background:#0E0D0C}
       </div>
     </div>
 
-  </div>
-</section>
-
-<!-- ===== 3c. La calculette ===== -->
-<section class="panel flow sheet grain bg-paper" id="calcul" data-chapter="Le quotidien">
-  <div class="in px" data-px="56">
-    <div class="eyebrow"><span class="pill">Ordre de grandeur</span></div>
+    <!-- Calculette -->
     <div class="calc" id="calc">
       <div class="in2">
         <div>
@@ -1442,15 +1435,6 @@ footer{background:#0E0D0C}
         </div>
         <div class="after"><b>Pour qui ?</b><span class="t-body">Direction d'établissement, cadre de santé, direction commerciale ou marketing MedTech, affaires médicales, direction produit d'un éditeur de logiciel de santé. Si vous avez reconnu votre quotidien plus haut, c'est pour vous.</span></div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 9b. Réserver la session ===== -->
-<section class="panel flow sheet grain bg-kraft" id="reserver" data-chapter="Session d'exploration">
-  <div class="in px" data-px="56">
-    <div class="eyebrow"><span class="pill">Réserver</span></div>
-    <div class="session solo">
       <form class="form" id="lead-form" novalidate>
         <div class="f-head"><div><h3>Réserver ma session d'exploration</h3><p class="t-small" style="color:var(--ink-3);margin-top:4px">Réponse sous 48 h ouvrées. Aucune relance automatique.</p></div><span class="free">Gratuite</span></div>
         <div class="fields">
@@ -1733,15 +1717,12 @@ SILO.next = {
   intro: "Regardons ce que ça donne au quotidien",
   introAll: "Regardons un exemple de quotidien",
   introOther: "Voyons pourquoi la vidéo répond à toute friction",
-  quotidien: "Regardons une journée type, heure par heure",
-  jour: "Chiffrons ce que cette journée coûte",
-  calcul: "Voyons la réponse, friction par friction",
+  quotidien: "Voyons la réponse, friction par friction",
   reponse: "Vérifions avec ce que dit la littérature",
   chiffres: "Parlons conformité",
   conformite: "Convaincu ? Voyons comment on travaillerait ensemble",
   etapes: "Réservons votre session d'exploration",
-  exploration: "Réservons votre créneau",
-  reserver: "Faisons connaissance",
+  exploration: "Faisons connaissance",
   qui: "La qualité, en images"
 };
 /* Versions courtes des mêmes boutons, affichées sous 700 px. */
@@ -1750,15 +1731,12 @@ SILO.nextShort = {
   intro: "Au quotidien",
   introAll: "Un exemple de quotidien",
   introOther: "Pourquoi la vidéo répond",
-  quotidien: "Une journée type",
-  jour: "Ce que ça coûte",
-  calcul: "Voyons la réponse",
+  quotidien: "Voyons la réponse",
   reponse: "Ce que dit la littérature",
   chiffres: "Parlons conformité",
   conformite: "Convaincu ? Voyons la suite",
   etapes: "Réserver ma session",
-  exploration: "Réserver un créneau",
-  reserver: "Faisons connaissance",
+  exploration: "Faisons connaissance",
   qui: "La qualité en images"
 };
 
@@ -2130,7 +2108,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   const pxEls = $$(".px");
   const chapterEl = $("#chapter"), chapterName = $("#chapter-name");
   const navLinks = $$(".bar nav a");
-  const idToNav = { hero: null, intro: "parcours", constat: "constat", quotidien: "quotidien", jour: "quotidien", calcul: "quotidien", reponse: "reponse", chiffres: "chiffres", conformite: null, etapes: "methode", exploration: null, reserver: null, qui: null, "signature-panel": null };
+  const idToNav = { hero: null, intro: "parcours", constat: "constat", quotidien: "quotidien", reponse: "reponse", chiffres: "chiffres", conformite: null, etapes: "methode", exploration: null, qui: null, "signature-panel": null };
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   let ticking = false, lastChapter = "";
 
