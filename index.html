@@ -1069,13 +1069,21 @@ footer{background:#0E0D0C}
 @media (max-height:800px){#quotidien .calc{margin-top:clamp(24px,4svh,52px)}}
 
 /* ---------- Pourquoi la vidéo : manifeste centré, puis trois preuves sourcées ---------- */
-.why-video{margin-top:clamp(40px,7svh,96px);padding-top:clamp(30px,5svh,60px);
+.why-video{position:relative;isolation:isolate;margin-top:clamp(40px,7svh,96px);padding-top:clamp(30px,5svh,60px);
   border-top:1px solid rgba(237,228,214,.18);text-align:center}
+/* Plan d'entretien en fond, très en retrait : il donne le sujet sans disputer le texte.
+   Le voile radial garde le contraste de lecture au centre, là où court le paragraphe. */
+.wv-bg{position:absolute;left:50%;top:0;transform:translateX(-50%);width:100vw;max-width:none;height:100%;
+  object-fit:cover;object-position:50% 38%;z-index:-2;opacity:.16;
+  filter:grayscale(.3) brightness(.9) contrast(1.02);pointer-events:none}
+.why-video::before{content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);width:100vw;height:100%;
+  z-index:-1;pointer-events:none;
+  background:radial-gradient(62% 58% at 50% 46%,rgba(19,18,17,.72) 0%,rgba(19,18,17,.5) 55%,rgba(19,18,17,.12) 100%)}
 .why-video .eyebrow{justify-content:center;margin-bottom:clamp(14px,2.4svh,28px)}
 .why-video .t-h1{max-width:18ch;margin-inline:auto;text-wrap:balance;color:#FFFDF9}
 .manifest{margin:clamp(20px,3.4svh,40px) auto 0;max-width:min(100%,860px);
   font-size:clamp(17px,1.45vw,21px);font-weight:500;line-height:1.4;letter-spacing:-.012em;
-  color:rgba(237,228,214,.55);text-wrap:pretty}
+  color:rgba(237,228,214,.62);text-wrap:pretty}
 .manifest b{font-weight:500;color:#F6F1E8}
 .proofs{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.6vw,44px);
   margin-top:clamp(24px,4.2svh,54px);padding-top:clamp(20px,3.4svh,38px);
@@ -1162,6 +1170,7 @@ footer{background:#0E0D0C}
     </div>
     <div class="rail-foot"><span>Trois fuites, une même réponse : un parcours vidéo par friction.</span><span>Glissez pour parcourir</span></div>
     <div class="why-video">
+      <img class="wv-bg" src="assets/img/fond-pourquoi.jpg" width="1800" height="887" alt="" loading="lazy" decoding="async">
       <div class="eyebrow"><span class="pill">Pourquoi la vidéo</span></div>
       <h3 class="t-h1">La vidéo est la pièce maîtresse.</h3>
       <p class="manifest">Ce qui se perd n'est pas le savoir : c'est <b>sa transmission</b>. L'oral se dit une fois, se déforme, et dépend de la disponibilité de celui qui sait. L'écrit n'est pas lu. <b>La vidéo montre le geste au lieu de le décrire</b>, se revoit au moment du besoin, et <b>dit la même chose à la première comme à la centième personne</b>. Elle ne remplace pas vos experts : <b>elle prend la partie répétitive</b> et leur rend la conversation qui compte. Montrer, répéter sans se fatiguer, ne jamais varier : <b>aucun autre support ne fait les trois</b>.</p>

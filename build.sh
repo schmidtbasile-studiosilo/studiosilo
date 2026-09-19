@@ -14,7 +14,7 @@ perl -pe '
       "assets/img/perroquet-1200.jpg"         => inl("assets/img/perroquet-1200.jpg","image/jpeg"),
       "assets/img/perroquet.jpg"              => inl("assets/img/perroquet.jpg","image/jpeg"),
     );
-    for my $g (glob("assets/img/gallery/*.jpg"), glob("assets/img/hero-*.jpg"), glob("assets/img/infirmiere-*.jpg"), glob("assets/img/portrait-*.jpg"), glob("assets/img/studio-*.jpg")) { $map{$g} = inl($g, "image/jpeg"); }
+    for my $g (glob("assets/img/gallery/*.jpg"), glob("assets/img/hero-*.jpg"), glob("assets/img/infirmiere-*.jpg"), glob("assets/img/portrait-*.jpg"), glob("assets/img/studio-*.jpg"), glob("assets/img/fond-*.jpg")) { $map{$g} = inl($g, "image/jpeg"); }
   }
   s/^<link rel="preload"[^\n]*\n//;         # inutile quand les polices sont embarquées
   s/ srcset="[^"]*" sizes="[^"]*"//;          # une seule image embarquée (1200 px)
