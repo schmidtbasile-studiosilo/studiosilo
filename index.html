@@ -1104,6 +1104,43 @@ footer{background:#0E0D0C}
   .why-video .eyebrow{justify-content:flex-start}
   .why-video .t-h1,.manifest{margin-inline:0}
 }
+/* ---------- Chez vous : carrousel de parcours, le choisi seul en couleur ---------- */
+.prail-wrap{margin:clamp(14px,2.4svh,26px) calc(var(--gut) * -1) 0}
+#intro .prail{display:flex;gap:clamp(10px,1.2vw,18px);grid-template-columns:none;margin-top:0;
+  overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:var(--gut);
+  padding:2px var(--gut) 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#intro .prail::-webkit-scrollbar{display:none}
+#intro .prail:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:12px}
+#intro .prail .chip{position:relative;flex:0 0 clamp(200px,19vw,290px);aspect-ratio:4/5;min-height:0;
+  display:block;padding:0;border:0;border-radius:clamp(20px,1.8vw,30px);overflow:hidden;isolation:isolate;
+  background:var(--kraft);scroll-snap-align:center;cursor:pointer;
+  transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+#intro .prail .chip:hover{transform:translateY(-4px);box-shadow:0 18px 38px rgba(15,14,12,.16)}
+#intro .prail .chip .pc-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 32%;
+  opacity:.3;filter:saturate(.7) contrast(.92);transition:opacity .5s var(--ease),filter .5s var(--ease)}
+#intro .prail .chip::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(15,14,12,0) 34%,rgba(15,14,12,.34) 62%,rgba(15,14,12,.78) 100%);
+  opacity:0;transition:opacity .5s var(--ease)}
+#intro .prail .chip.on .pc-img{opacity:1;filter:none}
+#intro .prail .chip.on::after{opacity:1}
+#intro .prail .pc-in{position:absolute;left:0;right:0;top:52%;z-index:1;
+  padding:0 clamp(14px,1.3vw,20px);text-align:center;color:var(--ink);transition:color .4s var(--ease)}
+#intro .prail .chip.on .pc-in{color:#F6F1E8;text-shadow:0 1px 14px rgba(10,9,8,.55)}
+#intro .prail .chip-t{display:block;font-size:clamp(15px,1.15vw,19px);font-weight:700;letter-spacing:-.02em;line-height:1.1}
+#intro .prail .chip-d{display:block;height:0;overflow:visible;opacity:0;font-size:clamp(12.5px,.95vw,14.5px);
+  font-weight:400;line-height:1.35;color:inherit;margin-top:0;transition:opacity .45s var(--ease)}
+#intro .prail .chip-d > span{display:block;padding-top:clamp(6px,.8vw,10px)}
+#intro .prail .chip.on .chip-d{opacity:1}
+#intro .prail .chip:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.pmore{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(12px,2svh,22px)}
+#intro .pmore .chip.ghost{min-height:0;padding:11px 18px;border-radius:999px;font-size:14.5px;justify-content:center}
+@media (prefers-reduced-motion:reduce){
+  #intro .prail .chip,#intro .prail .chip .pc-img,#intro .prail .chip::after,#intro .prail .chip-d{transition:none}
+}
+@media (max-width:820px){
+  #intro .prail .chip{flex:0 0 min(64vw,240px)}
+  #intro .prail .chip-d{font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -1211,12 +1248,31 @@ footer{background:#0E0D0C}
       <p class="hero-title t-lead mt-2 maxw-60" id="hero-title">Nous existons pour que vos équipes arrêtent de se répéter, que vos patients arrêtent de se perdre, que vos prescripteurs arrêtent de décrocher.</p>
       <p class="t-body mt-1 maxw-60 offer">Pour ça, nous fabriquons une seule chose : des parcours vidéo. Une série de vidéos courtes, ordonnées, dites par vos équipes, que l'on regarde depuis un téléphone au moment du besoin.</p>
       <p class="hint t-body">Voici les cinq endroits où l'information se perd le plus souvent. Choisissez le vôtre : la page s'adapte à votre quotidien.</p>
-      <div class="chips" role="group" aria-label="Choisir un parcours">
-        <button class="chip" type="button" data-p="patient" aria-pressed="false"><span class="n">01</span><span class="chip-t">Parcours patient</span><span class="chip-d">Des vidéos qui expliquent un traitement, un examen, un retour à domicile, dans les mots du patient et de ses proches.</span></button>
-        <button class="chip" type="button" data-p="onboarding" aria-pressed="false"><span class="n">02</span><span class="chip-t">Onboarding soignant</span><span class="chip-d">Un parcours vidéo qui remplace la dépendance à un tuteur disponible : autonome, identique pour chaque arrivée.</span></button>
-        <button class="chip" type="button" data-p="prescripteur" aria-pressed="false"><span class="n">03</span><span class="chip-t">Parcours prescripteur</span><span class="chip-d">Des vidéos qui donnent au médecin de quoi comprendre, se projeter et prescrire, sans dépendre d'une visite.</span></button>
-        <button class="chip" type="button" data-p="deploiement" aria-pressed="false"><span class="n">04</span><span class="chip-t">Déploiement client B2B</span><span class="chip-d">Un parcours vidéo qui installe un produit ou un logiciel dans un nouveau service, sans y envoyer une équipe entière.</span></button>
-        <button class="chip" type="button" data-p="support" aria-pressed="false"><span class="n">05</span><span class="chip-t">Support &amp; SAV</span><span class="chip-d">Des vidéos qui absorbent le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes.</span></button>
+      <div class="prail-wrap">
+        <div class="chips prail" id="parcours-rail" role="group" aria-label="Choisir un parcours, défilement horizontal" tabindex="0">
+        <button class="chip" type="button" data-p="patient" aria-pressed="false">
+          <img class="pc-img" src="assets/img/gallery/realisation-04.jpg" alt="" loading="lazy" decoding="async">
+          <span class="pc-in"><span class="chip-t">Parcours patient</span><span class="chip-d"><span>Des vidéos qui expliquent un traitement, un examen, un retour à domicile, dans les mots du patient et de ses proches.</span></span></span>
+        </button>
+        <button class="chip" type="button" data-p="onboarding" aria-pressed="false">
+          <img class="pc-img" src="assets/img/gallery/realisation-05.jpg" alt="" loading="lazy" decoding="async">
+          <span class="pc-in"><span class="chip-t">Onboarding soignant</span><span class="chip-d"><span>Un parcours vidéo qui remplace la dépendance à un tuteur disponible : autonome, identique pour chaque arrivée.</span></span></span>
+        </button>
+        <button class="chip" type="button" data-p="prescripteur" aria-pressed="false">
+          <img class="pc-img" src="assets/img/gallery/realisation-08.jpg" alt="" loading="lazy" decoding="async">
+          <span class="pc-in"><span class="chip-t">Parcours prescripteur</span><span class="chip-d"><span>Des vidéos qui donnent au médecin de quoi comprendre, se projeter et prescrire, sans dépendre d'une visite.</span></span></span>
+        </button>
+        <button class="chip" type="button" data-p="deploiement" aria-pressed="false">
+          <img class="pc-img" src="assets/img/gallery/realisation-01.jpg" alt="" loading="lazy" decoding="async">
+          <span class="pc-in"><span class="chip-t">Déploiement client B2B</span><span class="chip-d"><span>Un parcours vidéo qui installe un produit ou un logiciel dans un nouveau service, sans y envoyer une équipe entière.</span></span></span>
+        </button>
+        <button class="chip" type="button" data-p="support" aria-pressed="false">
+          <img class="pc-img" src="assets/img/gallery/realisation-02.jpg" alt="" loading="lazy" decoding="async">
+          <span class="pc-in"><span class="chip-t">Support &amp; SAV</span><span class="chip-d"><span>Des vidéos qui absorbent le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes.</span></span></span>
+        </button>
+        </div>
+      </div>
+      <div class="pmore">
         <button class="chip ghost" type="button" data-action="autre">Un autre parcours</button>
         <button class="chip ghost" type="button" data-p="all" aria-pressed="false">Je ne sais pas encore</button>
       </div>
@@ -1775,6 +1831,12 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     try { localStorage.setItem("silo.parcours", key); } catch (e) {}
     const d = dataFor(key);
     chips.forEach(c => { const on = c.dataset.p === key; c.classList.toggle("on", on); c.setAttribute("aria-pressed", on); });
+    // le carrousel amène la carte choisie sous les yeux (utile quand le choix vient d'ailleurs : onglets du quotidien, mémoire, assistant)
+    { const pr = $("#parcours-rail"), on = pr && pr.querySelector(".chip.on");
+      if (on && pr.scrollWidth > pr.clientWidth + 1) {
+        const x = on.getBoundingClientRect().left - pr.getBoundingClientRect().left + pr.scrollLeft;
+        pr.scrollTo({ left: Math.max(0, x - (pr.clientWidth - on.offsetWidth) / 2), behavior: reduced ? "auto" : "smooth" });
+      } }
     ask.classList.add("chosen");
     // Hero title
     if (heroTitle.textContent !== d.title) {
@@ -2054,7 +2116,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   applyInert();
   // Une fois la dernière section atteinte, plus de verrou : le pied de page doit rester accessible
   const gateY = () => { if (unlockedIdx >= panels.length - 1) return Infinity; const g = geo.get(panels[unlockedIdx]); return g ? g.T + Math.max(0, g.H - innerHeight) : Infinity; };
-  const freeZone = t => t && t.closest && t.closest("dialog, .rail, .stats, .rp-tabs, textarea, .chat, .menu");
+  const freeZone = t => t && t.closest && t.closest("dialog, .rail, .prail, .stats, .rp-tabs, textarea, .chat, .menu");
   addEventListener("wheel", e => { if (e.deltaY > 0 && !freeZone(e.target) && scrollY >= gateY() - 1) e.preventDefault(); }, { passive: false });
   let touchY = null;
   addEventListener("touchstart", e => { touchY = e.touches[0].clientY; }, { passive: true });
