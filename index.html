@@ -910,6 +910,19 @@ footer{background:#0E0D0C}
   .t-xxl .sub{margin-top:.35em}
 }
 
+
+/* ---- Cartes du constat : titre centré au repos, il remonte quand la description se déplie ---- */
+.pcard:not(.wide):not(.closing-card) .pcard-in{gap:0}
+.pc-d{display:grid;grid-template-rows:0fr;margin-top:0;opacity:0;transform:none;
+      transition:grid-template-rows .45s var(--ease),opacity .3s var(--ease),margin-top .45s var(--ease)}
+.pc-d > span{overflow:hidden;min-height:0}
+.pcard:hover .pc-d,.pcard:focus-within .pc-d{grid-template-rows:1fr;opacity:1;margin-top:clamp(8px,1.4svh,14px)}
+.pc-t{transition:transform .45s var(--ease)}
+@media (prefers-reduced-motion:reduce){
+  .pc-d{grid-template-rows:1fr;opacity:1;margin-top:clamp(8px,1.4svh,14px);transition:none}
+  .pc-t{transition:none}
+}
+
 </style>
 </head>
 <body>
@@ -969,15 +982,15 @@ footer{background:#0E0D0C}
         </article>
         <article class="pcard">
           <img src="assets/img/perroquet-1200.jpg" srcset="assets/img/perroquet-1200.jpg 1200w, assets/img/perroquet.jpg 2000w" sizes="(max-width:820px) 72vw, 31vw" alt="" loading="lazy" decoding="async">
-          <div class="pcard-in"><span class="n">01</span><h3 class="pc-t">Des talents en boucle</h3><p class="pc-d">Infirmières transformées en support technique, médecins qui récitent les mêmes consignes, commerciaux usés par la pédagogie de base.</p></div>
+          <div class="pcard-in"><span class="n">01</span><h3 class="pc-t">Des talents en boucle</h3><p class="pc-d"><span>Infirmières transformées en support technique, médecins qui récitent les mêmes consignes, commerciaux usés par la pédagogie de base.</span></p></div>
         </article>
         <article class="pcard">
           <img src="assets/img/gallery/realisation-01.jpg" sizes="(max-width:820px) 72vw, 31vw" alt="" loading="lazy" decoding="async">
-          <div class="pcard-in"><span class="n">02</span><h3 class="pc-t">Des interlocuteurs sans projection</h3><p class="pc-d">Faute de support visuel à la hauteur, ni le décideur, ni le prescripteur, ni le patient n'arrivent à s'imaginer ce qu'on leur présente. Et chacun recule.</p></div>
+          <div class="pcard-in"><span class="n">02</span><h3 class="pc-t">Des interlocuteurs sans projection</h3><p class="pc-d"><span>Faute de support visuel à la hauteur, ni le décideur, ni le prescripteur, ni le patient n'arrivent à s'imaginer ce qu'on leur présente. Et chacun recule.</span></p></div>
         </article>
         <article class="pcard">
           <img src="assets/img/gallery/realisation-04.jpg" sizes="(max-width:820px) 72vw, 31vw" alt="" loading="lazy" decoding="async">
-          <div class="pcard-in"><span class="n">03</span><h3 class="pc-t">Des frictions jamais colmatées</h3><p class="pc-d">Du temps volé et des opportunités perdues, chaque année, sans qu'aucune ligne budgétaire ne les nomme.</p></div>
+          <div class="pcard-in"><span class="n">03</span><h3 class="pc-t">Des frictions jamais colmatées</h3><p class="pc-d"><span>Du temps volé et des opportunités perdues, chaque année, sans qu'aucune ligne budgétaire ne les nomme.</span></p></div>
         </article>
       </div>
     </div>
