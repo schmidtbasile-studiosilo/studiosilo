@@ -1181,6 +1181,20 @@ footer{background:#0E0D0C}
   #quotidien .stack .w.last{flex:0 0 auto;white-space:normal;margin-top:.12em;
     font-size:clamp(20px,6.2vw,34px);text-align:left}
 }
+/* ---------- Calculette : carte nuit posée dans la colonne, bouton rendu au fond clair ---------- */
+#quotidien .calc{margin:clamp(34px,5.6svh,76px) 0 0;
+  padding:clamp(24px,3.4svh,50px) clamp(22px,2.6vw,44px) clamp(26px,3.6svh,52px);
+  background:var(--night-deep);border-radius:clamp(22px,2.2vw,34px);
+  box-shadow:0 22px 54px rgba(15,14,12,.2)}
+#quotidien .calc .in2{max-width:none}
+#quotidien .result{border-color:rgba(246,241,232,.14);background:rgba(255,255,255,.04);
+  border-radius:clamp(16px,1.5vw,24px)}
+#quotidien .next{margin-top:clamp(26px,4.4svh,56px);position:relative;z-index:1}
+#quotidien .in{padding-bottom:clamp(22px,4svh,56px)}
+@media (max-width:700px){
+  #quotidien .calc{border-radius:22px;padding:22px 18px 24px}
+  #quotidien .next{margin-top:26px}
+}
 </style>
 </head>
 <body>
