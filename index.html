@@ -1313,6 +1313,8 @@ footer{background:#0E0D0C}
   #constat .pcard > img{transition:none}
   #constat .pcard:hover > img,#constat .pcard:focus-within > img{transform:none}
 }
+/* Le plan du bandeau : on remonte le cadrage pour garder le crâne et tout le bandeau. */
+#constat .pcard > img[src*="carte-interlocuteurs"]{object-position:50% 20%;--photo:.26} /* fond blanc en studio : on l'assombrit davantage pour qu'il tienne le rang des deux autres */
 </style>
 </head>
 <body>
@@ -1372,7 +1374,7 @@ footer{background:#0E0D0C}
           <div class="pcard-in"><span class="n">01</span><h3 class="pc-t">Des talents en boucle</h3><p class="pc-d"><span>Infirmières transformées en support technique, médecins qui récitent les mêmes consignes, commerciaux usés par la pédagogie de base.</span></p></div>
         </article>
         <article class="pcard">
-          <img src="assets/img/gallery/realisation-01.jpg" sizes="(max-width:820px) 72vw, 31vw" alt="" loading="lazy" decoding="async">
+          <img src="assets/img/carte-interlocuteurs.jpg" sizes="(max-width:820px) 72vw, 31vw" alt="" loading="lazy" decoding="async">
           <div class="pcard-in"><span class="n">02</span><h3 class="pc-t">Des interlocuteurs sans projection</h3><p class="pc-d"><span>Faute de support visuel à la hauteur, ni le décideur, ni le prescripteur, ni le patient n'arrivent à s'imaginer ce qu'on leur présente. Et chacun recule.</span></p></div>
         </article>
         <article class="pcard">
