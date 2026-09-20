@@ -1122,6 +1122,9 @@ footer{background:#0E0D0C}
   background:linear-gradient(180deg,rgba(15,14,12,0) 16%,rgba(15,14,12,.34) 42%,rgba(15,14,12,.72) 66%,rgba(15,14,12,.92) 100%);
   opacity:0;transition:opacity .5s var(--ease)}
 #intro .prail .chip.on .pc-img{opacity:1;filter:brightness(.94) saturate(.96)}
+/* Une carte non choisie se réveille un peu au survol. */
+#intro .prail .pslot:hover .chip:not(.on) .pc-img,
+#intro .prail .pslot:focus-within .chip:not(.on) .pc-img{opacity:.5}
 #intro .prail .chip.on::after{opacity:1}
 #intro .prail .pc-in{position:absolute;left:0;right:0;top:52%;z-index:1;
   padding:0 clamp(14px,1.3vw,20px);text-align:center;color:var(--ink);transition:color .4s var(--ease)}
