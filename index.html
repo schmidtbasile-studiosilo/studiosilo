@@ -1329,6 +1329,47 @@ footer{background:#0E0D0C}
 @media (prefers-reduced-motion:reduce){
   #etapes .steps.armed .step{opacity:1;transform:none}
 }
+/* ---------- Session d'exploration : le formulaire remonte à hauteur du titre ---------- */
+/* Le titre rejoint la colonne de gauche : la grille démarre alors au même y des deux côtés,
+   et le carton du formulaire vient border « La session d'exploration ». */
+#exploration .session{margin-top:0}
+#exploration .session .moments{margin-top:clamp(12px,2.4svh,30px)}
+
+/* ---------- Le formulaire passe en bloc nuit ---------- */
+/* Même vocabulaire que la calculette de #quotidien : fond nuit profond, crème pour l'encre. */
+#exploration .form{background:var(--night-deep);color:#EDE4D6;
+  border-radius:clamp(22px,2.2vw,34px);box-shadow:0 22px 54px rgba(15,14,12,.2)}
+#exploration .form .f-head h3{color:#F3EBDD}
+#exploration .form .f-sub{margin-top:4px;color:rgba(237,228,214,.6)}
+#exploration .field label,#exploration .field .f-label{color:rgba(237,228,214,.62)}
+#exploration .field input,#exploration .field select,#exploration .field textarea{
+  background:rgba(255,255,255,.06);border-color:rgba(237,228,214,.3);color:#F3EBDD;caret-color:#F3EBDD}
+/* Les exemples en filigrane portent de l'information : on les tient au-dessus du décoratif. */
+#exploration .field input::placeholder,#exploration .field textarea::placeholder{color:rgba(237,228,214,.5)}
+#exploration .field input:focus,#exploration .field select:focus,#exploration .field textarea:focus{
+  outline:2px solid rgba(237,228,214,.7);outline-offset:1px;border-color:transparent;background:rgba(255,255,255,.09)}
+/* Le remplissage automatique du navigateur repeint le champ en clair : on lui impose la nuit. */
+#exploration .field input:-webkit-autofill,#exploration .field input:-webkit-autofill:focus{
+  -webkit-text-fill-color:#F3EBDD;caret-color:#F3EBDD;
+  -webkit-box-shadow:0 0 0 1000px #1B1917 inset;box-shadow:0 0 0 1000px #1B1917 inset}
+#exploration .field.hl label{color:#F3EBDD}
+#exploration .field.hl textarea{outline:2px solid rgba(237,228,214,.7);outline-offset:1px;border-color:transparent}
+/* Les puces de parcours suivent les onglets des chiffres : contour crème, pleine crème une fois cochée. */
+#exploration .f-chip{background:transparent;border-color:rgba(237,228,214,.3);color:rgba(237,228,214,.82)}
+#exploration .f-chip:hover{background:rgba(237,228,214,.08);border-color:rgba(237,228,214,.55)}
+#exploration .f-chip.on{background:#EDE4D6;color:var(--night);border-color:#EDE4D6}
+#exploration .f-chip.on::before{background:var(--night);border-color:var(--night)}
+#exploration .f-chip:has(input:focus-visible){outline-color:rgba(237,228,214,.8)}
+/* Bouton principal sur fond nuit : le kraft, comme partout ailleurs sur les sections sombres. */
+#exploration .form .btn{background:var(--kraft);color:var(--ink)}
+#exploration .form .btn:hover{background:#DFC9AA}
+#exploration .form .btn.line{background:transparent;border-color:rgba(237,228,214,.5);color:#EDE4D6}
+#exploration .form .btn.line:hover{background:rgba(237,228,214,.1)}
+#exploration .form .status{color:rgba(237,228,214,.7)}
+#exploration .form .status.ok{color:#93B889}
+#exploration .form .status.err{color:#E09079}
+#exploration .form .alt{color:rgba(237,228,214,.55)}
+#exploration .form .alt a{color:#EDE4D6}
 </style>
 </head>
 <body>
@@ -1672,9 +1713,9 @@ footer{background:#0E0D0C}
 <section class="panel flow sheet grain bg-kraft" id="exploration" data-chapter="Session d'exploration">
   <div class="in px" data-px="56">
     <div class="eyebrow"><span class="pill">Prochaine étape</span></div>
-    <h2 class="t-h1"><span class="serif-i" style="font-weight:400;letter-spacing:0">La session d'exploration.</span><br>Une heure. Gratuite.<br>Sans support de vente.</h2>
     <div class="session">
       <div>
+        <h2 class="t-h1"><span class="serif-i" style="font-weight:400;letter-spacing:0">La session d'exploration.</span><br>Une heure. Gratuite.<br>Sans support de vente.</h2>
         <div class="moments" id="moments">
           <div class="moment"><div class="t">Premier temps</div><div><h3 class="t-h3">On écoute</h3><p class="t-body">Feuille blanche. Rien à démontrer, rien à vendre. On cherche les frictions telles que vous les vivez.</p></div></div>
           <div class="moment"><div class="t">Second temps</div><div><h3 class="t-h3">On restitue</h3><p class="t-body">Ce que la conversation vient de révéler, croisé avec ce que nous savons de votre secteur. Une première Matrice, un premier parcours vidéo candidat, un premier ordre de grandeur.</p></div></div>
@@ -1683,7 +1724,7 @@ footer{background:#0E0D0C}
         <div class="after"><b>Pour qui ?</b><span class="t-body">Direction d'établissement, cadre de santé, direction commerciale ou marketing MedTech, affaires médicales, direction produit d'un éditeur de logiciel de santé. Si vous avez reconnu votre quotidien plus haut, c'est pour vous.</span></div>
       </div>
       <form class="form" id="lead-form" novalidate>
-        <div class="f-head"><div><h3>Réserver ma session d'exploration</h3><p class="t-small" style="color:var(--ink-3);margin-top:4px">Réponse sous 48 h ouvrées. Aucune relance automatique.</p></div><span class="free">Gratuite</span></div>
+        <div class="f-head"><div><h3>Réserver ma session d'exploration</h3><p class="t-small f-sub">Réponse sous 48 h ouvrées. Aucune relance automatique.</p></div><span class="free">Gratuite</span></div>
         <div class="fields">
           <div class="field"><label for="f-name">Nom et prénom</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
           <div class="field"><label for="f-org">Structure</label><input id="f-org" name="org" type="text" autocomplete="organization" placeholder="CHU, clinique, EHPAD, MedTech, laboratoire…" required></div>
