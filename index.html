@@ -658,7 +658,7 @@ footer{background:#0E0D0C}
 #qui .row .btn{background:var(--kraft);color:#141312;border:0}
 
 /* ---- Signature : galerie en rail d'une seule rangée ---- */
-#signature-panel .split{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));align-items:start;gap:clamp(18px,3vw,64px)}
+#qui .signature .split{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));align-items:start;gap:clamp(18px,3vw,64px)}
 .gallery{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gut);margin:clamp(14px,2.4svh,30px) calc(var(--gut) * -1) 0;padding-inline:var(--gut);scrollbar-width:none;height:clamp(140px,26svh,300px)}
 .gallery::-webkit-scrollbar{display:none}
 .gallery .tile{flex:0 0 auto;height:100%;width:auto;scroll-snap-align:start}
@@ -715,9 +715,9 @@ footer{background:#0E0D0C}
 #exploration .f-chip{height:34px;font-size:13px}
 #exploration .form .t-small{font-size:12px}
 
-#signature-panel .split .t-lead{font-size:14.5px;line-height:1.35}
-#signature-panel .confid .t-body{}
-#signature-panel .confid .t-body.mt-2{}
+#qui .signature .split .t-lead{font-size:14.5px;line-height:1.35}
+#qui .signature .confid .t-body{}
+#qui .signature .confid .t-body.mt-2{}
 
 
 /* ---- Resserrage final : la session d'exploration ---- */
@@ -758,9 +758,9 @@ footer{background:#0E0D0C}
   #exploration .field textarea{height:44px}
   #chiffres .split .t-lead{}
   #chiffres .stat .claim{}
-  #signature-panel .split .t-lead{}
-  #signature-panel .confid .t-body{}
-  #signature-panel .confid .t-body.mt-2{}
+  #qui .signature .split .t-lead{}
+  #qui .signature .confid .t-body{}
+  #qui .signature .confid .t-body.mt-2{}
   .gallery{height:clamp(120px,22svh,220px)}
   .pcard{min-height:clamp(130px,30svh,320px)}
 }
@@ -1008,9 +1008,9 @@ footer{background:#0E0D0C}
 #exploration .actions{margin-top:clamp(12px,2svh,18px)}
 #exploration .form .alt{font-size:12.5px}
 
-#signature-panel .split .t-lead{font-size:15px}
-#signature-panel .confid{margin-top:clamp(20px,3.2svh,40px);padding:clamp(20px,3svh,34px)}
-#signature-panel .confid .t-body{font-size:14.5px}
+#qui .signature .split .t-lead{font-size:15px}
+#qui .signature .confid{margin-top:clamp(20px,3.2svh,40px);padding:clamp(20px,3svh,34px)}
+#qui .signature .confid .t-body{font-size:14.5px}
 .gallery{height:clamp(170px,32svh,360px);margin-top:clamp(20px,3.2svh,40px)}
 .pcard{min-height:clamp(170px,38svh,460px)}
 @media (max-width:820px){.pcard{min-height:clamp(180px,34svh,340px)}}
@@ -1057,7 +1057,7 @@ footer{background:#0E0D0C}
   #exploration .form{padding:16px}
   #exploration .fields{gap:8px}
   #exploration .f-head{margin-bottom:10px}
-  #signature-panel .confid{margin-top:16px;padding:18px}
+  #qui .signature .confid{margin-top:16px;padding:18px}
   .gallery{height:clamp(150px,26svh,250px);margin-top:16px}
   .pcard{min-height:clamp(150px,30svh,300px)}
 }
@@ -1759,12 +1759,6 @@ footer{background:#0E0D0C}
         <div class="row mt-3"><a class="btn" href="#exploration">Commençons par une session d'exploration <span class="arr">→</span></a></div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ===== 10b. La qualité comme signature ===== -->
-<section class="panel flow sheet bg-night deep" id="signature-panel" data-chapter="Derrière Studio Silo">
-  <div class="in px" data-px="56">
     <div class="signature" id="signature">
       <div class="split">
         <h3 class="t-h2">La qualité comme signature, depuis toujours.</h3>
@@ -1773,10 +1767,7 @@ footer{background:#0E0D0C}
       <div class="gallery" id="gallery" aria-label="Plans arrêtés de réalisations de Schmidt Basile"></div>
       <div class="confid" id="confid">
         <div>
-          <h3 class="t-h3">À quoi ressemble un parcours vidéo Silo&#8239;?</h3>
-          <p class="t-body">Une friction, une série de capsules courtes, dites par les équipes, regardées au moment du besoin. Le principe tient en une minute.</p>
-          <button class="hero-cta play section-play" type="button" data-video="v3"><span class="lbl">Anatomie d'un parcours vidéo (60&nbsp;s)</span><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span></button>
-          <p class="t-body mt-2">Les parcours que nous produisons circulent à l'intérieur des hôpitaux, des laboratoires et des entreprises de santé : protocoles, formations, démonstrations produit. Ils appartiennent à nos clients et restent confidentiels. Sur demande, nous vous en montrons des extraits en visio, sous accord de confidentialité.</p>
+          <p class="t-body">Les parcours que nous produisons circulent à l'intérieur des hôpitaux, des laboratoires et des entreprises de santé : protocoles, formations, démonstrations produit. Ils appartiennent à nos clients et restent confidentiels. Sur demande, nous vous en montrons des extraits en visio, sous accord de confidentialité.</p>
         </div>
         <div class="confid-cta">
           <a class="btn" href="#exploration" id="ask-reals">Demander à voir des extraits <span class="arr">→</span></a>
@@ -1786,6 +1777,7 @@ footer{background:#0E0D0C}
     </div>
   </div>
 </section>
+
 
 </main>
 
@@ -2008,8 +2000,7 @@ SILO.next = {
   quotidien: "Vérifions avec ce que dit la littérature",
   chiffres: "Convaincu ? Voyons comment on travaillerait ensemble",
   etapes: "Réservons votre session d'exploration",
-  exploration: "Faisons connaissance",
-  qui: "La qualité, en images"
+  exploration: "Faisons connaissance"
 };
 /* Versions courtes des mêmes boutons, affichées sous 700 px. */
 SILO.nextShort = {
@@ -2020,8 +2011,7 @@ SILO.nextShort = {
   quotidien: "Ce que dit la littérature",
   chiffres: "Convaincu ? Voyons la suite",
   etapes: "Réserver ma session",
-  exploration: "Faisons connaissance",
-  qui: "La qualité en images"
+  exploration: "Faisons connaissance"
 };
 
 
@@ -2408,7 +2398,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   const pxEls = $$(".px");
   const chapterEl = $("#chapter"), chapterName = $("#chapter-name");
   const navLinks = $$(".bar nav a");
-  const idToNav = { hero: null, intro: "parcours", constat: "constat", quotidien: "quotidien", chiffres: "chiffres", etapes: "methode", exploration: null, qui: null, "signature-panel": null };
+  const idToNav = { hero: null, intro: "parcours", constat: "constat", quotidien: "quotidien", chiffres: "chiffres", etapes: "methode", exploration: null, qui: null };
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   let ticking = false, lastChapter = "";
 
