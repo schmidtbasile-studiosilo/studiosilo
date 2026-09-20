@@ -1288,7 +1288,9 @@ footer{background:#0E0D0C}
   border-radius:calc(var(--h) / 3.2);
   --play-line-h:transparent;--play-cap:#F6F1E8;--play-cap-ink:#141312}
 /* ---------- Le constat respire : plus d'air sous la barre et entre ses deux temps ---------- */
-#constat > .in{padding-top:calc(var(--bar-h) + clamp(48px,10svh,104px))}
+#constat > .in{padding-top:calc(var(--bar-h) + clamp(48px,10svh,104px));
+  padding-bottom:clamp(40px,7svh,78px)}
+#constat .next{margin-top:clamp(44px,8svh,88px)}
 #constat .why-video{margin-top:clamp(50px,10svh,116px);padding-top:clamp(46px,8.4svh,98px)}
 /* Sur mobile le bloc est bien plus haut (preuves empilées) : le fondu doit finir plus tôt. */
 @media (max-width:820px){
