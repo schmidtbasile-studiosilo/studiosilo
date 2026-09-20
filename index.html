@@ -1315,6 +1315,20 @@ footer{background:#0E0D0C}
 }
 /* Le plan du bandeau : on remonte le cadrage pour garder le crâne et tout le bandeau. */
 #constat .pcard > img[src*="carte-interlocuteurs"]{object-position:50% 20%;--photo:.26} /* fond blanc en studio : on l'assombrit davantage pour qu'il tienne le rang des deux autres */
+/* ---------- Les six étapes se posent l'une après l'autre ---------- */
+/* « armed » n'est posé que par le script : sans JS, les six étapes restent visibles. */
+#etapes .steps.armed .step{opacity:0;transform:translateY(16px)}
+#etapes .steps.armed.play .step{opacity:1;transform:none;
+  transition:opacity .6s var(--ease),transform .6s var(--ease),color .3s,border-color .3s;
+  transition-delay:var(--d,0s),var(--d,0s),0s,0s} /* le survol garde sa réponse immédiate : seul le lever est décalé */
+#etapes .steps.armed.play .step:nth-child(2){--d:.11s}
+#etapes .steps.armed.play .step:nth-child(3){--d:.22s}
+#etapes .steps.armed.play .step:nth-child(4){--d:.33s}
+#etapes .steps.armed.play .step:nth-child(5){--d:.44s}
+#etapes .steps.armed.play .step:nth-child(6){--d:.55s}
+@media (prefers-reduced-motion:reduce){
+  #etapes .steps.armed .step{opacity:1;transform:none}
+}
 </style>
 </head>
 <body>
@@ -2296,6 +2310,18 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   /* ---------- Marker highlights ---------- */
   const mkIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("on"); mkIO.unobserve(e.target); } }), { threshold: .6 });
   $$(".mk").forEach(m => mkIO.observe(m));
+
+  /* ---------- Les six étapes : apparition en cascade ---------- */
+  // Le décalage ne se joue qu'une fois, à la première arrivée de la grille dans le cadre.
+  { const stepsEl = $("#etapes .steps");
+    if (stepsEl && !reduced && "IntersectionObserver" in window) {
+      stepsEl.classList.add("armed");
+      const stepsIO = new IntersectionObserver(es => es.forEach(e => {
+        if (!e.isIntersecting) return;
+        stepsEl.classList.add("play"); stepsIO.disconnect();
+      }), { threshold: .3 });
+      stepsIO.observe(stepsEl);
+    } }
 
   /* ---------- Stack reveal (Réexpliquer.) ---------- */
   // La boucle ne tourne que lorsque la pile est à l'écran : rien ne s'anime dans le vide.
