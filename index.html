@@ -1375,6 +1375,15 @@ footer{background:#0E0D0C}
 /* ---------- Support & SAV : on serre le cadre et on remonte le plan ---------- */
 /* Le visage de l'opératrice doit finir au-dessus du titre, qui commence à 46 % de la carte. */
 #intro .prail .chip .pc-img[src*="carte-support"]{object-position:50% 100%;transform:scale(1.2)}
+/* ---------- Hero : la ligne de définition sous le logo ---------- */
+/* Elle forme un bloc avec le logo (petit écart), puis on ouvre franchement avant l'accroche. */
+.hero-sub{margin-top:clamp(8px,1.2svh,16px);font-family:var(--serif);
+  font-size:clamp(13.5px,1.05vw,17px);line-height:1.35;letter-spacing:.01em;
+  color:var(--ink-2);max-width:min(100%,46ch);margin-inline:auto;text-wrap:balance;
+  opacity:0;animation:fadeIn 1.1s var(--ease) .2s forwards}
+#hero .hero-tag{margin-top:clamp(26px,5svh,58px)}
+@media (max-width:700px){.hero-sub{font-size:13.5px}#hero .hero-tag{margin-top:clamp(20px,3.6svh,34px)}}
+@media (prefers-reduced-motion:reduce){.hero-sub{animation:none;opacity:1}}
 </style>
 </head>
 <body>
@@ -1407,7 +1416,8 @@ footer{background:#0E0D0C}
   <img class="hero-bg" src="assets/img/hero-silo-2400.jpg" srcset="assets/img/hero-silo-1200.jpg 1200w, assets/img/hero-silo-2400.jpg 2400w" sizes="100vw" width="2400" height="1350" alt="" fetchpriority="high" decoding="async">
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="in">
-    <h1 class="wordmark hero-logo"><svg class="logo" viewBox="0 0 259 54" aria-hidden="true" focusable="false"><use href="#silo-logo"/></svg><span class="visually-hidden">Studio Silo, agence de stratégie vidéo dédiée aux acteurs de la santé</span></h1>
+    <h1 class="wordmark hero-logo"><svg class="logo" viewBox="0 0 259 54" aria-hidden="true" focusable="false"><use href="#silo-logo"/></svg><span class="visually-hidden">Studio Silo</span></h1>
+    <p class="hero-sub">Agence de stratégie vidéo dédiée aux acteurs de la santé</p>
     <p class="hero-tag"><span class="l1">Nous concevons la vidéo là où son absence vous coûte le plus.</span></p>
     <div class="hero-actions">
       <a class="hero-cta" href="#constat">Explorer <span class="arr" aria-hidden="true">↓</span></a>
