@@ -1316,6 +1316,7 @@ footer{background:#0E0D0C}
 /* Le plan du bandeau : on remonte le cadrage pour garder le crâne et tout le bandeau. */
 #constat .pcard > img[src*="carte-interlocuteurs"]{object-position:100% 50%;--photo:.26} /* le médecin est à droite du cadre : on cale le recadrage sur lui. Couloir et blouse blanche : on assombrit pour tenir le rang des voisines */
 #constat .pcard > img[src*="carte-frictions"]{--photo:.88} /* le rocher est déjà très sombre à la prise de vue : on ne l'assombrit presque plus, sinon il tombe à 19 de luminance contre 40 et 44 pour ses voisines */
+#constat .pcard.wide > img{--photo:.28} /* le plan du couloir ressortait à 66 de luminance contre 40 à 44 pour les trois petites cartes : on le ramène dans la rangée */
 /* ---------- Les six étapes se posent l'une après l'autre ---------- */
 /* « armed » n'est posé que par le script : sans JS, les six étapes restent visibles. */
 #etapes .steps.armed .step{opacity:0;transform:translateY(16px)}
