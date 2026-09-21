@@ -93,7 +93,7 @@ p{margin:0}
 footer .wordmark{--logo-w:clamp(140px,11vw,190px);color:#F3EBDD}
 
 /* ---------- Floating bar ---------- */
-.bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:6px;height:var(--bar-h);padding:6px 8px 6px 18px;border-radius:999px;background:rgba(48,44,40,.55);color:#EFE8DD;backdrop-filter:blur(7px) saturate(120%);-webkit-backdrop-filter:blur(7px) saturate(120%);box-shadow:0 10px 30px rgba(15,14,12,.22),inset 0 0 0 1px rgba(255,255,255,.07);max-width:calc(100vw - 24px)}
+.bar{position:fixed;top:14px;left:0;right:0;margin-inline:auto;width:max-content;z-index:60;display:flex;align-items:center;gap:6px;height:var(--bar-h);padding:6px 8px 6px 18px;border-radius:999px;background:rgba(48,44,40,.55);color:#EFE8DD;backdrop-filter:blur(7px) saturate(120%);-webkit-backdrop-filter:blur(7px) saturate(120%);box-shadow:0 10px 30px rgba(15,14,12,.22),inset 0 0 0 1px rgba(255,255,255,.07);max-width:calc(100vw - 24px)}
 .bar nav{display:flex;gap:2px}
 .bar nav a{font-size:14px;font-weight:500;text-decoration:none;padding:9px 12px;border-radius:999px;color:rgba(243,237,227,.78);transition:color .2s,background .2s;white-space:nowrap}
 .bar nav a:hover{color:#fff}
@@ -122,7 +122,7 @@ footer .wordmark{--logo-w:clamp(140px,11vw,190px);color:#F3EBDD}
 
 /* ---------- Panels (deck) ---------- */
 main{position:relative}
-.panel{position:sticky;top:0;width:100%;min-height:100svh;overflow:hidden;isolation:isolate;--enter:1;--cover:0;transform:scale(calc(1 - var(--cover) * .045));transform-origin:50% 40%}
+.panel{position:sticky;top:0;width:100%;min-height:100svh;overflow:hidden;isolation:isolate;--cover:0;transform:scale(calc(1 - var(--cover) * .045));transform-origin:50% 40%}
 .panel{contain:paint}
 .panel.covering{will-change:transform}
 .panel.covering::after{will-change:opacity}
@@ -1384,6 +1384,45 @@ footer{background:#0E0D0C}
 #hero .hero-tag{margin-top:clamp(26px,5svh,58px)}
 @media (max-width:700px){.hero-sub{font-size:14.5px}#hero .hero-tag{margin-top:clamp(20px,3.6svh,34px)}}
 @media (prefers-reduced-motion:reduce){.hero-sub{animation:none;opacity:1}}
+/* ---------- Tactile : pas de survol collant, descriptions du constat visibles ---------- */
+/* Sur un écran tactile, un tap laisse :hover accroché : le plan zoomé ne redescend jamais, la carte reste soulevée.
+   On réserve ces deux effets aux appareils qui survolent vraiment. */
+@media (hover:none){
+  #constat .pcard:hover > img{transform:none;filter:brightness(var(--photo)) saturate(.85) contrast(1.04)}
+  #intro .prail .pslot:hover{transform:none}
+  /* Sans survol, la description d'une carte du constat n'aurait aucun moyen d'apparaître : on la montre. */
+  .pc-d{opacity:1;transform:none}
+}
+/* ---------- Pastille de l'assistant : l'anneau tourne sur le compositeur ---------- */
+/* L'ancienne animation faisait varier box-shadow : une repeinture par image, sans fin, même à l'arrêt. */
+.chat-fab .dot{position:relative;box-shadow:none;animation:none}
+.chat-fab .dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(207,180,152,.55);
+  animation:pulse-ring 2.4s infinite;will-change:transform,opacity}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:.6}70%{transform:scale(3.2);opacity:0}100%{transform:scale(3.2);opacity:0}}
+@media (prefers-reduced-motion:reduce){.chat-fab .dot::after{display:none}}
+/* ---------- Filigrane du quotidien sur mobile : une seule image, fixe ---------- */
+/* Deux images plein cadre filtrées en fondu permanent : trois passes GPU par image pour un effet à 13 %. Sur téléphone, on fige. */
+@media (max-width:820px){#quotidien .bgp img{animation:none;opacity:.13}#quotidien .bgp img:nth-child(2){display:none}}
+/* ---------- Zones tactiles : 44 px minimum sans changer le dessin ---------- */
+@media (pointer:coarse){
+  #intro .prail .pc-conf::before{content:"";position:absolute;inset:-8px -6px}
+  .chat header .x{width:44px;height:44px}
+  #exploration .f-chip{min-height:44px}
+  .tab{min-height:44px}
+  .stat .src{padding-block:12px}
+  .sugg button{min-height:40px}
+  footer .contacts a{display:inline-block;padding:8px 0}
+}
+/* ---------- Menu et fenêtres : le fond ne défile plus sous le doigt ---------- */
+/* iOS ignore overflow:hidden sur body pour le défilement tactile ; touch-action tranche à la source. */
+.menu.open{touch-action:none;overscroll-behavior:contain}
+dialog[open]{touch-action:none}
+#lb-img{touch-action:pinch-zoom}
+.cm-box{touch-action:pan-y;overscroll-behavior:contain}
+.chat .log{overscroll-behavior:contain}
+/* ---------- Galerie sur petit écran : snap indicatif, pas obligatoire ---------- */
+/* Cinq plans sur huit sont plus larges que l'écran : avec « mandatory », leur bord droit ne pouvait jamais se poser. */
+@media (max-width:820px){.gallery{scroll-snap-type:x proximity}}
 </style>
 </head>
 <body>
@@ -1450,11 +1489,11 @@ footer{background:#0E0D0C}
           <div class="pcard-in"><span class="n">01</span><h3 class="pc-t">Des talents en boucle</h3><p class="pc-d"><span>Infirmières transformées en support technique, médecins qui récitent les mêmes consignes, commerciaux usés par la pédagogie de base.</span></p></div>
         </article>
         <article class="pcard">
-          <img src="assets/img/carte-interlocuteurs.jpg" sizes="(max-width:820px) 72vw, 31vw" alt="" loading="lazy" decoding="async">
+          <img src="assets/img/carte-interlocuteurs.jpg" srcset="assets/img/carte-interlocuteurs-m.jpg 960w, assets/img/carte-interlocuteurs.jpg 1800w" sizes="(max-width:820px) 475px, 594px" alt="" loading="lazy" decoding="async">
           <div class="pcard-in"><span class="n">02</span><h3 class="pc-t">Des interlocuteurs sans projection</h3><p class="pc-d"><span>Faute de support visuel à la hauteur, ni le décideur, ni le prescripteur, ni le patient n'arrivent à s'imaginer ce qu'on leur présente. Et chacun recule.</span></p></div>
         </article>
         <article class="pcard">
-          <img src="assets/img/carte-frictions.jpg" sizes="(max-width:820px) 72vw, 31vw" alt="" loading="lazy" decoding="async">
+          <img src="assets/img/carte-frictions.jpg" srcset="assets/img/carte-frictions-m.jpg 960w, assets/img/carte-frictions.jpg 1600w" sizes="(max-width:820px) 475px, 594px" alt="" loading="lazy" decoding="async">
           <div class="pcard-in"><span class="n">03</span><h3 class="pc-t">Des frictions jamais colmatées</h3><p class="pc-d"><span>Du temps volé et des opportunités perdues, chaque année, sans qu'aucune ligne budgétaire ne les nomme.</span></p></div>
         </article>
       </div>
@@ -1507,14 +1546,14 @@ footer{background:#0E0D0C}
         </div>
         <div class="pslot">
           <button class="chip" type="button" data-p="onboarding" aria-pressed="false">
-            <img class="pc-img" src="assets/img/carte-onboarding.jpg" alt="" loading="lazy" decoding="async">
+            <img class="pc-img" src="assets/img/carte-onboarding.jpg" srcset="assets/img/carte-onboarding-m.jpg 760w, assets/img/carte-onboarding.jpg 1500w" sizes="(max-width:820px) 375px, 544px" alt="" loading="lazy" decoding="async">
             <span class="pc-in"><span class="chip-t">Onboarding</span><span class="chip-d"><span>Un parcours vidéo qui remplace la dépendance à un tuteur disponible : autonome, identique pour chaque arrivée.</span></span></span>
           </button>
           <button class="pc-conf" type="button" data-for="onboarding" hidden>Ce qu'exige l'inspection<span class="b" aria-hidden="true">!</span></button>
         </div>
         <div class="pslot">
           <button class="chip" type="button" data-p="prescripteur" aria-pressed="false">
-            <img class="pc-img" src="assets/img/carte-prescripteur.jpg" alt="" loading="lazy" decoding="async">
+            <img class="pc-img" src="assets/img/carte-prescripteur.jpg" srcset="assets/img/carte-prescripteur-m.jpg 720w, assets/img/carte-prescripteur.jpg 1200w" sizes="(max-width:820px) 200px, 290px" alt="" loading="lazy" decoding="async">
             <span class="pc-in"><span class="chip-t">Parcours prescripteur</span><span class="chip-d"><span>Des vidéos qui donnent au médecin de quoi comprendre, se projeter et prescrire, sans dépendre d'une visite.</span></span></span>
           </button>
         </div>
@@ -1527,7 +1566,7 @@ footer{background:#0E0D0C}
         </div>
         <div class="pslot">
           <button class="chip" type="button" data-p="support" aria-pressed="false">
-            <img class="pc-img" src="assets/img/carte-support.jpg" alt="" loading="lazy" decoding="async">
+            <img class="pc-img" src="assets/img/carte-support.jpg" srcset="assets/img/carte-support-m.jpg 720w, assets/img/carte-support.jpg 1201w" sizes="(max-width:820px) 200px, 290px" alt="" loading="lazy" decoding="async">
             <span class="pc-in"><span class="chip-t">Support &amp; SAV</span><span class="chip-d"><span>Des vidéos qui absorbent le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes.</span></span></span>
           </button>
           <button class="pc-conf" type="button" data-for="support" hidden>Ce qu'exige l'inspection<span class="b" aria-hidden="true">!</span></button>
@@ -2193,13 +2232,21 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     $("#c-days").nextElementSibling.textContent = fte >= 1 ? `soit ${fte.toFixed(1).replace(".", ",")} équivalent${fte >= 2 ? "s" : ""} temps plein` : `soit ${Math.round(fte * 100)} % d'un temps plein`;
   }
   // Le montant reste sur une ligne : on réduit sa taille si le conteneur est trop étroit (sinon la carte grandit à chaque réglage)
+  // Taille proportionnelle en UNE mesure, puis un filet d'un ou deux tours : l'ancienne boucle forçait une mise en page par palier de 2 px.
   function fitTotal(el) {
     el.style.fontSize = "";
-    const max = parseFloat(getComputedStyle(el).fontSize); let size = max;
-    while (el.scrollWidth > el.clientWidth && size > 24) { size -= 2; el.style.fontSize = size + "px"; }
+    const max = parseFloat(getComputedStyle(el).fontSize);
+    const w = el.scrollWidth, cw = el.clientWidth;
+    if (w <= cw) return;
+    let size = Math.max(24, Math.floor(max * cw / w) - 1);
+    el.style.fontSize = size + "px";
+    while (el.scrollWidth > el.clientWidth && size > 24) { size -= 1; el.style.fontSize = size + "px"; }
   }
   Object.values(cIn).forEach(i => i.addEventListener("input", () => { userTouchedCalc = true; calc(); }));
-  addEventListener("resize", () => fitTotal($("#c-total")));
+  let fitTick = false;
+  const refit = () => { if (!fitTick) { fitTick = true; requestAnimationFrame(() => { fitTick = false; fitTotal($("#c-total")); }); } };
+  addEventListener("resize", refit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refit); // le premier calc() peut mesurer avant l'arrivée de la police grasse
 
   /* ---------- Stats ---------- */
   const statsEl = $("#stats"), tabsEl = $("#stat-tabs"), countEl = $("#stats-count");
@@ -2403,17 +2450,35 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   let unlockedIdx = 0;
   // Les sections au-delà de la zone déverrouillée sont inertes (ni focus clavier, ni clic) tant qu'on n'y est pas arrivé
   const applyInert = () => panels.forEach((p, k) => { p.inert = k > unlockedIdx; });
-  const unlockTo = i => { if (i > unlockedIdx) { unlockedIdx = i; applyInert(); } };
-  applyInert();
   // Une fois la dernière section atteinte, plus de verrou : le pied de page doit rester accessible
   const gateY = () => { if (unlockedIdx >= panels.length - 1) return Infinity; const g = geo.get(panels[unlockedIdx]); return g ? g.T + Math.max(0, g.H - innerHeight) : Infinity; };
-  const freeZone = t => t && t.closest && t.closest("dialog, .rail, .prail, .stats, .rp-tabs, textarea, .chat, .menu");
-  addEventListener("wheel", e => { if (e.deltaY > 0 && !freeZone(e.target) && scrollY >= gateY() - 1) e.preventDefault(); }, { passive: false });
-  let touchY = null;
-  addEventListener("touchstart", e => { touchY = e.touches[0].clientY; }, { passive: true });
-  addEventListener("touchmove", e => { const y = e.touches[0].clientY; if (touchY !== null && y < touchY - 1 && !freeZone(e.target) && scrollY >= gateY() - 1) e.preventDefault(); touchY = y; }, { passive: false });
-  addEventListener("keydown", e => { if (["ArrowDown", "PageDown", "End", " "].includes(e.key) && !freeZone(e.target) && !e.target.closest("input, select, button, a") && scrollY >= gateY() - 1) e.preventDefault(); });
-  addEventListener("scroll", () => { const gy = gateY(); if (scrollY > gy + 1) scrollTo({ top: gy, behavior: "instant" }); }, { passive: true }); // filet : barre de défilement, inertie
+  /* Le verrou est la hauteur du document lui-même : <main> est tronqué (overflow:clip — contrairement à hidden, il ne crée
+     pas de conteneur de défilement, les panneaux restent collés à la fenêtre) au bas de la dernière section débloquée.
+     Le navigateur ne peut physiquement pas aller plus loin : plus d'écouteurs non passifs qui retardent chaque geste,
+     plus de rappel scrollTo dans l'écouteur scroll qui se battait avec l'inertie ; le rebond en bout de course reste natif.
+     Sans overflow:clip (vieux Safari), on garde l'ancien verrou par événements. */
+  const mainEl = document.querySelector("main"), footerEl = document.querySelector("footer");
+  const clipGate = !!(mainEl && footerEl && window.CSS && CSS.supports("overflow", "clip"));
+  let mainTop = 0; // lu dans layoutSticky, jamais ici : pas de mise en page forcée
+  function applyGate() {
+    if (!clipGate) return;
+    const gy = gateY();
+    if (gy === Infinity) { mainEl.style.height = ""; mainEl.style.overflow = ""; footerEl.hidden = false; return; }
+    mainEl.style.height = (gy + innerHeight - mainTop) + "px"; // scrollHeight = gy + hauteur d'écran : scrollY plafonne à gy
+    mainEl.style.overflow = "clip";
+    footerEl.hidden = true; // sinon il remonterait sous le <main> tronqué
+  }
+  const unlockTo = i => { if (i > unlockedIdx) { unlockedIdx = i; applyInert(); applyGate(); } };
+  applyInert();
+  if (!clipGate) {
+    const freeZone = t => t && t.closest && t.closest("dialog, .rail, .prail, .stats, .tabs, .gallery, input[type=range], select, textarea, .chat, .menu");
+    addEventListener("wheel", e => { if (e.deltaY > 0 && !freeZone(e.target) && scrollY >= gateY() - 1) e.preventDefault(); }, { passive: false });
+    let touchY = null;
+    addEventListener("touchstart", e => { touchY = e.touches[0].clientY; }, { passive: true });
+    addEventListener("touchmove", e => { if (!e.cancelable) return; const y = e.touches[0].clientY; if (touchY !== null && y < touchY - 1 && !freeZone(e.target) && scrollY >= gateY() - 1) e.preventDefault(); touchY = y; }, { passive: false });
+    addEventListener("keydown", e => { if (["ArrowDown", "PageDown", "End", " "].includes(e.key) && !freeZone(e.target) && !e.target.closest("input, select, button, a") && scrollY >= gateY() - 1) e.preventDefault(); });
+    addEventListener("scroll", () => { const gy = gateY(); if (scrollY > gy + 1) scrollTo({ top: gy, behavior: "instant" }); }, { passive: true }); // filet : barre de défilement, inertie
+  }
 
   panels.forEach((p, i) => { p.style.zIndex = String(i + 1); });
   const pxEls = $$(".px");
@@ -2426,11 +2491,19 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   /* Chaque panneau s'accroche (sticky) : en haut s'il tient dans l'écran, sinon quand son bas
      atteint le bas de l'écran (top négatif). Le panneau suivant vient toujours le recouvrir. */
   const geo = new Map(); // panneau -> { T: haut dans la page, H: hauteur, top: point d'accroche }
+  /* Sur téléphone, innerHeight bouge de 60 à 100 px quand la barre d'adresse se replie : on fige la hauteur de mise en page
+     sur le petit écran (celui de 100svh, lu sur une sonde), sinon chaque repli déplaçait le point d'accroche des panneaux. */
+  const coarse = matchMedia("(pointer:coarse)").matches;
+  const probe = document.createElement("div");
+  probe.style.cssText = "position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none";
+  document.body.appendChild(probe);
+  let vhLayout = probe.offsetHeight || innerHeight;
   function layoutSticky() {
-    const vh = innerHeight;
+    if (coarse) vhLayout = probe.offsetHeight || innerHeight;
+    const vh = coarse ? vhLayout : innerHeight;
     // Pas d'offsetTop sur un panneau sticky : Chrome y inclut le décalage de collage quand on a déjà défilé.
     // On additionne donc les hauteurs (panneaux + freins), toutes lues avant d'écrire : une seule mise en page.
-    let T = document.querySelector("main").offsetTop;
+    let T = document.querySelector("main").offsetTop; mainTop = T;
     const heights = panels.map(p => p.offsetHeight);
     const gaps = panels.map(p => { const b = p.nextElementSibling; return (b && b.classList.contains("brake")) ? b.offsetHeight : 0; });
     panels.forEach((p, i) => {
@@ -2441,9 +2514,10 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       geo.set(p, { T, H: h, top });
       T += h + gaps[i];
     });
+    applyGate();
   }
   // Haut visuel d'un panneau, hors transformations : sa position dans la page, ou son point d'accroche s'il est collé
-  const visualTop = p => { const g = geo.get(p); return g ? Math.max(g.T - scrollY, g.top) : p.getBoundingClientRect().top; };
+  const visualTop = (p, sy = scrollY) => { const g = geo.get(p); return g ? Math.max(g.T - sy, g.top) : p.getBoundingClientRect().top; };
   /* Ancres internes : les panneaux sont sticky (parfois avec un top négatif) et le navigateur vise mal leur position ;
      on défile vers la position calculée du panneau (plus le décalage de l'élément visé s'il est à l'intérieur). */
   function scrollToId(id, smooth) {
@@ -2466,19 +2540,20 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   const pxMeta = pxEls.map(el => ({ el, panel: el.closest(".panel"), f: parseFloat(el.dataset.px) || 60, img: el.hasAttribute("data-scale") ? el.querySelector(".slides, img") : null, lastY: null })).filter(m => m.panel);
   function frame() {
     ticking = false;
-    const vh = innerHeight;
+    // Toutes les lectures d'abord (scrollY force une mise en page s'il y a des écritures en attente), puis les écritures.
+    const vh = innerHeight, sy = scrollY;
+    const vts = panels.map(p => visualTop(p, sy));
+    const enters = vts.map(vt => +clamp((vh - vt) / vh, 0, 1).toFixed(4));
     let chapter = "", activeId = null;
     panels.forEach((p, i) => {
-      const vt = visualTop(p);
-      const enter = +clamp((vh - vt) / vh, 0, 1).toFixed(4);
+      const enter = enters[i];
       enterOf.set(p, enter);
-      if (lastEnter.get(p) !== enter) { lastEnter.set(p, enter); p.style.setProperty("--enter", enter); p.classList.toggle("entering", enter > 0 && enter < 1); }
-      const next = panels[i + 1];
-      if (next) {
-        const cover = +clamp((vh - visualTop(next)) / vh, 0, 1).toFixed(4);
+      if (lastEnter.get(p) !== enter) { lastEnter.set(p, enter); p.classList.toggle("entering", enter > 0 && enter < 1); } // --enter n'est lu par aucune règle CSS
+      if (i < panels.length - 1) {
+        const cover = enters[i + 1]; // le recouvrement du panneau i est l'entrée du panneau i+1
         if (lastCover.get(p) !== cover) { lastCover.set(p, cover); p.style.setProperty("--cover", cover); p.classList.toggle("covering", cover > 0 && cover < 1); p.classList.toggle("under", cover >= 1); }
       }
-      if (vt <= vh * .45) { chapter = p.dataset.chapter || ""; activeId = p.id; }
+      if (vts[i] <= vh * .45) { chapter = p.dataset.chapter || ""; activeId = p.id; }
     });
     if (!reduced) pxMeta.forEach(m => {
       const enter = enterOf.get(m.panel) ?? 1;
@@ -2497,8 +2572,12 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
   addEventListener("scroll", onScroll, { passive: true });
-  let resizeTick = false;
-  addEventListener("resize", () => { if (!resizeTick) { resizeTick = true; requestAnimationFrame(() => { resizeTick = false; layoutSticky(); onScroll(); }); } });
+  let resizeTick = false, lastW = innerWidth;
+  addEventListener("resize", () => {
+    if (coarse && innerWidth === lastW && (probe.offsetHeight || innerHeight) === vhLayout) { applyGate(); onScroll(); return; } // barre d'adresse : le verrou suit, la mise en page ne bouge pas
+    lastW = innerWidth;
+    if (!resizeTick) { resizeTick = true; requestAnimationFrame(() => { resizeTick = false; layoutSticky(); onScroll(); }); }
+  });
   layoutSticky(); frame();
   // Lien profond (ex. \/#exploration) : le navigateur viserait lui-même le panneau sticky (au mauvais endroit) ;
   // on retire le fragment, on défile nous-mêmes, puis on le remet une fois la mise en page stable.
@@ -2531,7 +2610,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   }
   burger.addEventListener("click", () => toggleMenu(!menu.classList.contains("open")));
   $$("a", menu).forEach(a => a.addEventListener("click", () => toggleMenu(false)));
-  addEventListener("keydown", e => { if (e.key === "Escape") { toggleMenu(false); chat.close(); } });
+  addEventListener("keydown", e => { if (e.key === "Escape") { toggleMenu(false); chat.close(); const d = document.querySelector("dialog[open]"); if (d) d.close(); } });
 
   /* ---------- Demande d'extraits de réalisations (confidentielles) ---------- */
   const askReals = $("#ask-reals"), askRealsMail = $("#ask-reals-mail"), fMsg = $("#f-msg");
@@ -2556,7 +2635,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     e.preventDefault();
     const fd = new FormData(form), data = Object.fromEntries(fd.entries()); const pk = fd.getAll("parcours").filter(Boolean); data.parcours = pk.join(", "); data.parcours_libelles = pk.map(k => k === "autre" ? "Autre" : ((SILO.parcours[k] || {}).label || k)).join(", ");
     if (!data.name || !data.org || !data.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
-      status.className = "status err"; status.textContent = "Il manque votre nom, votre structure ou un e-mail valide."; return;
+      status.className = "status err"; status.textContent = "Il manque votre nom, votre structure ou un e-mail valide."; { const f = $$("#f-name, #f-org, #f-email").find(i => !i.value.trim() || (i.type === "email" && !i.checkValidity())); if (f) f.focus(); } return;
     }
     $("#f-submit").disabled = true; status.className = "status"; status.textContent = "Envoi…";
     data.page_parcours = current; data.submitted_at = new Date().toISOString(); data._subject = "Session d'exploration – " + data.org;
