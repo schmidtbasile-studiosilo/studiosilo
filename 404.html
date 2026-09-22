@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page introuvable — Studio Silo</title>
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#CFB498">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23CFB498'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Georgia,serif' font-size='38' fill='%230F0E0C'%3Es%3C/text%3E%3C/svg%3E">
+<style>
+@font-face{font-family:"Neue Montreal";src:local("Neue Montreal"),url("assets/fonts/NeueMontreal-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Neue Montreal";src:local("Neue Montreal Medium"),url("assets/fonts/NeueMontreal-Medium.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Neue Montreal";src:local("Neue Montreal Bold"),url("assets/fonts/NeueMontreal-Bold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+:root{--kraft:#CFB498;--ink:#0F0E0C;--ink-2:#38342F;--line:rgba(15,14,12,.22)}
+*,*::before,*::after{box-sizing:border-box}
+/* align-CONTENT et non align-items : la rangée de la grille est dimensionnée par son contenu,
+   centrer l'élément DANS sa rangée ne le descend pas. C'est la grille entière qu'il faut centrer.
+   « safe » : sur un écran plus court que le contenu, le centrage repousserait le haut hors d'atteinte. */
+body{margin:0;min-height:100svh;display:grid;align-content:safe center;justify-content:center;justify-items:center;background:var(--kraft);color:var(--ink);
+     font-family:"Neue Montreal","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.page{max-width:56ch;padding:clamp(24px,4vh,48px) clamp(20px,6vw,64px);text-align:center}
+.logo{width:clamp(180px,26vw,280px);height:auto;margin-bottom:clamp(28px,5vh,48px)}
+h1{font-size:clamp(26px,4vw,40px);line-height:1.08;letter-spacing:-.03em;margin:0 0 12px;text-wrap:balance}
+p{color:var(--ink-2);margin:0 0 clamp(26px,4vh,38px);text-wrap:balance}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:50px;padding:10px 24px;border-radius:999px;
+     background:var(--ink);color:#EFE8DD;font-weight:500;font-size:15.5px;text-decoration:none;
+     transition:transform .25s cubic-bezier(.2,.7,.2,1),background .2s}
+.btn:hover{transform:translateY(-1px);background:#2A2622}
+.alt{display:block;margin-top:22px;font-size:14.5px;color:var(--ink-2)}
+.alt a{color:inherit}
+</style>
+</head>
+<body>
+<main class="page">
+  <img class="logo" src="assets/img/logo-studiosilo.svg" width="259" height="54" alt="Studio Silo">
+  <h1>Cette page n'existe pas.</h1>
+  <p>Le lien est peut-être incomplet, ou la page a changé d'adresse. Tout le site tient sur une seule page&nbsp;: vous y retrouverez les cinq parcours vidéo, les chiffres et la session d'exploration.</p>
+  <a class="btn" href="/">Retour au site <span aria-hidden="true">→</span></a>
+  <span class="alt">Ou écrivez directement à <a href="mailto:schmidt.basile@studiosilo.fr">schmidt.basile@studiosilo.fr</a>.</span>
+</main>
+</body>
+</html>

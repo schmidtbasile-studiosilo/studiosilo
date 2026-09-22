@@ -1,0 +1,10 @@
+# Fichiers présents dans le dépôt mais qui n'ont rien à faire sur le serveur public.
+# Vercel sert à la racine TOUT ce qu'il reçoit : sans cette liste, studiosilo.fr/publier.sh
+# renvoyait le script de publication, chemins locaux compris.
+build.sh
+publier.sh
+chat-worker.js
+DEPLOIEMENT.md
+README.md
+.nojekyll
+.DS_Store

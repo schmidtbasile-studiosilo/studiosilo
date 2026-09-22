@@ -11,6 +11,9 @@ perl -pe '
       "assets/fonts/NeueMontreal-Italic.woff2"  => inl("assets/fonts/NeueMontreal-Italic.woff2","font/woff2"),
       "assets/fonts/NeueMontreal-Medium.woff2"  => inl("assets/fonts/NeueMontreal-Medium.woff2","font/woff2"),
       "assets/fonts/NeueMontreal-Bold.woff2"    => inl("assets/fonts/NeueMontreal-Bold.woff2","font/woff2"),
+      "assets/fonts/EBGaramond-Variable.woff2" => inl("assets/fonts/EBGaramond-Variable.woff2","font/woff2"),
+      "assets/fonts/EBGaramond-Italic.woff2"   => inl("assets/fonts/EBGaramond-Italic.woff2","font/woff2"),
+      "assets/kb.txt"                          => inl("assets/kb.txt","text/plain;charset=utf-8"),
       "assets/img/perroquet-1200.webp"        => inl("assets/img/perroquet-1200.webp","image/webp"),
       "assets/img/perroquet.webp"             => inl("assets/img/perroquet.webp","image/webp"),
     );

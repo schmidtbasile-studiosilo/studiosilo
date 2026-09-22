@@ -12,3 +12,16 @@ Neue Montreal/
 # Dossiers de travail design (hors site publié)
 design_handoff_pages_foncees/
 *.zip
+
+# Doublons JPEG des images WebP : depuis le passage au WebP (v5.37) plus rien ne les référence.
+# Les originaux restent dans ce dossier Drive ; inutile de les versionner ni de les déployer.
+assets/img/carte-*.jpg
+assets/img/gallery/*.jpg
+assets/img/hero-*.jpg
+assets/img/infirmiere-*.jpg
+assets/img/perroquet*.jpg
+assets/img/studio-*.jpg
+assets/img/fond-*.jpg
+
+# Replis OpenType des polices : le woff2 suffit, plus aucune règle @font-face ne les cite.
+assets/fonts/*.otf

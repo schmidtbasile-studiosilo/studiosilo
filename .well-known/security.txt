@@ -1,0 +1,5 @@
+# Studio Silo — où signaler une faille (RFC 9116)
+Contact: mailto:schmidt.basile@studiosilo.fr
+Expires: 2027-09-22T00:00:00.000Z
+Preferred-Languages: fr, en
+Canonical: https://www.studiosilo.fr/.well-known/security.txt

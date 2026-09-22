@@ -1,54 +1,77 @@
-# Mettre le site en ligne sur GitHub Pages
+# Mettre le site en ligne
 
-Le site est un seul fichier `index.html` avec ses ressources dans `assets/`. Il n'y a rien à installer ni à compiler : GitHub Pages sert ces fichiers tels quels.
+Le site est un seul fichier `index.html` avec ses ressources dans `assets/`. Rien à installer, rien à compiler.
 
-## Ce qui part sur GitHub
+## Qui sert le site
 
-- `index.html`, `assets/` (polices, images), `chat-worker.js`, `build.sh`, `README.md`, `DEPLOIEMENT.md`
-- `.nojekyll` (dit à GitHub de servir les fichiers sans traitement)
-- `.gitignore` (exclut les dossiers de travail : `Sources plans`, `ref`, `dist`, `Logo`, `Neue Montreal`)
+**Vercel**, pas GitHub Pages — le dépôt GitHub sert uniquement de source. Vercel le surveille : chaque `git push` déclenche une mise en ligne, prête en une à deux minutes.
 
-## Première mise en ligne (une seule fois)
+L'adresse servie est **`https://www.studiosilo.fr`**. L'apex `studiosilo.fr` redirige dessus (308). Toutes les métadonnées du site (canonical, og:url, JSON-LD, sitemap) pointent sur la version `www` : c'est l'adresse réelle, il ne faut pas la remettre sur l'apex.
 
-Un dépôt local prêt à pousser a été préparé dans `~/Sites/studiosilo` (hors de Google Drive, qui s'entend mal avec Git). Son contenu est une copie des fichiers ci-dessus, déjà validée (commit) et reliée à `https://github.com/schmidtbasile-studiosilo/studiosilo.git`.
+DNS (chez Squarespace) : `studiosilo.fr` → A `216.198.79.1`, `www` → CNAME `cname.vercel-dns.com`.
 
-Deux façons de pousser, au choix.
+## Publier une nouvelle version
 
-### A. Avec GitHub Desktop (le plus simple)
-
-1. Installez GitHub Desktop (desktop.github.com) et connectez-vous à votre compte.
-2. Menu **File → Add Local Repository…**, choisissez le dossier `~/Sites/studiosilo`.
-3. Cliquez **Publish repository** (ou **Push origin**). Gardez le nom `studiosilo`.
-
-### B. Dans le Terminal
-
-```bash
-cd ~/Sites/studiosilo && git push -u origin main
-```
-
-GitHub demande un identifiant et un mot de passe : le mot de passe est un **jeton** (Personal Access Token), pas le mot de passe du compte. Pour le créer : GitHub → photo de profil → **Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token**, cocher `repo`, copier le jeton et le coller à la place du mot de passe.
-
-## Activer GitHub Pages
-
-1. Sur github.com, ouvrez le dépôt `studiosilo` → **Settings → Pages**.
-2. Dans **Build and deployment**, source : **Deploy from a branch**, branche `main`, dossier `/ (root)`. Enregistrez.
-3. Après une à deux minutes, le site est en ligne à `https://schmidtbasile-studiosilo.github.io/studiosilo/`.
-
-## Mettre à jour le site ensuite
-
-Le site de référence reste dans le Drive (`Claude Code/Website v1`). Pour publier une nouvelle version :
+Le site de référence reste dans le Drive (`Claude Code/Website v1`). Pour publier :
 
 ```bash
 ~/Sites/studiosilo/publier.sh "Ce qui a changé"
 ```
 
-Le script recopie les fichiers du Drive vers le dépôt, enregistre une version et la pousse. Le site se met à jour tout seul en une ou deux minutes.
+Le script recopie les fichiers du Drive vers le dépôt, enregistre une version et la pousse. **Donnez-lui toujours un message** : sans argument il écrit « Mise à jour du site », qui ne dit rien six mois plus tard.
 
-## Nom de domaine studiosilo.fr (plus tard)
+## Les fichiers de configuration
 
-Dans **Settings → Pages → Custom domain**, saisir `studiosilo.fr`, puis chez le registrar créer les enregistrements DNS indiqués par GitHub (quatre A vers les adresses de GitHub Pages et un CNAME `www`). Cocher **Enforce HTTPS** une fois le certificat émis.
+### `vercel.json` — en-têtes de sécurité et de cache
+
+Envoyé avec chaque réponse. Deux rôles.
+
+**Sécurité.** `Content-Security-Policy` (le navigateur refuse tout script, style, image, police ou requête venant d'ailleurs que du site), `X-Frame-Options: DENY` et `frame-ancestors 'none'` (le site ne peut pas être encadré dans une autre page), `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` (caméra, micro, position… refusés), `Strict-Transport-Security`.
+
+> **Si vous ajoutez un service tiers** (mesure d'audience, vidéo hébergée ailleurs, prise de rendez-vous en iframe), il sera **bloqué** tant que son domaine n'est pas ajouté à la bonne directive : `connect-src` pour un appel réseau, `media-src` pour une vidéo, `frame-src` pour une iframe, `script-src` pour un script. C'est voulu : rien n'entre sans décision.
+
+**Cache.** Les polices sont mises en cache un an (`immutable` : elles ne changent jamais). Les images sont fraîches un jour, puis servies telles quelles pendant une semaine le temps d'être revérifiées en arrière-plan. Sans ces règles, Vercel demandait au navigateur de revalider **chaque image et chaque police à chaque visite**.
+
+> **Conséquence à connaître :** si vous remplacez une image **en gardant le même nom**, les visiteurs déjà venus peuvent voir l'ancienne pendant quelques jours. Changez le nom du fichier (`carte-support-2.webp`) quand le contenu change vraiment.
+
+### `.vercelignore` — ce qui ne part pas sur le serveur
+
+Vercel sert à la racine tout ce qu'il reçoit : sans cette liste, `studiosilo.fr/publier.sh` renvoyait le script de publication, chemins locaux compris. Y figurent `build.sh`, `publier.sh`, `chat-worker.js`, `DEPLOIEMENT.md`, `README.md`.
+
+### `.gitignore` — ce qui ne part pas sur GitHub
+
+Les dossiers de travail (`Sources plans`, `ref`, `dist`, `Logo`, `Neue Montreal`), et les doublons JPEG des images WebP : depuis le passage au WebP, plus rien ne les référence. Les originaux restent dans le Drive.
+
+### `404.html`
+
+Page d'erreur aux couleurs du site, servie automatiquement par Vercel sur une adresse inconnue.
+
+### `.well-known/security.txt`
+
+Dit où signaler une faille (RFC 9116). **Contient une date d'expiration** : à repousser une fois par an, sinon le fichier n'est plus considéré comme valide.
+
+## Fabriquer l'artefact d'un seul fichier
+
+```bash
+./build.sh
+```
+
+Produit `dist/studio-silo-artifact.html` : le site entier avec polices, images et base de connaissance embarquées en base64. Sert à montrer le site sans serveur.
+
+Deux pièges quand vous modifiez `index.html` :
+
+- `build.sh` remplace **toutes** les occurrences d'un chemin de ressource par son contenu encodé. N'écrivez jamais un chemin comme `assets/…` dans un commentaire : il serait remplacé lui aussi, et l'artefact gonflerait d'autant.
+- Toute nouvelle image doit entrer dans l'un des motifs listés dans `build.sh`, sinon elle manquera dans l'artefact.
+
+## À faire côté DNS (pas encore fait)
+
+- **DMARC.** SPF et DKIM sont en place, mais il n'y a aucun enregistrement `_dmarc`. Sans lui, n'importe qui peut écrire des courriels signés `@studiosilo.fr` sans qu'aucune messagerie n'ait de consigne. Créer chez Squarespace un TXT sur `_dmarc.studiosilo.fr` :
+  `v=DMARC1; p=none; rua=mailto:schmidt.basile@studiosilo.fr; adkim=r; aspf=r`
+  Commencer par `p=none` (on observe, rien n'est rejeté), puis passer à `p=quarantine` après quelques semaines de rapports sans anomalie.
+- **CAA** (facultatif). Un enregistrement CAA sur `studiosilo.fr` limite les autorités qui peuvent émettre un certificat pour le domaine : `0 issue "letsencrypt.org"` (Vercel) — à vérifier avant, un CAA trop strict empêche le renouvellement.
 
 ## À savoir
 
-- Un dépôt public rend visibles tous les fichiers, y compris les polices Neue Montreal (`assets/fonts`). Vérifiez que votre licence Pangram Pangram autorise cet usage web ; sinon, passez le dépôt en privé (GitHub Pages sur dépôt privé nécessite un abonnement) ou hébergez ailleurs.
-- Les images sources et les plans originaux ne sont pas envoyés (dossiers exclus) : ils restent dans le Drive.
+- Le dépôt est public : les polices Neue Montreal (`assets/fonts`) y sont visibles. Vérifier que la licence Pangram Pangram couvre l'usage web ; sinon passer le dépôt en privé (Vercel sait déployer un dépôt privé).
+- EB Garamond est servie par le site (licence OFL, texte dans `assets/fonts/EBGaramond-OFL.txt`) : plus aucune requête vers Google Fonts, donc plus aucune adresse IP de visiteur transmise à un tiers.
+- Les images sources et les plans originaux restent dans le Drive.
