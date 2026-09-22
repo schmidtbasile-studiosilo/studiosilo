@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Studio Silo — Conception et réalisation de parcours vidéo pour la santé</title>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <meta name="description" content="Studio Silo conçoit et réalise des parcours vidéo pour les acteurs de la santé : patients, soignants, prescripteurs, déploiement, support. Session d'exploration gratuite.">
 <meta property="og:title" content="Studio Silo — Parcours vidéo pour les acteurs de la santé">
 <meta property="og:description" content="Des parcours vidéo qui transmettent ce que vos équipes répètent aujourd'hui de vive voix. Une session d'exploration gratuite pour identifier et chiffrer vos frictions.">
@@ -1429,6 +1430,9 @@ dialog[open]{touch-action:none}
 /* ---------- Galerie sur petit écran : snap indicatif, pas obligatoire ---------- */
 /* Cinq plans sur huit sont plus larges que l'écran : avec « mandatory », leur bord droit ne pouvait jamais se poser. */
 @media (max-width:820px){.gallery{scroll-snap-type:x proximity}}
+/* ---------- Formulaire : une demande envoyée ne repart pas ---------- */
+#lead-form .btn:disabled{opacity:.55;cursor:default}
+#lead-form .btn:disabled:hover{transform:none;background:var(--kraft)}
 </style>
 </head>
 <body>
@@ -1445,7 +1449,7 @@ dialog[open]{touch-action:none}
     <a href="#chiffres" data-nav="chiffres">Chiffres</a>
     <a href="#etapes" data-nav="methode">Méthode</a>
   </nav>
-  <a class="cta" href="#exploration"><span class="txt">Nous contacter</span><span class="arr">→</span></a>
+  <a class="cta" href="#exploration" aria-label="Nous contacter"><span class="txt">Nous contacter</span><span class="arr" aria-hidden="true">→</span></a>
   <button class="burger" type="button" aria-label="Menu" aria-expanded="false" id="burger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 </div>
 <div class="chapter" id="chapter" aria-hidden="true"><span class="who" id="chapter-who"></span><span id="chapter-name">Constat</span></div>
@@ -2454,10 +2458,18 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   /* Verrou : on ne défile pas au-delà du bas de la dernière section atteinte par un bouton, une flèche, le rail ou le menu.
      (Toute navigation explicite passe par scrollToId, qui déverrouille la section visée.) */
   let unlockedIdx = 0;
+  /* Le verrou ne s'arme qu'à la toute dernière instruction du script. Si une initialisation lève avant
+     (dialog non supporté, stockage refusé…), il n'existe simplement jamais : la page reste entièrement
+     défilante, pied de page compris, au lieu de rester bloquée sur le hero. */
+  let gateReady = false;
+  /* Ce que le visiteur a déjà ouvert reste ouvert : un rechargement ou une restauration d'onglet ne doit pas
+     refermer la page derrière lui. sessionStorage et non localStorage : la mise en scène garde tout son sens
+     pour un nouveau visiteur, dans un nouvel onglet. */
+  try { const v = parseInt(sessionStorage.getItem("silo.unlocked"), 10); if (v > 0) unlockedIdx = Math.min(v, panels.length - 1); } catch (e) {}
   // Les sections au-delà de la zone déverrouillée sont inertes (ni focus clavier, ni clic) tant qu'on n'y est pas arrivé
-  const applyInert = () => panels.forEach((p, k) => { p.inert = k > unlockedIdx; });
+  const applyInert = () => panels.forEach((p, k) => { p.inert = gateReady && k > unlockedIdx; });
   // Une fois la dernière section atteinte, plus de verrou : le pied de page doit rester accessible
-  const gateY = () => { if (unlockedIdx >= panels.length - 1) return Infinity; const g = geo.get(panels[unlockedIdx]); return g ? g.T + Math.max(0, g.H - innerHeight) : Infinity; };
+  const gateY = () => { if (!gateReady || unlockedIdx >= panels.length - 1) return Infinity; const g = geo.get(panels[unlockedIdx]); return g ? g.T + Math.max(0, g.H - innerHeight) : Infinity; };
   /* Le verrou est la hauteur du document lui-même : <main> est tronqué (overflow:clip — contrairement à hidden, il ne crée
      pas de conteneur de défilement, les panneaux restent collés à la fenêtre) au bas de la dernière section débloquée.
      Le navigateur ne peut physiquement pas aller plus loin : plus d'écouteurs non passifs qui retardent chaque geste,
@@ -2474,7 +2486,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     mainEl.style.overflow = "clip";
     footerEl.hidden = true; // sinon il remonterait sous le <main> tronqué
   }
-  const unlockTo = i => { if (i > unlockedIdx) { unlockedIdx = i; applyInert(); applyGate(); } };
+  const unlockTo = i => { if (i > unlockedIdx) { unlockedIdx = i; try { sessionStorage.setItem("silo.unlocked", String(i)); } catch (e) {} applyInert(); applyGate(); } };
   applyInert();
   if (!clipGate) {
     const freeZone = t => t && t.closest && t.closest("dialog, .rail, .prail, .stats, .tabs, .gallery, input[type=range], select, textarea, .chat, .menu");
@@ -2616,6 +2628,8 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   }
   burger.addEventListener("click", () => toggleMenu(!menu.classList.contains("open")));
   $$("a", menu).forEach(a => a.addEventListener("click", () => toggleMenu(false)));
+  // La barre reste hors du champ inerte pour garder le burger accessible : ses propres liens referment donc le menu.
+  $$('.bar a[href^="#"]').forEach(a => a.addEventListener("click", () => toggleMenu(false)));
   addEventListener("keydown", e => { if (e.key === "Escape") { toggleMenu(false); chat.close(); const d = document.querySelector("dialog[open]"); if (d) d.close(); } });
 
   /* ---------- Demande d'extraits de réalisations (confidentielles) ---------- */
@@ -2639,6 +2653,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
+    if (form.dataset.sent === "1") return; // une demande envoyée ne repart pas
     const fd = new FormData(form), data = Object.fromEntries(fd.entries()); const pk = fd.getAll("parcours").filter(Boolean); data.parcours = pk.join(", "); data.parcours_libelles = pk.map(k => k === "autre" ? "Autre" : ((SILO.parcours[k] || {}).label || k)).join(", ");
     if (!data.name || !data.org || !data.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
       status.className = "status err"; status.textContent = "Il manque votre nom, votre structure ou un e-mail valide."; { const f = $$("#f-name, #f-org, #f-email").find(i => !i.value.trim() || (i.type === "email" && !i.checkValidity())); if (f) f.focus(); } return;
@@ -2655,7 +2670,9 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     const mailto = `mailto:${cfg.email}?subject=${subject}&body=${body}`;
     if (stored) { status.className = "status ok"; status.innerHTML = `Demande reçue. Schmidt vous répond sous 48 h ouvrées. <a href="${mailto}">Envoyer aussi un e-mail</a> si vous préférez.`; }
     else { status.className = "status ok"; status.innerHTML = `Votre messagerie va s'ouvrir avec la demande pré-remplie. Si rien ne se passe, <a href="${mailto}">cliquez ici</a>.`; setTimeout(() => { location.href = mailto; }, 400); }
-    $("#f-submit").disabled = false;
+    const btn = $("#f-submit");
+    if (stored) { btn.disabled = true; btn.innerHTML = 'Demande envoyée <span class="arr" aria-hidden="true">✓</span>'; form.dataset.sent = "1"; }
+    else { btn.disabled = false; }
   });
 
   /* ---------- Chat ---------- */
@@ -2775,6 +2792,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   applyParcours(current);
   if (current === "all") ask.classList.remove("chosen");
   calc();
+  gateReady = true; applyInert(); applyGate(); // tout s'est bien passé : le verrou peut s'armer
 })();
 </script>
 </body>
