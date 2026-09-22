@@ -1380,19 +1380,24 @@ footer{background:#0E0D0C}
 /* Les deux phrases occupent la MÊME cellule de grille : la hauteur réservée est celle de la plus haute,
    donc rien ne bouge autour au moment de la bascule. Le mouvement descend toujours : la phrase entre par
    le haut, se pose, puis poursuit vers le bas pour sortir. Elle remonte en coulisse à 50,01 %, c'est-à-dire
-   déjà invisible, pour être prête au tour suivant. Cycle de 10 s, 5 s de lecture chacune, avec un court noir
-   entre les deux (les faire se croiser rendrait les mots illisibles l'un sur l'autre).
+   déjà invisible, pour être prête au tour suivant. Cycle de 12 s : 6 s par phrase, dont 1,1 s de descente
+   d'entrée et 1,1 s de descente de sortie — le geste dure plus du double d'avant, pour qu'il se remarque
+   sans jamais presser la lecture. La courbe est donnée segment par segment : départ et arrivée à vitesse
+   nulle (aucun à-coup), vitesse constante pendant la pause. Les deux phrases ne se croisent jamais : la
+   suivante ne commence sa descente qu'une fois la précédente tout à fait effacée. La courbe choisie
+   (.37,0,.63,1) est quasi sinusoïdale : sa pointe de vitesse ne dépasse la moyenne que de 60 % — deux fois
+   moins qu'une courbe d'interface ordinaire — donc le mot glisse au lieu de filer.
    Seuls opacity et transform sont animés : tout se joue sur le compositeur, sans remise en page. */
 #hero .hero-tag{display:grid}
 #hero .hero-tag .rot{grid-area:1/1;opacity:0;transform:translateY(-.55em);
-  animation:hero-rot 10s var(--ease) infinite both}
+  animation:hero-rot 12s linear infinite both}
 #hero .hero-tag .r1{animation-delay:.35s}
-#hero .hero-tag .r2{animation-delay:5.35s}
+#hero .hero-tag .r2{animation-delay:6.35s}
 @keyframes hero-rot{
-  0%{opacity:0;transform:translateY(-.55em)}      /* en attente, au-dessus de la ligne */
-  5%{opacity:1;transform:translateY(0)}           /* elle descend et se pose */
-  45%{opacity:1;transform:translateY(0)}          /* cinq secondes de lecture */
-  50%{opacity:0;transform:translateY(.55em)}      /* elle poursuit vers le bas et s'efface */
+  0%{opacity:0;transform:translateY(-.55em);animation-timing-function:cubic-bezier(.37,0,.63,1)}   /* en attente, au-dessus de la ligne */
+  9.17%{opacity:1;transform:translateY(0);animation-timing-function:linear}                        /* elle est descendue se poser (1,1 s) */
+  40.83%{opacity:1;transform:translateY(0);animation-timing-function:cubic-bezier(.37,0,.63,1)}     /* près de quatre secondes de lecture immobile */
+  50%{opacity:0;transform:translateY(.55em)}      /* elle poursuit vers le bas et s'efface (1,1 s) */
   50.01%{opacity:0;transform:translateY(-.55em)}  /* retour en coulisse, hors de vue */
   100%{opacity:0;transform:translateY(-.55em)}
 }
