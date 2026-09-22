@@ -3,7 +3,7 @@
 set -e
 SRC="/Users/schmidt/Library/CloudStorage/GoogleDrive-schmidt.basile@studiosilo.fr/Mon Drive/Claude Code/Website v1"
 cd "$(dirname "$0")"
-rsync -a --delete --exclude-from="$SRC/.gitignore" --exclude '.git/' --exclude 'publier.sh' "$SRC/" ./
+rsync -a --delete --exclude-from="$SRC/.gitignore" --exclude '.git/' --exclude 'publier.sh' --exclude 'CNAME' --exclude '.vercel/' "$SRC/" ./
 git add -A
 git commit -m "${1:-Mise à jour du site}" || { echo "Rien de nouveau à publier."; exit 0; }
 git push

@@ -1,0 +1,5 @@
+# Studio Silo — https://www.studiosilo.fr
+User-agent: *
+Allow: /
+
+Sitemap: https://www.studiosilo.fr/sitemap.xml
