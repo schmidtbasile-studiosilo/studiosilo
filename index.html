@@ -1378,18 +1378,27 @@ footer{background:#0E0D0C}
 /* Elle forme un bloc avec le logo (petit écart), puis on ouvre franchement avant l'accroche. */
 /* ---------- Hero : une seule ligne, deux phrases qui se relaient ---------- */
 /* Les deux phrases occupent la MÊME cellule de grille : la hauteur réservée est celle de la plus haute,
-   donc rien ne bouge autour au moment de la bascule. Cycle de 6 s, 3 s chacune, avec un court noir entre
-   les deux (les faire se croiser rendrait les mots illisibles l'un sur l'autre). */
+   donc rien ne bouge autour au moment de la bascule. Chaque phrase monte pour arriver et redescend pour
+   partir : le bas de la ligne sert de coulisse commune. Cycle de 10 s, 5 s de lecture chacune, avec un
+   court noir entre les deux (les faire se croiser rendrait les mots illisibles l'un sur l'autre).
+   Seuls opacity et transform sont animés : tout se joue sur le compositeur, sans remise en page. */
 #hero .hero-tag{display:grid}
-#hero .hero-tag .rot{grid-area:1/1;opacity:0;animation:hero-rot 6s var(--ease) infinite both}
+#hero .hero-tag .rot{grid-area:1/1;opacity:0;transform:translateY(.55em);
+  animation:hero-rot 10s var(--ease) infinite both}
 #hero .hero-tag .r1{animation-delay:.35s}
-#hero .hero-tag .r2{animation-delay:3.35s}
-@keyframes hero-rot{0%{opacity:0}5%{opacity:1}45%{opacity:1}50%{opacity:0}100%{opacity:0}}
+#hero .hero-tag .r2{animation-delay:5.35s}
+@keyframes hero-rot{
+  0%{opacity:0;transform:translateY(.55em)}    /* en coulisse, sous la ligne */
+  5%{opacity:1;transform:translateY(0)}        /* elle monte et se pose */
+  45%{opacity:1;transform:translateY(0)}       /* cinq secondes de lecture */
+  50%{opacity:0;transform:translateY(.55em)}   /* elle redescend et s'efface */
+  100%{opacity:0;transform:translateY(.55em)}
+}
 /* Une fois le hero recouvert, plus rien ne tourne : la page peut se mettre au repos. */
 #hero.panel.under .hero-tag .rot{animation-play-state:paused}
 @media (prefers-reduced-motion:reduce){
   #hero .hero-tag .rot{animation:none}
-  #hero .hero-tag .r1{opacity:1}
+  #hero .hero-tag .r1{opacity:1;transform:none}
 }
 /* ---------- Tactile : pas de survol collant, descriptions du constat visibles ---------- */
 /* Sur un écran tactile, un tap laisse :hover accroché : le plan zoomé ne redescend jamais, la carte reste soulevée.
