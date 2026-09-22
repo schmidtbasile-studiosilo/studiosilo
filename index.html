@@ -1642,8 +1642,8 @@ dialog[open]{touch-action:none}
         <div class="result" aria-live="polite">
           <div class="lab">Temps expert brûlé en pédagogie, par an</div>
           <div class="big t-num" id="c-total">≈ 37 000 €</div>
-          <div class="unit">sur 220 jours travaillés, uniquement en répétition</div>
-          <div class="hours"><div><b id="c-hours">880 h</b><span>d'expertise par an</span></div><div><b id="c-days">110 j</b><span>soit 55 % d'un temps plein</span></div></div>
+          <div class="unit">sur 220 jours travaillés de 8 h, uniquement en répétition</div>
+          <div class="hours"><div><b id="c-hours">880 h</b><span>d'expertise par an</span></div><div><b id="c-days">110 j</b><span>soit 50 % d'un temps plein</span></div></div>
           <p class="after-result">Un parcours vidéo se produit une fois. Ensuite, il répète à votre place : à chaque rendez-vous, à chaque appel, à chaque arrivée, sans mobiliser personne.</p>
           <p class="note">Ce n'est qu'une friction parmi celles que le diagnostic chiffre. Sans compter les décisions qui n'arrivent pas, la montée en compétence trop lente, le savoir qui part avec les gens. La session d'exploration chiffre les autres cases, et dit quel parcours vidéo produire en premier.</p>
           <a class="btn light" href="#exploration">Chiffrer ce qu'un parcours vidéo remplacerait chez vous <span class="arr">→</span></a>
@@ -1784,7 +1784,7 @@ dialog[open]{touch-action:none}
         <div class="moments" id="moments">
           <div class="moment"><div class="t">Premier temps</div><div><h3 class="t-h3">On écoute</h3><p class="t-body">Feuille blanche. Rien à démontrer, rien à vendre. On cherche les frictions telles que vous les vivez.</p></div></div>
           <div class="moment"><div class="t">Second temps</div><div><h3 class="t-h3">On restitue</h3><p class="t-body">Ce que la conversation vient de révéler, croisé avec ce que nous savons de votre secteur. Une première Matrice, un premier parcours vidéo candidat, un premier ordre de grandeur.</p></div></div>
-          <div class="moment"><div class="t">Une semaine plus tard</div><div><h3 class="t-h3">Vous recevez le diagnostic</h3><p class="t-body">Le diagnostic chiffré, la Matrice de Colmatage et le plan des parcours vidéo à produire, dans l'ordre. <b>Que nous travaillions ensemble ou non.</b> Le diagnostic vous appartient : utilisable seul, ou avec un autre prestataire.</p></div></div>
+          <div class="moment"><div class="t">Une semaine plus tard</div><div><h3 class="t-h3">Vous recevez le diagnostic</h3><p class="t-body">Le diagnostic chiffré, la <b>Matrice de Colmatage</b> — vos parcours en lignes, vos frictions en colonnes, rouge quand la friction fuit, vert quand un parcours vidéo la colmate — et le plan des parcours à produire, dans l'ordre. <b>Que nous travaillions ensemble ou non.</b> Le diagnostic vous appartient : utilisable seul, ou avec un autre prestataire.</p></div></div>
         </div>
         <div class="after"><b>Pour qui ?</b><span class="t-body">Direction d'établissement, cadre de santé, direction commerciale ou marketing MedTech, affaires médicales, direction produit d'un éditeur de logiciel de santé. Si vous avez reconnu votre quotidien plus haut, c'est pour vous.</span></div>
       </div>
@@ -2232,8 +2232,9 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     const total = hours * r;
     const totalEl = $("#c-total"); totalEl.textContent = fmtEur(total); fitTotal(totalEl);
     $("#c-hours").textContent = fmtInt(hours) + " h";
-    const fte = hours / 1607;
-    $("#c-days").textContent = fmtInt(hours / 8) + " j";
+    const days = Math.round(hours / 8);   // même base que « 220 jours travaillés de 8 h » affiché au-dessus
+    const fte = days / 220;
+    $("#c-days").textContent = fmtInt(days) + " j";
     $("#c-days").nextElementSibling.textContent = fte >= 1 ? `soit ${fte.toFixed(1).replace(".", ",")} équivalent${fte >= 2 ? "s" : ""} temps plein` : `soit ${Math.round(fte * 100)} % d'un temps plein`;
   }
   // Le montant reste sur une ligne : on réduit sa taille si le conteneur est trop étroit (sinon la carte grandit à chaque réglage)
