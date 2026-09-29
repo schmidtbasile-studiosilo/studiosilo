@@ -1579,12 +1579,29 @@ body:has(dialog[open]) .cursor{opacity:0}
 @media (pointer:fine) and (prefers-reduced-motion:no-preference){.cursor{display:block}}
 /* ---------- Hero : le silo suit la souris et s'agrandit quand on descend (repris du concept réimaginé) ----------
    Deux propriétés distinctes, pour deux rythmes : « translate » suit la souris avec un retard doux (transition),
-   « scale » suit le défilement sans aucun retard. --cover (0 → 1 pendant que le constat recouvre le hero) est écrit
+   « scale » suit le défilement sans aucun retard. --dive (0 → 1 pendant la plongée, voir plus bas) est écrit
    par le moteur de défilement sur le panneau ; l'image zoome vers l'ouverture du silo (transform-origin haut).
    Base à 1,06 : la marge qui permet au parallaxe de bouger sans jamais découvrir un bord. */
-#hero .hero-bg{transform-origin:50% 32%;scale:calc(1.06 + var(--cover,0) * .42);translate:var(--hx,0px) var(--hy,0px);
+#hero .hero-bg{transform-origin:50% 32%;scale:calc(1.06 + var(--dive,0) * 1.25);translate:var(--hx,0px) var(--hy,0px);
   transition:translate 1.3s cubic-bezier(.2,.7,.2,1);will-change:scale,translate}
 @media (prefers-reduced-motion:reduce){#hero .hero-bg{scale:1;translate:none;transition:none}}
+/* ---------- Hero → constat : la plongée dans le silo (transition du concept réimaginé, choix de Schmidt) ----------
+   Le frein qui suit le hero devient une zone de plongée d'un écran environ : rien ne recouvre encore le hero,
+   l'image zoome vers l'ouverture (--dive), le texte s'efface, puis un voile fond au noir du constat. Le constat,
+   aplat du même noir, sans arrondi ni ombre, sort alors de l'obscurité sans qu'aucun bord ne se voie monter.
+   Le glissement « feuille sur feuille » des autres sections est inchangé. */
+#hero + .brake{height:110svh}
+.hero-dive{position:absolute;inset:0;z-index:4;background:var(--night-deep);pointer-events:none;opacity:clamp(0,calc((var(--dive,0) - .3) / .6),1)}
+#hero .in{opacity:calc(1 - var(--dive,0) * 2.2);translate:0 calc(var(--dive,0) * -70px)}
+#hero .ticker{opacity:calc(1 - var(--dive,0) * 2)}
+#constat.panel.sheet{border-radius:0;box-shadow:none;background:var(--night-deep)}
+/* « Descendre dans le silo » à la place d'Explorer : un fil qui coule sous le libellé */
+.hero-cue{display:inline-flex;flex-direction:column;align-items:center;gap:14px;padding:10px 14px;color:var(--ink);text-decoration:none;
+  font-size:clamp(13.5px,1vw,15px);font-weight:500;letter-spacing:.14em;text-transform:uppercase;animation:rise .9s .2s var(--ease) backwards}
+.hero-cue i{display:block;width:1px;height:clamp(44px,6svh,60px);background:linear-gradient(var(--ink) 45%,rgba(15,14,12,0));animation:drip 2.2s cubic-bezier(.65,0,.35,1) infinite}
+.hero-cue:hover i,.hero-cue:focus-visible i{animation-duration:1.2s}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media (prefers-reduced-motion:reduce){.hero-cue,.hero-cue i{animation:none}}
 </style>
 </head>
 <body>
@@ -1621,11 +1638,12 @@ body:has(dialog[open]) .cursor{opacity:0}
     <h1 class="wordmark hero-logo"><svg class="logo" viewBox="0 0 259 54" aria-hidden="true" focusable="false"><use href="#silo-logo"/></svg><span class="visually-hidden">Studio Silo — agence de stratégie vidéo dédiée aux acteurs de la santé</span></h1>
     <p class="hero-tag"><span class="rot r1">Nous concevons la vidéo là où son absence vous coûte le plus.</span><span class="rot r2" aria-hidden="true">Agence de stratégie vidéo dédiée aux acteurs de la santé</span></p>
     <div class="hero-actions">
-      <a class="hero-cta" href="#constat">Explorer <span class="arr" aria-hidden="true">↓</span></a>
+      <a class="hero-cue" id="hero-cue" href="#constat">Descendre dans le silo<i aria-hidden="true"></i></a>
       <button class="hero-cta mf-open" type="button" id="mf-open" aria-haspopup="dialog" aria-controls="mf-fenetre">Lire le manifeste</button>
     </div>
   </div>
   <div class="ticker" aria-hidden="true"><div class="track" id="ticker"></div></div>
+  <div class="hero-dive" aria-hidden="true"></div>
 </section>
 
 <!-- ===== 1. Constat (carrousel) ===== -->
@@ -2728,6 +2746,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   probe.style.cssText = "position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none";
   document.body.appendChild(probe);
   let vhLayout = probe.offsetHeight || innerHeight;
+  let diveH = 1, lastDive = -1; // hauteur de la zone de plongée (frein qui suit le hero), lue dans layoutSticky
   function layoutSticky() {
     if (coarse) vhLayout = probe.offsetHeight || innerHeight;
     const vh = coarse ? vhLayout : innerHeight;
@@ -2736,6 +2755,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     let T = document.querySelector("main").offsetTop; mainTop = T;
     const heights = panels.map(p => p.offsetHeight);
     const gaps = panels.map(p => { const b = p.nextElementSibling; return (b && b.classList.contains("brake")) ? b.offsetHeight : 0; });
+    diveH = Math.max(1, gaps[0]);
     panels.forEach((p, i) => {
       const h = heights[i];
       const top = Math.min(0, vh - h);
@@ -2785,6 +2805,9 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       }
       if (vts[i] <= vh * .45) { chapter = p.dataset.chapter || ""; activeId = p.id; }
     });
+    // plongée dans le silo : pendant le frein qui suit le hero, rien ne le recouvre encore ; on y zoome et on fond au noir
+    const dive = +clamp(sy / diveH, 0, 1).toFixed(4);
+    if (dive !== lastDive) { lastDive = dive; panels[0].style.setProperty("--dive", dive); }
     if (!reduced) pxMeta.forEach(m => {
       const enter = enterOf.get(m.panel) ?? 1;
       const y = +((1 - enter) * m.f).toFixed(2);
@@ -3079,6 +3102,27 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     } else if (mfBtn) mfBtn.hidden = true; // sans <dialog>, pas de bouton mort dans le hero
   } catch (err) { const b = $("#mf-open"); if (b && !$("#mf-fenetre[open]")) b.hidden = true; }
 
+  /* ---------- « Descendre dans le silo » : la plongée se joue sur 1,9 s, pas à la vitesse du défilement natif ---------- */
+  try {
+    const cue = $("#hero-cue");
+    if (cue) cue.addEventListener("click", e => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+      const target = panels[1]; if (!target) return;
+      e.preventDefault(); e.stopPropagation();
+      unlockTo(1);
+      const g = geo.get(target); if (!g) return;
+      history.replaceState(null, "", "#" + target.id);
+      const land = () => { const h = target.querySelector("h2"); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } };
+      if (reduced) { scrollTo({ top: g.T, behavior: "instant" }); land(); return; }
+      const y0 = scrollY, dy = g.T - y0, t0 = performance.now(), D = 1900;
+      let stop = false; const cancel = () => { stop = true; };
+      addEventListener("wheel", cancel, { once: true, passive: true }); addEventListener("touchstart", cancel, { once: true, passive: true }); addEventListener("keydown", cancel, { once: true });
+      const io = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const step = now => { if (stop) return; const t = Math.min(1, (now - t0) / D); scrollTo({ top: y0 + dy * io(t), behavior: "instant" }); if (t < 1) requestAnimationFrame(step); else land(); };
+      requestAnimationFrame(step);
+    });
+  } catch (err) {}
+
   /* ---------- Hero : le fond suit la souris (parallaxe léger, souris seulement) ---------- */
   try {
     const heroEl = $("#hero");
@@ -3102,7 +3146,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       const ring = cur.firstElementChild, dot = cur.lastElementChild, lab = ring.firstElementChild;
       const DARK = ".bg-night, .bloc-nuit, #exploration .form, .bar, footer, .chat-fab";
       const HOVER = 'a, button, [role="button"], [role="slider"], input[type="range"], select, label[for], .f-chip';
-      const MAG = ".hero-cta, .btn, .bar .cta, .chat-fab";
+      const MAG = ".hero-cta, .hero-cue, .btn, .bar .cta, .chat-fab";
       let mx = -200, my = -200, rx = -200, ry = -200, running = false;
       const follow = () => {
         rx += (mx - rx) * .2; ry += (my - ry) * .2;
