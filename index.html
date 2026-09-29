@@ -1590,11 +1590,12 @@ body:has(dialog[open]) .cursor{opacity:0}
    l'image zoome vers l'ouverture (--dive), le texte s'efface, puis un voile fond au noir du constat. Le constat,
    aplat du même noir, sans arrondi ni ombre, sort alors de l'obscurité sans qu'aucun bord ne se voie monter.
    Le glissement « feuille sur feuille » des autres sections est inchangé. */
-#hero + .brake{height:110svh}
-.hero-dive{position:absolute;inset:0;z-index:4;background:var(--night-deep);pointer-events:none;opacity:clamp(0,calc((var(--dive,0) - .3) / .6),1)}
+#hero + .brake{height:55svh} /* 110svh au départ : Schmidt a trouvé que le constat arrivait trop tard */
+.hero-dive{position:absolute;inset:0;z-index:4;background:var(--night-deep);pointer-events:none;opacity:clamp(0,calc((var(--dive,0) - .2) / .8),1)} /* noir complet pile à la fin de la plongée : aucun temps mort */
 #hero .in{opacity:calc(1 - var(--dive,0) * 2.2);translate:0 calc(var(--dive,0) * -70px)}
 #hero .ticker{opacity:calc(1 - var(--dive,0) * 2)}
 #constat.panel.sheet{border-radius:0;box-shadow:none;background:var(--night-deep)}
+#constat.panel > .in{padding-top:calc(var(--bar-h) + 20px)} /* le titre sort du noir plus tôt, toujours sous la barre */
 /* Quand le constat recouvre le hero, celui-ci est déjà noir : il ne doit plus rétrécir (le fond kraft apparaissait
    sur les côtés et en haut) ni s'assombrir (il devenait d'un noir différent de celui du constat). */
 #hero.panel{transform:none}
@@ -3109,7 +3110,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     } else if (mfBtn) mfBtn.hidden = true; // sans <dialog>, pas de bouton mort dans le hero
   } catch (err) { const b = $("#mf-open"); if (b && !$("#mf-fenetre[open]")) b.hidden = true; }
 
-  /* ---------- « Descendre dans le silo » : la plongée se joue sur 1,9 s, pas à la vitesse du défilement natif ---------- */
+  /* ---------- « Descendre dans le silo » : la plongée se joue sur 1,5 s, pas à la vitesse du défilement natif ---------- */
   try {
     const cue = $("#hero-cue");
     if (cue) cue.addEventListener("click", e => {
@@ -3121,7 +3122,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       history.replaceState(null, "", "#" + target.id);
       const land = () => { const h = target.querySelector("h2"); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } };
       if (reduced) { scrollTo({ top: g.T, behavior: "instant" }); land(); return; }
-      const y0 = scrollY, dy = g.T - y0, t0 = performance.now(), D = 1900;
+      const y0 = scrollY, dy = g.T - y0, t0 = performance.now(), D = 1500;
       let stop = false; const cancel = () => { stop = true; };
       addEventListener("wheel", cancel, { once: true, passive: true }); addEventListener("touchstart", cancel, { once: true, passive: true }); addEventListener("keydown", cancel, { once: true });
       const io = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
