@@ -1482,21 +1482,20 @@ dialog[open]{touch-action:none}
   .hero-cta.mf-open:hover,.hero-cta.mf-open:focus-visible{border-radius:calc(var(--h) / 3.2)}
 }
 /* Manifeste en bas du hero, sur tous les formats (choix de Schmidt) : « Explorer » reste seul au centre, le bouton
-   se pose juste au-dessus du bandeau des terrains, crème au trait, sans fond, volontairement discret.
+   se pose au pied de l'écran, crème au trait, sans fond, volontairement discret.
    Ancré dans .in (position:relative, toute la hauteur du hero) ; centré par left/right + margin auto, pas par
    translateX que l'animation « rise » écraserait. L'ordre du DOM ne bouge pas (Explorer puis le manifeste).
    Lisibilité sans fond : ombre légère sous les lettres, et dégradé sombre du bas de l'image porté de 26 % à 60 %.
    Écran de moins de 560 px de haut (téléphone à l'horizontale) : pas de place en bas, le bouton reste sous Explorer. */
 @media (min-height:560px){
   #hero .hero-veil{background:radial-gradient(44% 40% at 50% 47%,rgba(240,234,226,.18) 0%,rgba(240,234,226,0) 100%),linear-gradient(180deg,rgba(15,14,12,.1) 0%,rgba(15,14,12,0) 22%,rgba(15,14,12,0) 70%,rgba(15,14,12,.6) 100%),radial-gradient(var(--glow) at 50% 28%,rgba(255,253,248,.5) 0%,rgba(255,253,248,.26) 30%,rgba(255,253,248,.08) 60%,rgba(255,253,248,0) 100%)}
-  #hero .hero-cta.mf-open{--h:clamp(48px,5vh,54px);position:absolute;left:0;right:0;bottom:90px;width:max-content;margin-inline:auto;
+  #hero .hero-cta.mf-open{--h:clamp(48px,5vh,54px);position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + clamp(28px,5svh,52px));width:max-content;margin-inline:auto;
     padding:6px 24px;font-size:clamp(16px,1.1vw,17px);background:transparent;border-color:#F3EDE3;color:#F3EDE3;
     text-shadow:0 0 2px rgba(15,14,12,.55),0 0 10px rgba(15,14,12,.35)}
   /* même spécificité : sans elle, filet et texte crème resteraient au survol et au focus clavier */
   #hero .hero-cta.mf-open:hover,#hero .hero-cta.mf-open:focus-visible{background:var(--ink);border-color:var(--ink);color:#EFE8DD;text-shadow:none;border-radius:calc(var(--h) / 3.2)}
 }
-/* bandeau des terrains : 71 px de haut sur ordinateur, 57 px sur téléphone ; le bouton garde 19 px au-dessus */
-@media (min-height:560px) and (max-width:700px){#hero .hero-cta.mf-open{bottom:76px}}
+/* le bandeau des terrains a été retiré (30 sept. 2026) : le bouton se pose au pied de l'écran, zone la plus sombre du dégradé */
 
 /* ---------- Manifeste : fenêtre de lecture ----------
    La <dialog> couvre l'écran et défile elle-même : molette, doigt et clavier agissent partout, voile compris,
@@ -1593,7 +1592,6 @@ body:has(dialog[open]) .cursor{opacity:0}
 #hero + .brake{height:100svh} /* un écran de plongée ; le titre du constat remonté et le voile sans temps mort gardent l'arrivée rapide */
 .hero-dive{position:absolute;inset:0;z-index:4;background:var(--night-deep);pointer-events:none;opacity:clamp(0,calc((var(--dive,0) - .2) / .8),1)} /* noir complet pile à la fin de la plongée : aucun temps mort */
 #hero .in{opacity:calc(1 - var(--dive,0) * 2.6);translate:0 calc(var(--dive,0) * -120px);scale:calc(1 - var(--dive,0) * .12)} /* sortie du concept : monte, rapetisse, s'efface */
-#hero .ticker{opacity:calc(1 - var(--dive,0) * 2)}
 #constat.panel.sheet{border-radius:0;box-shadow:none;background:var(--night-deep)}
 #constat.panel > .in{padding-top:calc(var(--bar-h) + 20px)} /* le titre sort du noir plus tôt, toujours sous la barre */
 /* Quand le constat recouvre le hero, celui-ci est déjà noir : il ne doit plus rétrécir (le fond kraft apparaissait
@@ -1662,7 +1660,6 @@ body:has(dialog[open]) .cursor{opacity:0}
       <button class="hero-cta mf-open" type="button" id="mf-open" aria-haspopup="dialog" aria-controls="mf-fenetre">Lire le manifeste</button>
     </div>
   </div>
-  <div class="ticker" aria-hidden="true"><div class="track" id="ticker"></div></div>
   <div class="hero-dive" aria-hidden="true"></div>
 </section>
 
