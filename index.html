@@ -1595,6 +1595,10 @@ body:has(dialog[open]) .cursor{opacity:0}
 #hero .in{opacity:calc(1 - var(--dive,0) * 2.2);translate:0 calc(var(--dive,0) * -70px)}
 #hero .ticker{opacity:calc(1 - var(--dive,0) * 2)}
 #constat.panel.sheet{border-radius:0;box-shadow:none;background:var(--night-deep)}
+/* Quand le constat recouvre le hero, celui-ci est déjà noir : il ne doit plus rétrécir (le fond kraft apparaissait
+   sur les côtés et en haut) ni s'assombrir (il devenait d'un noir différent de celui du constat). */
+#hero.panel{transform:none}
+#hero.panel::after{display:none}
 /* « Descendre dans le silo » à la place d'Explorer : un fil qui coule sous le libellé */
 .hero-cue{display:inline-flex;flex-direction:column;align-items:center;gap:14px;padding:10px 14px;color:var(--ink);text-decoration:none;
   font-size:clamp(13.5px,1vw,15px);font-weight:500;letter-spacing:.14em;text-transform:uppercase;animation:rise .9s .2s var(--ease) backwards}
