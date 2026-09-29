@@ -1583,7 +1583,7 @@ body:has(dialog[open]) .cursor{opacity:0}
    Base à 1,06 : la marge qui permet au parallaxe de bouger sans jamais découvrir un bord. */
 #hero .hero-bg{transform-origin:50% 32%;scale:calc(1.06 + var(--dive,0) * 1.25);translate:var(--hx,0px) var(--hy,0px);
   transition:translate 1.3s cubic-bezier(.2,.7,.2,1);will-change:scale,translate}
-@media (prefers-reduced-motion:reduce){#hero .hero-bg{scale:1;translate:none;transition:none}}
+@media (prefers-reduced-motion:reduce){#hero .hero-bg{scale:1;translate:none;transition:none;will-change:auto}#hero .in{translate:none;scale:none}}
 /* ---------- Hero → constat : la plongée dans le silo (transition du concept réimaginé, choix de Schmidt) ----------
    Le frein qui suit le hero devient une zone de plongée d'un écran environ : rien ne recouvre encore le hero,
    l'image zoome vers l'ouverture (--dive), le texte s'efface, puis un voile fond au noir du constat. Le constat,
@@ -1598,12 +1598,19 @@ body:has(dialog[open]) .cursor{opacity:0}
    sur les côtés et en haut) ni s'assombrir (il devenait d'un noir différent de celui du constat). */
 #hero.panel{transform:none}
 #hero.panel::after{display:none}
+/* Téléphone : quand les barres du navigateur se replient, l'écran grandit ; le hero couvre alors le grand viewport
+   (sinon une bande kraft apparaissait sous lui pendant la plongée), son contenu reste centré dans le petit. */
+#hero.panel{min-height:100lvh}
+#hero.panel > .in{min-height:100svh}
+/* Plongée assez avancée : le texte est invisible, il ne doit plus recevoir de clic ni de focus */
+#hero.dived .in{visibility:hidden}
 /* « Descendre dans le silo » à la place d'Explorer : un fil qui coule sous le libellé */
 .hero-cue{display:inline-flex;flex-direction:column;align-items:center;gap:14px;padding:10px 14px;color:var(--ink);text-decoration:none;
   font-size:clamp(13.5px,1vw,15px);font-weight:500;letter-spacing:.14em;text-transform:uppercase;animation:rise .9s .2s var(--ease) backwards}
 .hero-cue i{display:block;width:1px;height:clamp(44px,6svh,60px);background:linear-gradient(var(--ink) 45%,rgba(15,14,12,0));animation:drip 2.2s cubic-bezier(.65,0,.35,1) infinite}
 .hero-cue:hover i,.hero-cue:focus-visible i{animation-duration:1.2s}
 @keyframes drip{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+#hero.panel.under .hero-cue i,#hero.dived .hero-cue i,body:has(dialog[open]) .hero-cue i{animation-play-state:paused}
 @media (prefers-reduced-motion:reduce){.hero-cue,.hero-cue i{animation:none}}
 /* ---------- Ouverture : au chargement, le site apparaît dans un rond qui s'ouvre sur l'œil du silo (repris du concept) ----------
    Le cercle part du centre de l'ouverture (50 % 34 %) et s'élargit en 1,7 s sur un fond noir ; logo, phrase et boutons
@@ -1619,6 +1626,33 @@ body:has(dialog[open]) .cursor{opacity:0}
 #hero .hero-cue{animation-delay:1.25s}
 #hero .hero-cta.mf-open{animation-delay:1.45s}
 @media (prefers-reduced-motion:reduce){#hero.panel{animation:none}.intro-curtain{display:none}}
+/* ---------- Passes multi-formats (30 sept. 2026) ---------- */
+/* Téléphone : le bouton « suivant » en bas d'une section ne passe plus sous la bulle de l'assistant */
+@media (max-width:600px),(max-height:500px){.next{padding-bottom:62px}}
+/* Écran tactile : champs à 16 px, sinon Safari zoome la page à chaque saisie */
+@media (pointer:coarse){.field input,.field select,.field textarea,.chat form input{font-size:16px}}
+/* Menu : défile s'il ne tient pas (téléphone à l'horizontale), sans jamais passer sous la barre */
+.menu{justify-content:safe center;overflow-y:auto;overscroll-behavior:contain}
+@media (max-height:500px){
+  .menu{padding-top:calc(var(--bar-h) + 16px)}
+  .menu a{font-size:26px;padding:6px 0}
+  .menu .m-cta{margin-top:16px;padding:12px 20px}
+  .chat{top:10px;bottom:10px;height:auto}
+  .chat header .sub{display:none}
+  .sugg{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .sugg button{flex:none}
+}
+/* Sans survol (tactile), la description des cartes du constat est toujours visible : elle compte dans leur hauteur */
+@media (hover:none){.pc-d{height:auto}}
+.lightbox[open]{touch-action:pinch-zoom}
+/* Tablette et petit portable : le bouton « Confirmer » ne touche plus le texte de la carte choisie */
+@media (min-width:821px) and (max-width:1160px){#intro .prail .pslot:has(.pc-conf:not([hidden])) .pc-in{top:42%}}
+/* Barre : sous 1380 px, le nom du chapitre seul (le préfixe chevauchait les liens) */
+@media (max-width:1380px){.chapter .who{display:none}}
+/* Sections sombres : pas de rétrécissement sous la feuille suivante (un cadre kraft apparaissait autour du noir) */
+#constat.panel,#chiffres.panel{transform:none}
+/* Rails : pas d'aimantation pendant qu'on glisse à la souris */
+.prail.dragging,.gallery.dragging{scroll-snap-type:none;cursor:grabbing}
 </style>
 </head>
 <body>
@@ -2249,7 +2283,7 @@ SILO.parcours = {
       ["13:30","Domicile du patient","Le glucomètre refuse l'appairage, hors des horaires du support. Le patient rouvre la vidéo sur son téléphone et suit le geste, seul."],
       ["17:00","Qualité","Le dossier de réclamation s'ouvre. La vidéo envoyée au client est figée, datée, validée : ce qui a été dit se retrouve."],
     ],
-    calc: { experts: 4, perDay: 8, min: 12, rate: 40, who: "Techniciens support mobilisés" },
+    calc: { experts: 4, perDay: 8, min: 10, rate: 40, who: "Techniciens support mobilisés" },
     chatIntro: "Bonjour. Vous vous intéressez au support et au SAV : absorber le niveau 1, les mêmes questions, les mêmes gestes, les mêmes pannes. Que voulez-vous savoir ?",
     sugg: ["Quelle part des tickets relève vraiment du niveau 1 ?","Que remplace un parcours vidéo support ?","Comment se passe la session d'exploration ?"]
   }
@@ -2336,7 +2370,7 @@ SILO.kb = "";
 SILO.kbUrl = "assets/kb.txt";
 
 /* Réponses guidées (mode hors ligne, sans IA). */
-SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples","reference","references","extraits","extrait","montrer","voir","travaux","videos"],"a":"Nos réalisations ne sont pas publiées : les parcours que nous produisons (protocoles, formations, démonstrations produit) circulent à l'intérieur des établissements et des entreprises de santé, ils appartiennent à nos clients et restent confidentiels. Sur demande, Schmidt Basile vous en montre des extraits en visio, sous accord de confidentialité : utilisez le bouton « Demander à voir des extraits » en bas de page ou le formulaire de session d'exploration. Les plans arrêtés de la section « Derrière Studio Silo » donnent une idée de la facture : dix ans de réalisation avant Studio Silo."},{"k":["studio","silo","agence","faites","quoi","presentation","presentez","proposez"],"a":"Studio Silo est une agence de stratégie vidéo dédiée aux acteurs de la santé. Nous réparons la transmission de l'information là où elle se perd : entre un service et un patient, entre un expert et une recrue, entre un produit et celui qui doit le prescrire. En complément de votre communication et de votre marketing : des parcours vidéo conçus pour un usage et une cible précis, validés et identiques pour tous."},{"k":["session","exploration","diagnostic","gratuit","gratuite","heure","rendez","reserver","reservation","commencer","premier","contact"],"a":"La session d'exploration dure une heure, elle est gratuite et sans support de vente. Premier temps : on écoute, feuille blanche, pour trouver les frictions telles que vous les vivez. Second temps : on restitue, croisé avec ce que nous savons de votre secteur. Une semaine plus tard, vous recevez le diagnostic chiffré, la Matrice de Colmatage et un plan de déploiement, que nous travaillions ensemble ou non. Le formulaire de la page suffit pour la réserver."},{"k":["prix","tarif","tarifs","cout","coute","couts","combien","budget","devis","mensualite","mensualites","facture"],"a":"Aucun tarif n'est communiqué avant le diagnostic : le prix se déduit de ce que la friction vous coûte réellement, pas du nombre de vidéos ni de nos journées, et il se règle en mensualités. Seule certitude : la session d'exploration est gratuite, et vous repartez avec le diagnostic chiffré."},{"k":["parcours","cinq","endroits","perd"],"a":"Nous travaillons sur cinq parcours où l'information se perd : le parcours patient, l'onboarding collaborateur / soignant, le parcours prescripteur, le déploiement client B2B et le support & SAV. Un directeur de clinique et un directeur commercial MedTech se reconnaissent chacun dans deux ou trois de ces lignes. Lequel vous ressemble ? Si votre cas n'est dans aucun des cinq, c'est fréquent : décrivez la friction en une phrase dans le formulaire, case « Autre », et le diagnostic partira de là."},{"k":["perimetre","definition","signifie","veut","dire","nom","pourquoi","silo","ferme","recolte"],"a":"À la ferme, on ne met pas toutes les récoltes dans le même silo. Chacune a le sien, et c'est comme ça qu'elle se conserve. Nous travaillons de la même façon : un sujet, un public, un usage à la fois. Un Silo est un périmètre d'intervention délimité, isolé pour être traité avec une efficacité maximale : un service, une force de vente, ou un objectif ultra-spécifique comme l'arrivée d'un nouveau soignant ou la mise en route d'un dispositif. Nous refusons le tout-en-un : chaque architecture visuelle est conçue exclusivement pour l'usage et la cible de son périmètre. Le manifeste, en haut de la page, raconte pourquoi."},{"k":["manifeste","conviction","convictions","valeurs","vision","refusez","refuse"],"a":"Le manifeste tient en une conviction : « Nous croyons qu'il faut consolider la maison de l'intérieur avant de se tourner vers l'extérieur. » Et il dit ce que nous refusons : « Nous refusons la vidéo sans objectif et le contenu produit pour occuper l'espace. Nous refusons aussi l'avatar qui remplace un visage : nous filmons de vraies personnes. » Vous pouvez le lire en entier depuis le haut de la page."},{"k":["matrice","colmatage","colmater","colmatee","rouge","vert","cartographie","tableau"],"a":"La Matrice de Colmatage pose vos parcours en lignes et vos frictions en colonnes. Rouge quand la friction fuit (du temps, de l'argent, de l'énergie), vert quand elle est colmatée par un parcours vidéo autonome. Elle est remise dès le diagnostic, sert de tableau de bord pendant toute la mission et décide de l'ordre des travaux : on ouvre toujours la case rouge qui coûte le plus cher."},{"k":["qara","conformite","conforme","inspection","13485","15189","reglementaire","reglementation","validation","valide","audit","tracable","opposable","preuve"],"a":"DPC pour les soignants, ISO 15189 pour les laboratoires d'analyses, ISO 13485 et FDA pour la MedTech, BPF pour les laboratoires pharmaceutiques : quatre noms, un seul principe. La formation de chaque collaborateur à ses activités est une obligation opposable en inspection. Un parcours vidéo validé QARA est un support figé, daté, traçable, et identique pour tout le monde. La validation intervient avant le moindre tournage."},{"k":["onboarding","integration","integrer","recrue","recrues","tuteur","tutrice","tuteurs","arrivant","arrivants","nouveaux","nouvelle","interimaire","turnover","infirmiere","soignant","cadre","idec","preceptrice","tutrices","remplace"],"a":"L'onboarding collaborateur / soignant remplace la dépendance à un tuteur disponible par un parcours autonome, identique pour chaque arrivée. Concrètement : le chariot d'urgence, le logiciel de prescription, le circuit du médicament ou le geste technique montrés une fois, correctement, pour tous, au lieu d'être réexpliqués de mémoire à chaque recrue par une tutrice qui a aussi ses patients.","p":"onboarding"},{"k":["patient","patients","sortie","consultation","traitement","examen","domicile","famille","proches","comprendre","compris","malade","pathologie","observance","aidant","annonce","retient","retenir"],"a":"Le parcours patient explique un traitement, un examen, un retour à domicile, dans les mots du patient et de ses proches. Il prend en charge la partie répétitive et standardisable de l'explication, consultable à son rythme et rejouable à la maison, en complément de la relation soignant-patient, jamais à sa place. Le contenu est validé cliniquement avant diffusion.","p":"patient"},{"k":["prescripteur","prescripteurs","medecin","medecins","prescrire","prescription","visite","visiteur","kam","projection","bloc","delegue","pharma","argumentaire","objection","projeter"],"a":"Le parcours prescripteur donne au médecin de quoi comprendre, se projeter et prescrire, sans dépendre d'une visite. Le chirurgien voit l'équipement dans son propre bloc, le praticien voit le parcours réel du point de vue de son patient. Les objections sont levées en amont, et l'argumentaire ne dépend plus de l'agenda d'un KAM ou d'un ingénieur d'application.","p":"prescripteur"},{"k":["deploiement","deployer","installer","installation","logiciel","client","clients","service","services","sites","ingenieur","application","formateur","bascule","dpi","site","equipe","formation"],"a":"Le déploiement client B2B installe un produit ou un logiciel dans un nouveau service sans y envoyer une équipe entière. Le déploiement type est filmé une fois, correctement : ce que fait l'équipe, dans quel ordre, avec quels écueils. Chaque nouveau site devient indépendant du calendrier de vos experts, et les équipes de nuit reçoivent la même formation que celles du matin.","p":"deploiement"},{"k":["support","hotline","ticket","tickets","niveau","panne","pannes","appels","appel","reclamation","technicien","sav","manipulation","depannage","questions","gestes"],"a":"Le support & SAV absorbe le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes. Un parcours de prise en main remis au moment du déploiement évite l'appel pour ce qui peut être montré, libère les techniciens de niveau 2 des tickets de niveau 1, et trace ce qui a été transmis au client.","p":"support"},{"k":["notoriete","social","sociaux","avatar","avatars","institutionnel","institutionnelle","marque","employeur","reseaux","linkedin","publicite"],"a":"La vidéo de notoriété, le contenu social ou le film institutionnel relèvent de votre communication, et nous ne cherchons pas à les remplacer : nous travaillons en complément. Studio Silo prend le relais là où l'information doit être transmise avec précision, une personne à la fois : vos équipes, vos gestes, vos lieux à l'écran, dans des parcours conçus pour un usage et une cible précis. Ce que nous refusons, c'est la vidéo sans objectif, celle qu'on produit parce qu'il faut du contenu. Nous refusons aussi l'avatar qui remplace un visage : nous filmons de vraies personnes. Si votre besoin est un film de marque ou du contenu pour les réseaux, nous vous le dirons franchement."},{"k":["basile","schmidt","fondateur","equipe","experience","derriere","vous","etes"],"a":"Derrière Studio Silo, Schmidt Basile : dix ans de réalisation vidéo, dont quatre ans à l'intérieur d'une entreprise de santé innovante, à produire des parcours pour les patients, les équipes opérationnelles et les soignants. D'abord au service de la communication, il a vu de l'intérieur que les demandes les plus pressantes venaient du terrain et que rien n'y répondait : Studio Silo est né pour y remédier, en complément de la communication et du marketing. Sa conviction : Studio Silo est d'abord une aide pour ceux qui sont sur le terrain, pour qu'ils retrouvent le temps de faire leur métier, ne s'épuisent plus à répéter les mêmes choses, réussissent à convaincre et n'aient plus peur d'être hors protocole."},{"k":["etapes","etape","duree","temps","delai","delais","immersion","conception","creation","livraison","suivi","methode","deroule","fonctionne"],"a":"Six étapes : Exploration (une session de diagnostic gratuite pour identifier les frictions et les chiffrer), Immersion (terrain, métier, contraintes réglementaires, supports existants), Conception (architecture du Silo, scénarios, validation QARA avant tournage), Création (tournage et montage avec un minimum de mobilisation de vos équipes), Livraison (des actifs prêts à diffuser, déclinés par canal), Suivi (mesure de l'usage réel, mises à jour au fil des évolutions produit et réglementaires, ouverture du Silo suivant). La durée dépend du périmètre : c'est l'un des livrables du diagnostic."},{"k":["tournage","tourner","filmer","filmez","filme","locaux","mobiliser","mobilisation","disponibilite","equipes","camera"],"a":"Oui, nous tournons chez vous, avec vos équipes, vos gestes et vos lieux, en mobilisant le minimum de temps de votre côté : les scénarios sont écrits et validés avant le tournage, et le soin de réalisation fait qu'un support est regardé jusqu'au bout. L'Immersion préalable sert précisément à organiser cela sans perturber le service."},{"k":["hopital","hopitaux","clinique","cliniques","ehpad","laboratoire","laboratoires","medtech","pharma","pharmaceutique","editeur","editeurs","secteur","secteurs","cible","cibles","travaillez"],"a":"Un seul secteur, neuf terrains : ceux qui forment du personnel soignant ou technique (hôpitaux et GHT, cliniques, EHPAD, laboratoires d'analyses), ceux qui déploient un produit ou un logiciel chez un client (MedTech, fabricants de dispositifs implantables et chirurgicaux, éditeurs de logiciels de santé), ceux qui doivent convaincre un prescripteur (laboratoires pharmaceutiques, MedTech) et ceux qui expliquent un sujet complexe à un patient (hôpitaux, cliniques, EHPAD, laboratoires, CRO)."},{"k":["contacter","mail","email","telephone","joindre","adresse","appeler","ecrire"],"a":"Vous pouvez écrire à schmidt.basile@studiosilo.fr ou appeler le +33 6 51 57 01 93. Le plus efficace reste de demander une session d'exploration via le formulaire de la page : une heure, gratuite, et vous repartez avec le diagnostic."},{"k":["chiffres","chiffre","source","sources","etude","etudes","prouve","prouvez","statistique","statistiques","litterature","donnees"],"a":"Chaque chiffre affiché sur la page renvoie vers l'étude ou le rapport d'origine, avec son périmètre réel (pays, population, année). Nous n'avançons aucun chiffre sans sa source : face à un public formé à la preuve, un chiffre non sourcé coûte plus cher qu'un chiffre absent. La section « Ce que dit la littérature » les regroupe par parcours."},{"k":["video","efficace","efficacite","retention","memoire","retenir","oublie","pourquoi","plutot","document","ecrit","papier","formation","elearning"],"a":"Un document écrit ne se regarde pas ; une explication orale ne se rejoue pas. Un parcours vidéo montre le geste, le lieu et le visage, une fois, correctement, et peut être revu à son rythme par chaque patient, chaque recrue, chaque service. Il rend l'information identique pour tous et traçable, là où le bouche-à-oreille change un peu à chaque fois."}];
+SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples","reference","references","extraits","extrait","montrer","voir","travaux","videos"],"a":"Nos réalisations ne sont pas publiées : les parcours que nous produisons (protocoles, formations, démonstrations produit) circulent à l'intérieur des établissements et des entreprises de santé, ils appartiennent à nos clients et restent confidentiels. Sur demande, Schmidt Basile vous en montre des extraits en visio, sous accord de confidentialité : utilisez le bouton « Demander à voir des extraits » en bas de page ou le formulaire de session d'exploration. Les plans arrêtés de la section « Derrière Studio Silo » donnent une idée de la facture : dix ans de réalisation avant Studio Silo."},{"k":["perimetre","definition","signifie","veut","dire","nom","pourquoi","silo","ferme","recolte"],"a":"À la ferme, on ne met pas toutes les récoltes dans le même silo. Chacune a le sien, et c'est comme ça qu'elle se conserve. Nous travaillons de la même façon : un sujet, un public, un usage à la fois. Un Silo est un périmètre d'intervention délimité, isolé pour être traité avec une efficacité maximale : un service, une force de vente, ou un objectif ultra-spécifique comme l'arrivée d'un nouveau soignant ou la mise en route d'un dispositif. Nous refusons le tout-en-un : chaque architecture visuelle est conçue exclusivement pour l'usage et la cible de son périmètre. Le manifeste, en haut de la page, raconte pourquoi."},{"k":["studio","silo","agence","faites","quoi","presentation","presentez","proposez"],"a":"Studio Silo est une agence de stratégie vidéo dédiée aux acteurs de la santé. Nous réparons la transmission de l'information là où elle se perd : entre un service et un patient, entre un expert et une recrue, entre un produit et celui qui doit le prescrire. En complément de votre communication et de votre marketing : des parcours vidéo conçus pour un usage et une cible précis, validés et identiques pour tous."},{"k":["session","exploration","diagnostic","gratuit","gratuite","heure","rendez","reserver","reservation","commencer","premier","contact"],"a":"La session d'exploration dure une heure, elle est gratuite et sans support de vente. Premier temps : on écoute, feuille blanche, pour trouver les frictions telles que vous les vivez. Second temps : on restitue, croisé avec ce que nous savons de votre secteur. Une semaine plus tard, vous recevez le diagnostic chiffré, la Matrice de Colmatage et un plan de déploiement, que nous travaillions ensemble ou non. Le formulaire de la page suffit pour la réserver."},{"k":["prix","tarif","tarifs","cout","coute","couts","combien","budget","devis","mensualite","mensualites","facture"],"a":"Aucun tarif n'est communiqué avant le diagnostic : le prix se déduit de ce que la friction vous coûte réellement, pas du nombre de vidéos ni de nos journées, et il se règle en mensualités. Seule certitude : la session d'exploration est gratuite, et vous repartez avec le diagnostic chiffré."},{"k":["parcours","cinq","endroits","perd"],"a":"Nous travaillons sur cinq parcours où l'information se perd : le parcours patient, l'onboarding collaborateur / soignant, le parcours prescripteur, le déploiement client B2B et le support & SAV. Un directeur de clinique et un directeur commercial MedTech se reconnaissent chacun dans deux ou trois de ces lignes. Lequel vous ressemble ? Si votre cas n'est dans aucun des cinq, c'est fréquent : décrivez la friction en une phrase dans le formulaire, case « Autre », et le diagnostic partira de là."},{"k":["manifeste","conviction","convictions","valeurs","vision","refusez","refuse"],"a":"Le manifeste tient en une conviction : « Nous croyons qu'il faut consolider la maison de l'intérieur avant de se tourner vers l'extérieur. » Et il dit ce que nous refusons : « Nous refusons la vidéo sans objectif et le contenu produit pour occuper l'espace. Nous refusons aussi l'avatar qui remplace un visage : nous filmons de vraies personnes. » Vous pouvez le lire en entier depuis le haut de la page."},{"k":["matrice","colmatage","colmater","colmatee","rouge","vert","cartographie","tableau"],"a":"La Matrice de Colmatage pose vos parcours en lignes et vos frictions en colonnes. Rouge quand la friction fuit (du temps, de l'argent, de l'énergie), vert quand elle est colmatée par un parcours vidéo autonome. Elle est remise dès le diagnostic, sert de tableau de bord pendant toute la mission et décide de l'ordre des travaux : on ouvre toujours la case rouge qui coûte le plus cher."},{"k":["qara","conformite","conforme","inspection","13485","15189","reglementaire","reglementation","validation","valide","audit","tracable","opposable","preuve"],"a":"DPC pour les soignants, ISO 15189 pour les laboratoires d'analyses, ISO 13485 et FDA pour la MedTech, BPF pour les laboratoires pharmaceutiques : quatre noms, un seul principe. La formation de chaque collaborateur à ses activités est une obligation opposable en inspection. Un parcours vidéo validé QARA est un support figé, daté, traçable, et identique pour tout le monde. La validation intervient avant le moindre tournage."},{"k":["onboarding","integration","integrer","recrue","recrues","tuteur","tutrice","tuteurs","arrivant","arrivants","nouveaux","nouvelle","interimaire","turnover","infirmiere","soignant","cadre","idec","preceptrice","tutrices","remplace"],"a":"L'onboarding collaborateur / soignant remplace la dépendance à un tuteur disponible par un parcours autonome, identique pour chaque arrivée. Concrètement : le chariot d'urgence, le logiciel de prescription, le circuit du médicament ou le geste technique montrés une fois, correctement, pour tous, au lieu d'être réexpliqués de mémoire à chaque recrue par une tutrice qui a aussi ses patients.","p":"onboarding"},{"k":["patient","patients","sortie","consultation","traitement","examen","domicile","famille","proches","comprendre","compris","malade","pathologie","observance","aidant","annonce","retient","retenir"],"a":"Le parcours patient explique un traitement, un examen, un retour à domicile, dans les mots du patient et de ses proches. Il prend en charge la partie répétitive et standardisable de l'explication, consultable à son rythme et rejouable à la maison, en complément de la relation soignant-patient, jamais à sa place. Le contenu est validé cliniquement avant diffusion.","p":"patient"},{"k":["prescripteur","prescripteurs","medecin","medecins","prescrire","prescription","visite","visiteur","kam","projection","bloc","delegue","pharma","argumentaire","objection","projeter"],"a":"Le parcours prescripteur donne au médecin de quoi comprendre, se projeter et prescrire, sans dépendre d'une visite. Le chirurgien voit l'équipement dans son propre bloc, le praticien voit le parcours réel du point de vue de son patient. Les objections sont levées en amont, et l'argumentaire ne dépend plus de l'agenda d'un KAM ou d'un ingénieur d'application.","p":"prescripteur"},{"k":["deploiement","deployer","installer","installation","logiciel","client","clients","service","services","sites","ingenieur","application","formateur","bascule","dpi","site","equipe","formation"],"a":"Le déploiement client B2B installe un produit ou un logiciel dans un nouveau service sans y envoyer une équipe entière. Le déploiement type est filmé une fois, correctement : ce que fait l'équipe, dans quel ordre, avec quels écueils. Chaque nouveau site devient indépendant du calendrier de vos experts, et les équipes de nuit reçoivent la même formation que celles du matin.","p":"deploiement"},{"k":["support","hotline","ticket","tickets","niveau","panne","pannes","appels","appel","reclamation","technicien","sav","manipulation","depannage","questions","gestes"],"a":"Le support & SAV absorbe le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes. Un parcours de prise en main remis au moment du déploiement évite l'appel pour ce qui peut être montré, libère les techniciens de niveau 2 des tickets de niveau 1, et trace ce qui a été transmis au client.","p":"support"},{"k":["notoriete","social","sociaux","avatar","avatars","institutionnel","institutionnelle","marque","employeur","reseaux","linkedin","publicite"],"a":"La vidéo de notoriété, le contenu social ou le film institutionnel relèvent de votre communication, et nous ne cherchons pas à les remplacer : nous travaillons en complément. Studio Silo prend le relais là où l'information doit être transmise avec précision, une personne à la fois : vos équipes, vos gestes, vos lieux à l'écran, dans des parcours conçus pour un usage et une cible précis. Ce que nous refusons, c'est la vidéo sans objectif, celle qu'on produit parce qu'il faut du contenu. Nous refusons aussi l'avatar qui remplace un visage : nous filmons de vraies personnes. Si votre besoin est un film de marque ou du contenu pour les réseaux, nous vous le dirons franchement."},{"k":["basile","schmidt","fondateur","equipe","experience","derriere","vous","etes"],"a":"Derrière Studio Silo, Schmidt Basile : dix ans de réalisation vidéo, dont quatre ans à l'intérieur d'une entreprise de santé innovante, à produire des parcours pour les patients, les équipes opérationnelles et les soignants. D'abord au service de la communication, il a vu de l'intérieur que les demandes les plus pressantes venaient du terrain et que rien n'y répondait : Studio Silo est né pour y remédier, en complément de la communication et du marketing. Sa conviction : Studio Silo est d'abord une aide pour ceux qui sont sur le terrain, pour qu'ils retrouvent le temps de faire leur métier, ne s'épuisent plus à répéter les mêmes choses, réussissent à convaincre et n'aient plus peur d'être hors protocole."},{"k":["etapes","etape","duree","temps","delai","delais","immersion","conception","creation","livraison","suivi","methode","deroule","fonctionne"],"a":"Six étapes : Exploration (une session de diagnostic gratuite pour identifier les frictions et les chiffrer), Immersion (terrain, métier, contraintes réglementaires, supports existants), Conception (architecture du Silo, scénarios, validation QARA avant tournage), Création (tournage et montage avec un minimum de mobilisation de vos équipes), Livraison (des actifs prêts à diffuser, déclinés par canal), Suivi (mesure de l'usage réel, mises à jour au fil des évolutions produit et réglementaires, ouverture du Silo suivant). La durée dépend du périmètre : c'est l'un des livrables du diagnostic."},{"k":["tournage","tourner","filmer","filmez","filme","locaux","mobiliser","mobilisation","disponibilite","equipes","camera"],"a":"Oui, nous tournons chez vous, avec vos équipes, vos gestes et vos lieux, en mobilisant le minimum de temps de votre côté : les scénarios sont écrits et validés avant le tournage, et le soin de réalisation fait qu'un support est regardé jusqu'au bout. L'Immersion préalable sert précisément à organiser cela sans perturber le service."},{"k":["hopital","hopitaux","clinique","cliniques","ehpad","laboratoire","laboratoires","medtech","pharma","pharmaceutique","editeur","editeurs","secteur","secteurs","cible","cibles","travaillez"],"a":"Un seul secteur, neuf terrains : ceux qui forment du personnel soignant ou technique (hôpitaux et GHT, cliniques, EHPAD, laboratoires d'analyses), ceux qui déploient un produit ou un logiciel chez un client (MedTech, fabricants de dispositifs implantables et chirurgicaux, éditeurs de logiciels de santé), ceux qui doivent convaincre un prescripteur (laboratoires pharmaceutiques, MedTech) et ceux qui expliquent un sujet complexe à un patient (hôpitaux, cliniques, EHPAD, laboratoires, CRO)."},{"k":["contacter","mail","email","telephone","joindre","adresse","appeler","ecrire"],"a":"Vous pouvez écrire à schmidt.basile@studiosilo.fr ou appeler le +33 6 51 57 01 93. Le plus efficace reste de demander une session d'exploration via le formulaire de la page : une heure, gratuite, et vous repartez avec le diagnostic."},{"k":["chiffres","chiffre","source","sources","etude","etudes","prouve","prouvez","statistique","statistiques","litterature","donnees"],"a":"Chaque chiffre affiché sur la page renvoie vers l'étude ou le rapport d'origine, avec son périmètre réel (pays, population, année). Nous n'avançons aucun chiffre sans sa source : face à un public formé à la preuve, un chiffre non sourcé coûte plus cher qu'un chiffre absent. La section « Ce que dit la littérature » les regroupe par parcours."},{"k":["video","efficace","efficacite","retention","memoire","retenir","oublie","pourquoi","plutot","document","ecrit","papier","formation","elearning"],"a":"Un document écrit ne se regarde pas ; une explication orale ne se rejoue pas. Un parcours vidéo montre le geste, le lieu et le visage, une fois, correctement, et peut être revu à son rythme par chaque patient, chaque recrue, chaque service. Il rend l'information identique pour tous et traçable, là où le bouche-à-oreille change un peu à chaque fois."}];
 </script>
 
 <script>
@@ -2375,7 +2409,9 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
    /* ---------- State : parcours ---------- */
   let current = "all";
   let otherMode = false;
-  try { const s = localStorage.getItem("silo.parcours"); if (s && (SILO.parcours[s] || s === "all")) current = s; } catch (e) {}
+  /* Aucun parcours n'est choisi d'avance (demande de Schmidt) : ni souvenir d'une visite précédente, ni bouton allumé d'office.
+     La page s'ouvre en mode transversal et attend un clic. L'ancienne mémoire est effacée pour les visiteurs déjà venus. */
+  try { localStorage.removeItem("silo.parcours"); } catch (e) {}
   let userTouchedCalc = false;
 
   const chips = $$(".chip[data-p]");
@@ -2387,7 +2423,6 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   function applyParcours(key, opts = {}) {
     current = key;
     setOther(false);
-    try { localStorage.setItem("silo.parcours", key); } catch (e) {}
     const d = dataFor(key);
     chips.forEach(c => { const on = c.dataset.p === key; c.classList.toggle("on", on); c.setAttribute("aria-pressed", on); });
     // le carrousel amène la carte choisie sous les yeux (utile quand le choix vient d'ailleurs : onglets du quotidien, mémoire, assistant)
@@ -2400,7 +2435,8 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     // Hero title
     if (heroTitle.textContent !== d.title) {
       heroTitle.classList.add("swap");
-      setTimeout(() => { heroTitle.textContent = d.title; heroTitle.classList.remove("swap"); }, reduced ? 0 : 320);
+      clearTimeout(heroTitle._t); // deux parcours choisis coup sur coup : seul le dernier titre s'affiche
+      heroTitle._t = setTimeout(() => { heroTitle.textContent = d.title; heroTitle.classList.remove("swap"); }, reduced ? 0 : 320);
     }
     // Chapter pill
     $("#chapter-who").textContent = key === "all" ? "" : d.short + " ·";
@@ -2420,7 +2456,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       $$(".pc-conf").forEach(b => { b.hidden = b.dataset.for !== key; }); }
     // Filtre de parcours du « Quotidien » : l'onglet actif suit le parcours choisi
     $$("#rp-tabs .tab").forEach(t => { const on = t.dataset.p === key; t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); });
-    { const rt = $("#rp-tabs"), on = rt && rt.querySelector(".tab.on"); if (on && rt.scrollWidth > rt.clientWidth + 1) { const x = on.getBoundingClientRect().left - rt.getBoundingClientRect().left + rt.scrollLeft; rt.scrollTo({ left: Math.max(0, x - (rt.clientWidth - on.offsetWidth) / 2), behavior: "smooth" }); } }
+    { const rt = $("#rp-tabs"), on = rt && rt.querySelector(".tab.on"); if (on && rt.scrollWidth > rt.clientWidth + 1) { const x = on.getBoundingClientRect().left - rt.getBoundingClientRect().left + rt.scrollLeft; rt.scrollTo({ left: Math.max(0, x - (rt.clientWidth - on.offsetWidth) / 2), behavior: reduced ? "auto" : "smooth" }); } }
     // Form
     const grp = $("#f-parcours"); if (grp && !grp.dataset.touched) $$("input", grp).forEach(i => { i.checked = i.value === key; i.closest(".f-chip").classList.toggle("on", i.checked); });
     // Chat
@@ -2443,8 +2479,9 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     if (oc) { oc.classList.toggle("on", on); oc.setAttribute("aria-pressed", on); }
     syncIntroNext();
     const au = $("#f-parcours input[value=\"autre\"]"), fm = $("#f-msg");
-    if (au) { au.checked = on; au.closest(".f-chip").classList.toggle("on", on); }
-    if (fm) fm.closest(".field").classList.toggle("hl", on);
+    const touched = !!($("#f-parcours") || {}).dataset?.touched; // le visiteur a coché lui-même : on n'y touche plus
+    if (au && (on || !touched)) { au.checked = on; au.closest(".f-chip").classList.toggle("on", on); }
+    if (fm && (on || !touched)) fm.closest(".field").classList.toggle("hl", on);
   }
   const otherChip = $("#ask .chip[data-action=\"autre\"]");
   if (otherChip) otherChip.addEventListener("click", () => {
@@ -2512,9 +2549,12 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   const TABS = [["global","Transversal"],["patient","Patient"],["onboarding","Onboarding"],["prescripteur","Prescripteur"],["deploiement","Déploiement"],["support","Support & SAV"]];
   let statTab = "global";
   const STRENGTH = { academic: "Étude", institutional: "Donnée institutionnelle", sectoral: "Donnée sectorielle", anecdotal: "Témoignage" };
-  function renderTabs() {
-    tabsEl.innerHTML = TABS.map(([k, l]) => `<button class="tab${k === statTab ? " on" : ""}" aria-pressed="${k === statTab}" data-t="${k}" type="button">${l}</button>`).join("");
-    $$(".tab", tabsEl).forEach(b => b.addEventListener("click", () => renderStats(b.dataset.t)));
+  function renderTabs() { // boutons créés une fois : les recréer faisait perdre le focus clavier au changement d'onglet
+    if (!tabsEl.querySelector(".tab")) {
+      tabsEl.innerHTML = TABS.map(([k, l]) => `<button class="tab" data-t="${k}" type="button">${l}</button>`).join("");
+      $$(".tab", tabsEl).forEach(b => b.addEventListener("click", () => renderStats(b.dataset.t)));
+    }
+    $$(".tab", tabsEl).forEach(b => { const on = b.dataset.t === statTab; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
   }
   function renderStats(tab) {
     statTab = tab;
@@ -2569,6 +2609,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     let tick = false; const queue = () => { if (!tick) { tick = true; requestAnimationFrame(() => { tick = false; update(); }); } };
     rail.addEventListener("scroll", queue, { passive: true });
     addEventListener("resize", queue);
+    rail.addEventListener("dragstart", e => e.preventDefault()); // sinon le navigateur « emporte » l'image ou le lien au lieu de faire défiler
     rail.addEventListener("keydown", e => { if (e.key === "ArrowRight") { e.preventDefault(); go(1); } else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); } });
     let drag = null, dragEndAt = 0, dragMoved = 0;
     // On ne capture le pointeur QU'AU MOMENT où le glissement commence : sinon un simple clic
@@ -2630,6 +2671,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       tiles.forEach((t, i) => { if (tops[i] === last) t.style.flex = `0 1 ${(parseFloat(t.style.getPropertyValue("--r")) * H).toFixed(2)}px`; });
     };
     justifyLast();
+    initRail(galleryEl); // galerie en bandeau : se glisse aussi à la souris, flèches du clavier comprises
     let galTick = false;
     addEventListener("resize", () => { if (!galTick) { galTick = true; requestAnimationFrame(() => { galTick = false; justifyLast(); }); } });
     galleryEl.addEventListener("click", e => {
@@ -2641,6 +2683,10 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       $("#lb-close").addEventListener("click", () => lightbox.close());
       lightbox.addEventListener("click", e => { if (e.target === lightbox) lightbox.close(); else if (e.target === lbImg) showSlide(slideIdx + 1); });
       lightbox.addEventListener("keydown", e => { if (e.key === "ArrowRight") { e.preventDefault(); showSlide(slideIdx + 1); } else if (e.key === "ArrowLeft") { e.preventDefault(); showSlide(slideIdx - 1); } });
+      let sw = null; // balayage horizontal au doigt : image suivante ou précédente
+      lightbox.addEventListener("touchstart", e => { sw = e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null; }, { passive: true });
+      lightbox.addEventListener("touchend", e => { if (!sw) return; const t = e.changedTouches[0], dx = t.clientX - sw.x, dy = t.clientY - sw.y; sw = null;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) showSlide(slideIdx + (dx < 0 ? 1 : -1)); }, { passive: true });
       lightbox.addEventListener("close", () => { clearInterval(slideTimer); lightbox.classList.remove("slideshow"); lbImg.classList.remove("kb"); lbImg.removeAttribute("src"); });
     }
   }
@@ -2766,7 +2812,10 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   probe.style.cssText = "position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none";
   document.body.appendChild(probe);
   let vhLayout = probe.offsetHeight || innerHeight;
-  let diveH = 1, lastDive = -1; // hauteur de la zone de plongée (frein qui suit le hero), lue dans layoutSticky
+  const probeL = document.createElement("div"); // grand viewport (barres du navigateur repliées) : hauteur du hero sur téléphone
+  probeL.style.cssText = "position:fixed;top:0;left:0;width:0;height:100lvh;visibility:hidden;pointer-events:none";
+  document.body.appendChild(probeL);
+  let diveH = 1, diveStart = 0, lastDive = -1; // zone de plongée (frein qui suit le hero) et son point de départ, lus dans layoutSticky
   function layoutSticky() {
     if (coarse) vhLayout = probe.offsetHeight || innerHeight;
     const vh = coarse ? vhLayout : innerHeight;
@@ -2776,9 +2825,12 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     const heights = panels.map(p => p.offsetHeight);
     const gaps = panels.map(p => { const b = p.nextElementSibling; return (b && b.classList.contains("brake")) ? b.offsetHeight : 0; });
     diveH = Math.max(1, gaps[0]);
+    const lvh = Math.max(vh, probeL.offsetHeight || 0);
+    const heroFits = heights[0] <= lvh + 1; // hero à la hauteur du grand viewport : collé en haut, sans décalage
+    diveStart = heroFits ? 0 : Math.max(0, heights[0] - vh); // hero plus haut que l'écran (téléphone à l'horizontale) : on le lit en entier avant de plonger
     panels.forEach((p, i) => {
       const h = heights[i];
-      const top = Math.min(0, vh - h);
+      const top = (i === 0 && heroFits) ? 0 : Math.min(0, vh - h);
       p.style.top = top + "px";
       p.style.transformOrigin = `50% ${Math.max(0, h - vh) + vh * .4}px`;
       geo.set(p, { T, H: h, top });
@@ -2790,8 +2842,10 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   const visualTop = (p, sy = scrollY) => { const g = geo.get(p); return g ? Math.max(g.T - sy, g.top) : p.getBoundingClientRect().top; };
   /* Ancres internes : les panneaux sont sticky (parfois avec un top négatif) et le navigateur vise mal leur position ;
      on défile vers la position calculée du panneau (plus le décalage de l'élément visé s'il est à l'intérieur). */
+  let glideStop = null; // glissade en cours du lien « Descendre dans le silo » : toute autre navigation l'interrompt
   function scrollToId(id, smooth) {
     const el = document.getElementById(id); if (!el) return false;
+    if (glideStop) glideStop();
     const panel = el.closest(".panel"), g = panel && geo.get(panel); if (!g) return false;
     if (typeof unlockTo === "function") unlockTo(panels.indexOf(panel)); // navigation explicite : la section devient accessible
     let y = 0; if (el !== panel) { let n = el; while (n && n !== panel) { y += n.offsetTop; n = n.offsetParent; } y = Math.max(0, y - 96); }
@@ -2826,8 +2880,8 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       if (vts[i] <= vh * .45) { chapter = p.dataset.chapter || ""; activeId = p.id; }
     });
     // plongée dans le silo : pendant le frein qui suit le hero, rien ne le recouvre encore ; on y zoome et on fond au noir
-    const dive = +clamp(sy / diveH, 0, 1).toFixed(4);
-    if (dive !== lastDive) { lastDive = dive; panels[0].style.setProperty("--dive", dive); }
+    const dive = +clamp((sy - diveStart) / diveH, 0, 1).toFixed(4);
+    if (dive !== lastDive) { lastDive = dive; panels[0].style.setProperty("--dive", dive); panels[0].classList.toggle("dived", dive >= .38); } // .38 : le texte est alors entièrement effacé
     if (!reduced) pxMeta.forEach(m => {
       const enter = enterOf.get(m.panel) ?? 1;
       const y = +((1 - enter) * m.f).toFixed(2);
@@ -2885,7 +2939,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   $$("a", menu).forEach(a => a.addEventListener("click", () => toggleMenu(false)));
   // La barre reste hors du champ inerte pour garder le burger accessible : ses propres liens referment donc le menu.
   $$('.bar a[href^="#"]').forEach(a => a.addEventListener("click", () => toggleMenu(false)));
-  addEventListener("keydown", e => { if (e.key === "Escape") { toggleMenu(false); chat.close(); const d = document.querySelector("dialog[open]"); if (d) d.close(); } });
+  addEventListener("keydown", e => { if (e.key === "Escape") { const d = document.querySelector("dialog[open]"); if (d) { d.close(); return; } toggleMenu(false); chat.close(); } }); // une couche à la fois
 
   /* ---------- Demande d'extraits de réalisations (confidentielles) ---------- */
   const askReals = $("#ask-reals"), askRealsMail = $("#ask-reals-mail"), fMsg = $("#f-msg");
@@ -2909,7 +2963,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   form.addEventListener("submit", async e => {
     e.preventDefault();
     if (form.dataset.sent === "1") return; // une demande envoyée ne repart pas
-    const fd = new FormData(form), data = Object.fromEntries(fd.entries()); const pk = fd.getAll("parcours").filter(Boolean); data.parcours = pk.join(", "); data.parcours_libelles = pk.map(k => k === "autre" ? "Autre" : ((SILO.parcours[k] || {}).label || k)).join(", ");
+    const fd = new FormData(form), data = Object.fromEntries([...fd.entries()].map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])); const pk = fd.getAll("parcours").filter(Boolean); data.parcours = pk.join(", "); data.parcours_libelles = pk.map(k => k === "autre" ? "Autre" : ((SILO.parcours[k] || {}).label || k)).join(", ");
     if (!data.name || !data.org || !data.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
       status.className = "status err"; status.textContent = "Il manque votre nom, votre structure ou un e-mail valide."; { const f = $$("#f-name, #f-org, #f-email").find(i => !i.value.trim() || (i.type === "email" && !i.checkValidity())); if (f) f.focus(); } return;
     }
@@ -2960,6 +3014,12 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     function open() { box.classList.add("open"); box.setAttribute("aria-hidden", "false"); fab.style.display = "none"; setTimeout(() => input.focus(), 50); }
     function close() { const wasOpen = box.classList.contains("open"); box.classList.remove("open"); box.setAttribute("aria-hidden", "true"); fab.style.display = ""; if (wasOpen) fab.focus(); }
     fab.addEventListener("click", open); $("#chat-close").addEventListener("click", close);
+    // Un lien de la conversation vers une section de la page : l'assistant se referme pour la laisser voir
+    log.addEventListener("click", e => {
+      const a = e.target.closest('a[href^="#"]'); if (!a) return;
+      close();
+      if (a.getAttribute("href") === "#exploration") setTimeout(() => { const f = $("#f-name"); if (f) f.focus({ preventScroll: true }); }, 900);
+    });
 
     /* La base de connaissance n'est téléchargée que si un moteur de réponse existe, et une seule fois.
        Si elle ne se charge pas, on NE fait PAS répondre le modèle sans sources : on retombe sur le mode
@@ -2976,12 +3036,13 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     }
     const stem = w => w.replace(/(s|x)$/, "");
     const normQ = q => q.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z0-9]+/).filter(w => w.length > 2).map(stem);
-    const STATW = ["recherche", "etude", "chiffre", "statistique", "donnee", "litterature", "prouve", "preuve", "source", "pourcentage"];
+    const STATW = ["etude", "chiffre", "statistique", "donnee", "litterature", "source", "pourcentage"]; // ni « recherche » (« je recherche un prestataire ») ni « preuve »
     const FAIBLE = new Set(["question", "vous", "site", "service", "premier", "plutot", "quoi", "faites", "dire", "nom", "combien", "commencer"].map(stem));
     function guided(q) {
       const words = normQ(q);
       const key = ctx === "all" ? "global" : ctx;
-      if (words.some(w => STATW.includes(w))) {
+      const faqTop = Math.max(0, ...SILO.faq.map(f => [...new Set(f.k.map(stem))].reduce((n, k) => n + (words.includes(k) ? (FAIBLE.has(k) ? .4 : 1) : 0), 0))); // « etude » et « etudes » ne comptent qu'une fois
+      if (words.some(w => STATW.includes(w)) && faqTop < 2) { // une question qui vise clairement une entrée de la FAQ n'est pas détournée vers les chiffres
         const list = SILO.stats.filter(s => (s.parcours || []).includes(key)).slice(0, 3);
         if (list.length) return `Ce que dit la littérature${key === "global" ? "" : " sur ce parcours"} :\n` + list.map(s => `• ${s.big} ${s.claim} (${s.source})`).join("\n") + `\n\nLes sources complètes sont dans la section « Ce que dit la littérature ». Pour chiffrer votre propre situation, la session d'exploration est gratuite.`;
       }
@@ -3134,11 +3195,13 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       history.replaceState(null, "", "#" + target.id);
       const land = () => { const h = target.querySelector("h2"); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } };
       if (reduced) { scrollTo({ top: g.T, behavior: "instant" }); land(); return; }
+      if (glideStop) glideStop();
       const y0 = scrollY, dy = g.T - y0, t0 = performance.now(), D = 2400;
-      let stop = false; const cancel = () => { stop = true; };
-      addEventListener("wheel", cancel, { once: true, passive: true }); addEventListener("touchstart", cancel, { once: true, passive: true }); addEventListener("keydown", cancel, { once: true });
+      const EV = ["wheel", "touchstart", "keydown", "pointerdown"];
+      let stop = false; const cancel = () => { stop = true; glideStop = null; EV.forEach(t => removeEventListener(t, cancel)); };
+      EV.forEach(t => addEventListener(t, cancel, { passive: true })); glideStop = cancel;
       const io = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      const step = now => { if (stop) return; const t = Math.min(1, (now - t0) / D); scrollTo({ top: y0 + dy * io(t), behavior: "instant" }); if (t < 1) requestAnimationFrame(step); else land(); };
+      const step = now => { if (stop) return; const t = Math.min(1, (now - t0) / D); scrollTo({ top: y0 + dy * io(t), behavior: "instant" }); if (t < 1) requestAnimationFrame(step); else { cancel(); land(); } };
       requestAnimationFrame(step);
     });
   } catch (err) {}
@@ -3164,7 +3227,7 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     const cur = $("#cursor");
     if (cur && matchMedia("(pointer: fine)").matches && !reduced) {
       const ring = cur.firstElementChild, dot = cur.lastElementChild, lab = ring.firstElementChild;
-      const DARK = ".bg-night, .bloc-nuit, #exploration .form, .bar, footer, .chat-fab";
+      const DARK = ".bg-night, .bloc-nuit, #exploration .form, .bar, footer, .chat-fab, #quotidien .calc, #intro .prail .chip.on, #intro .prail .pc-conf, #hero.dived, .menu, .lightbox";
       const HOVER = 'a, button, [role="button"], [role="slider"], input[type="range"], select, label[for], .f-chip';
       const MAG = ".hero-cta, .hero-cue, .btn, .bar .cta, .chat-fab";
       let mx = -200, my = -200, rx = -200, ry = -200, running = false;
@@ -3188,16 +3251,20 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       };
       const kick = () => { if (!mrun) { mrun = true; requestAnimationFrame(mloop); } };
       const release = () => { if (!active) return; const st = mags.get(active); if (st) st.tx = st.ty = 0; active = null; kick(); };
-      addEventListener("pointermove", e => {
-        if (e.pointerType !== "mouse") return;
-        mx = e.clientX; my = e.clientY;
-        dot.style.transform = `translate(${mx}px,${my}px)`; cur.classList.add("live");
-        if (!running) { running = true; requestAnimationFrame(follow); }
-        const t = e.target; if (!t || !t.closest) return;
+      const classify = t => {
         const tile = t.closest(".gallery .tile");
         cur.classList.toggle("label", !!tile); lab.textContent = tile ? "Agrandir" : "";
         cur.classList.toggle("hover", !tile && !!t.closest(HOVER));
         cur.classList.toggle("dark", !!t.closest(DARK));
+      };
+      addEventListener("pointermove", e => {
+        if (e.pointerType !== "mouse") return;
+        mx = e.clientX; my = e.clientY;
+        if (!cur.classList.contains("live")) { rx = mx; ry = my; ring.style.transform = `translate(${rx}px,${ry}px)`; } // premier mouvement : l'anneau part du pointeur, pas du coin
+        dot.style.transform = `translate(${mx}px,${my}px)`; cur.classList.add("live");
+        if (!running) { running = true; requestAnimationFrame(follow); }
+        const t = e.target; if (!t || !t.closest) return;
+        classify(t);
         const m = t.closest(MAG);
         if (active && active !== m) release();
         if (m && !m.disabled) {
@@ -3208,12 +3275,22 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
         }
       }, { passive: true });
       document.addEventListener("pointerleave", () => { cur.classList.remove("live"); release(); });
-      addEventListener("scroll", release, { passive: true }); // en défilant, le bouton lâche le pointeur
+      // En défilant, le bouton lâche le pointeur, et l'anneau reprend la couleur de ce qui passe désormais sous lui
+      let scTick = false;
+      addEventListener("scroll", () => {
+        release();
+        if (scTick || !cur.classList.contains("live")) return; scTick = true;
+        requestAnimationFrame(() => { scTick = false; const t = document.elementFromPoint(mx, my); if (t) classify(t); });
+      }, { passive: true });
     }
   } catch (err) {}
 
   applyParcours(current);
-  if (current === "all") ask.classList.remove("chosen");
+  if (current === "all") {
+    ask.classList.remove("chosen");
+    // le mode transversal est appliqué, mais « Je ne sais pas encore » n'est pas allumé : rien n'est choisi tant qu'on n'a pas cliqué
+    const allChip0 = chips.find(c => c.dataset.p === "all"); if (allChip0) { allChip0.classList.remove("on"); allChip0.setAttribute("aria-pressed", "false"); }
+  }
   calc();
   gateReady = true; applyInert(); applyGate(); // tout s'est bien passé : le verrou peut s'armer
 })();
