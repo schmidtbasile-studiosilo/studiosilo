@@ -25,3 +25,6 @@ assets/img/fond-*.jpg
 
 # Replis OpenType des polices : le woff2 suffit, plus aucune règle @font-face ne les cite.
 assets/fonts/*.otf
+
+# Concept « Studio Silo réimaginé » : référence de travail, jamais publiée
+concept-reimagine/
