@@ -1577,6 +1577,14 @@ body:has(.mf[open]) .ticker .track,body:has(.mf[open]) #hero .hero-tag .rot{anim
 .cursor.label .c-ring span{opacity:1}
 body:has(dialog[open]) .cursor{opacity:0}
 @media (pointer:fine) and (prefers-reduced-motion:no-preference){.cursor{display:block}}
+/* ---------- Hero : le silo suit la souris et s'agrandit quand on descend (repris du concept réimaginé) ----------
+   Deux propriétés distinctes, pour deux rythmes : « translate » suit la souris avec un retard doux (transition),
+   « scale » suit le défilement sans aucun retard. --cover (0 → 1 pendant que le constat recouvre le hero) est écrit
+   par le moteur de défilement sur le panneau ; l'image zoome vers l'ouverture du silo (transform-origin haut).
+   Base à 1,06 : la marge qui permet au parallaxe de bouger sans jamais découvrir un bord. */
+#hero .hero-bg{transform-origin:50% 32%;scale:calc(1.06 + var(--cover,0) * .42);translate:var(--hx,0px) var(--hy,0px);
+  transition:translate 1.3s cubic-bezier(.2,.7,.2,1);will-change:scale,translate}
+@media (prefers-reduced-motion:reduce){#hero .hero-bg{scale:1;translate:none;transition:none}}
 </style>
 </head>
 <body>
@@ -3070,6 +3078,19 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
       if (deepLink.toLowerCase() === "manifeste") openMf(null);
     } else if (mfBtn) mfBtn.hidden = true; // sans <dialog>, pas de bouton mort dans le hero
   } catch (err) { const b = $("#mf-open"); if (b && !$("#mf-fenetre[open]")) b.hidden = true; }
+
+  /* ---------- Hero : le fond suit la souris (parallaxe léger, souris seulement) ---------- */
+  try {
+    const heroEl = $("#hero");
+    if (heroEl && matchMedia("(pointer: fine)").matches && !reduced) {
+      heroEl.addEventListener("pointermove", e => {
+        if (e.pointerType !== "mouse") return;
+        const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
+        heroEl.style.setProperty("--hx", (-x * 26).toFixed(1) + "px"); heroEl.style.setProperty("--hy", (-y * 18).toFixed(1) + "px");
+      }, { passive: true });
+      heroEl.addEventListener("pointerleave", () => { heroEl.style.setProperty("--hx", "0px"); heroEl.style.setProperty("--hy", "0px"); });
+    }
+  } catch (err) {}
 
   /* ---------- Curseur et boutons aimantés (repris du concept « Studio Silo réimaginé ») ----------
      Un anneau suit la souris avec un léger retard ; les boutons principaux se laissent attirer vers le pointeur
