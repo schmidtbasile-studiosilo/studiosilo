@@ -1466,6 +1466,102 @@ dialog[open]{touch-action:none}
 /* ---------- Formulaire : une demande envoyée ne repart pas ---------- */
 #lead-form .btn:disabled{opacity:.55;cursor:default}
 #lead-form .btn:disabled:hover{transform:none;background:var(--kraft)}
+/* ---------- Manifeste : bouton du hero ----------
+   Jumeau au trait d'« Explorer » : même hauteur, même rebond et même passage à l'encre au survol,
+   mais sans aplat ni pastille, filet de 1 px et graisse 500 : il accompagne le bouton principal sans passer devant.
+   height devient min-height : si le libellé passe à la ligne (zoom du texte, police de repli), le bouton grandit au lieu de déborder. */
+.hero-actions{align-items:center}
+.hero-cta.mf-open{height:auto;min-height:var(--h);max-width:100%;padding:8px clamp(26px,2.3vw,36px);
+  background:transparent;border:1px solid rgba(15,14,12,.6);font-weight:500;line-height:1.15;text-align:center;animation-delay:.32s}
+/* règle propre : .hero-cta.mf-open et .hero-cta:hover ont la même spécificité, le fond transparent l'emporterait au survol */
+.hero-cta.mf-open:hover,.hero-cta.mf-open:focus-visible{background:var(--ink);border-color:var(--ink);color:#EFE8DD}
+/* Téléphone : les deux boutons s'empilent ; le manifeste, plus bas (48 px), prend presque la largeur d'Explorer (≈ 157 px chacun). */
+@media (max-width:700px){
+  .hero-actions{flex-direction:column;gap:12px}
+  .hero-cta.mf-open{--h:48px;font-size:16px;padding:6px 22px}
+  .hero-cta.mf-open:hover,.hero-cta.mf-open:focus-visible{border-radius:calc(var(--h) / 3.2)}
+}
+/* Téléphone assez haut : « Explorer » reste seul au centre, le manifeste descend au pied du premier écran,
+   juste au-dessus du bandeau des terrains (57 px de haut sur mobile, d'où bottom:76px).
+   Ancré dans .in (position:relative, toute la hauteur du hero), centré par left/right + margin auto et non
+   par translateX, que l'animation « rise » écraserait. L'ordre du DOM ne bouge pas : au clavier et au lecteur
+   d'écran, Explorer puis le manifeste, comme à l'écran de haut en bas.
+   Seuil à 560 px de haut : l'iPhone SE (568) garde 59 px entre les deux boutons ; en paysage (430 px au plus)
+   il n'y a pas de place sûre en bas, le bouton reste empilé sous Explorer. */
+@media (max-width:700px) and (min-height:560px){
+  /* Écriture et filet crème, sans fond : bouton volontairement discret, secondaire face à Explorer (choix de Schmidt).
+     Le bas de l'image est un ton moyen où aucune couleur de texte ne tient seule. Deux appoints, sans rien poser
+     sur le bouton : une ombre légère sous les lettres, et le dégradé sombre que le hero pose déjà en bas de l'image,
+     porté de 26 % à 60 % sur téléphone (le bandeau des terrains y gagne aussi). Mesuré au pire pixel en bordure des
+     lettres, image réelle recadrée comme à l'écran : 4,56:1 pour un premier écran de 660 px de haut (iPhone dans Safari,
+     barres affichées), 5,5 à 812, 6,0 à 932 ; les tout petits écrans (568-620) restent à 3,8-4,1, accepté pour ce bouton. */
+  #hero .hero-veil{background:radial-gradient(44% 40% at 50% 47%,rgba(240,234,226,.18) 0%,rgba(240,234,226,0) 100%),linear-gradient(180deg,rgba(15,14,12,.1) 0%,rgba(15,14,12,0) 22%,rgba(15,14,12,0) 70%,rgba(15,14,12,.6) 100%),radial-gradient(var(--glow) at 50% 28%,rgba(255,253,248,.5) 0%,rgba(255,253,248,.26) 30%,rgba(255,253,248,.08) 60%,rgba(255,253,248,0) 100%)}
+  #hero .hero-cta.mf-open{position:absolute;left:0;right:0;bottom:76px;width:max-content;margin-inline:auto;
+    background:transparent;border-color:#F3EDE3;color:#F3EDE3;text-shadow:0 0 2px rgba(15,14,12,.55),0 0 10px rgba(15,14,12,.35)}
+  /* même spécificité (1,3,0) : sans elle, filet et texte crème resteraient au survol et au focus clavier */
+  #hero .hero-cta.mf-open:hover,#hero .hero-cta.mf-open:focus-visible{background:var(--ink);border-color:var(--ink);color:#EFE8DD;text-shadow:none}
+}
+/* ---------- Manifeste : fenêtre de lecture ----------
+   La <dialog> couvre l'écran et défile elle-même : molette, doigt et clavier agissent partout, voile compris,
+   et rien ne passe à la page (overscroll-behavior). Pas de boîte à ascenseur interne comme .cm-box : c'est une lecture longue.
+   Colonne de 46ch : en Neue Montreal le « 0 » (unité ch) mesure .62em et le signe moyen du texte .41em, soit environ 69 signes par ligne.
+   Intertitres en EB Garamond italique (.serif-i), tout le reste en Neue Montreal, filets à 1 px. */
+.mf{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;border:0;
+  padding:clamp(56px,9vh,96px) var(--gut) clamp(40px,7vh,80px);background:transparent;color:var(--ink);
+  overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:rgba(239,232,221,.6) transparent}
+/* dialog[open]{touch-action:none} (l. 1459) bloque le doigt dans toutes les fenêtres ; celle-ci est son propre conteneur
+   de défilement : elle rouvre le glissement vertical et le zoom à deux doigts (0,2,0 contre 0,1,1). */
+.mf[open]{touch-action:auto} /* pas pan-y : zoomé, on doit pouvoir se déplacer latéralement */
+.mf::backdrop{background:rgba(15,14,12,.86)}
+.mf[open]::backdrop{animation:mf-fade .35s ease both}
+@keyframes mf-fade{from{opacity:0}}
+/* Fenêtre ouverte : la page dessous ne défile plus (une seule barre sous Windows, pas de défilement clavier derrière),
+   le bandeau des terrains et l'accroche du hero se figent. Sur body et non sur html : body porte overflow-x:hidden ;
+   si html cessait d'être « visible », body deviendrait un conteneur de défilement et les panneaux sticky se décrocheraient.
+   Même principe que le menu mobile (document.body.style.overflow). */
+body:has(.mf[open]){overflow:hidden}
+body:has(.mf[open]) .ticker .track,body:has(.mf[open]) #hero .hero-tag .rot{animation-play-state:paused}
+/* Croix : la même que les trois autres fenêtres, plus un anneau de 1 px et une ombre pour rester lisible quand le papier passe dessous.
+   z-index : au-dessus de la feuille (transformée pendant son entrée) et du bandeau mobile. */
+.mf .x{position:fixed;top:18px;right:18px;z-index:2;width:44px;height:44px;border-radius:50%;border:0;
+  background:#EFE8DD;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 0 0 1px rgba(15,14,12,.14),0 8px 24px rgba(15,14,12,.3)}
+.mf .x:focus-visible{outline:2px solid var(--ink);outline-offset:2px;box-shadow:0 0 0 2px #EFE8DD,0 8px 24px rgba(15,14,12,.3)} /* crème sur le voile, encre sur le papier */
+/* Feuille : papier, halo clair en tête, grain des sections papier (voile papier à 50 % sur --grain = opacité .5 de .panel.grain).
+   Aucune position : le grain passe par les couches de fond. Ne jamais animer la dialog elle-même (la croix et le bandeau
+   fixes défileraient avec le texte) : l'entrée « rise » est posée sur la feuille. */
+.mf-sheet{max-width:800px;margin:0 auto;padding:clamp(40px,7vh,96px) clamp(22px,6vw,96px) clamp(40px,6vh,80px);
+  border-radius:clamp(20px,2vw,30px);background-color:var(--paper);
+  background-image:radial-gradient(120% 900px at 50% 0,rgba(240,234,226,.9) 0%,rgba(240,234,226,0) 70%),
+    linear-gradient(rgba(228,218,204,.5),rgba(228,218,204,.5)),var(--grain);
+  box-shadow:0 30px 80px rgba(0,0,0,.45);overflow-wrap:break-word;animation:rise .6s var(--ease) both}
+.mf-body{--mf-fs:clamp(17.5px,.7vw + 10px,20px);max-width:46ch;margin:0 auto;font-size:var(--mf-fs);line-height:1.6;color:var(--ink-2)}
+.mf-body p{text-wrap:pretty}
+.mf-body p + p{margin-top:.85em}
+.mf-t{margin-bottom:clamp(8px,1.6vh,20px);font-size:min(clamp(38px,4.4vw,64px),12vw);font-weight:700;letter-spacing:-.045em;line-height:.95;color:var(--ink);overflow-wrap:normal}
+.mf-t span{display:block} /* « Manifeste / Studio Silo » : l'espace est gardée, le nom accessible reste « Manifeste Studio Silo » */
+.mf-t:focus,.mf-t:focus-visible{outline:none} /* reçoit le focus à l'ouverture (tabindex -1) pour que la lecture parte du titre ; ce n'est pas une commande */
+/* Six mouvements, six compartiments : un filet de 1 px au-dessus de chaque intertitre (motif des étapes et des normes du site). */
+.mf-body h3{margin:1.7em 0 .45em;padding-top:.6em;border-top:1px solid var(--line);font-size:1.6em;line-height:1.15;color:var(--ink)}
+.mf-body .mf-key{font-weight:500;color:var(--ink)} /* l'accroche du hero : le lecteur la reconnaît */
+.mf-body .mf-end{margin-top:clamp(44px,6vw,80px);font-size:clamp(30px,3.2vw,44px);font-weight:700;letter-spacing:-.035em;line-height:1.04;color:var(--ink)}
+.mf-end-2{display:block}
+.mf-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px 16px;
+  margin-top:clamp(32px,4.4vw,56px);padding-top:clamp(18px,2.2vw,26px);border-top:1px solid var(--line)}
+.mf-sign{--logo-w:clamp(84px,7vw,104px);color:var(--ink)}
+.mf .mf-cta{--h:56px;margin-top:0;padding:0 8px 0 24px;font-size:18px;animation:none} /* sans animation:none, « rise » se rejouerait à chaque ouverture */
+/* Téléphone : la feuille prend toute la largeur et monte du bas comme les .panel.sheet. Un bandeau nuit fixe porte la croix :
+   le texte glisse dessous au lieu de passer sous le bouton. Toucher le bandeau ferme, comme toucher le voile. */
+@media (max-width:600px){
+  .mf{padding:64px 0 0}
+  .mf::before{content:"";position:fixed;top:0;left:0;right:0;height:64px;z-index:1;background:var(--night)}
+  .mf .x{top:10px;right:12px}
+  .mf-sheet{border-radius:22px 22px 0 0;padding:32px var(--gut) calc(40px + env(safe-area-inset-bottom,0px))}
+  .mf-body{line-height:1.55}
+  .mf-body h3{margin-top:1.5em}
+}
+@media (prefers-reduced-motion:reduce){.mf-sheet,.mf[open]::backdrop{animation:none}}
 </style>
 </head>
 <body>
@@ -1502,6 +1598,7 @@ dialog[open]{touch-action:none}
     <p class="hero-tag"><span class="rot r1">Nous concevons la vidéo là où son absence vous coûte le plus.</span><span class="rot r2" aria-hidden="true">Agence de stratégie vidéo dédiée aux acteurs de la santé</span></p>
     <div class="hero-actions">
       <a class="hero-cta" href="#constat">Explorer <span class="arr" aria-hidden="true">↓</span></a>
+      <button class="hero-cta mf-open" type="button" id="mf-open" aria-haspopup="dialog" aria-controls="mf-fenetre">Lire le manifeste</button>
     </div>
   </div>
   <div class="ticker" aria-hidden="true"><div class="track" id="ticker"></div></div>
@@ -1883,6 +1980,54 @@ dialog[open]{touch-action:none}
 
 </main>
 
+<!-- Manifeste : fenêtre de lecture. Ouverte par le bouton « Lire le manifeste » du hero, par tout lien vers #manifeste
+     et par l'adresse studiosilo.fr/#manifeste. Placée hors de <main> et du pied de page : ni le verrou de défilement
+     ni le menu mobile ne peuvent la rendre inerte. Son id n'est volontairement PAS « manifeste » : ainsi le navigateur
+     ne vise aucun élément quand l'adresse porte #manifeste (sinon il retirerait le focus du titre au chargement).
+     Aucune balise d'en-tête ni de pied de page ici : le script prend le premier élément de pied de page du document. -->
+<dialog class="mf" id="mf-fenetre" aria-labelledby="mf-title" tabindex="-1">
+  <button class="x" type="button" id="mf-close" aria-label="Fermer le manifeste"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  <article class="mf-sheet">
+    <div class="mf-body">
+      <h2 class="mf-t" id="mf-title" tabindex="-1">Manifeste <span>Studio Silo</span></h2>
+
+      <h3 class="serif-i">Ce qui ne fait pas de bruit</h3>
+      <p>Une entreprise de santé peut avoir le meilleur produit, la meilleure équipe, les meilleures intentions, et perdre chaque jour énormément d'argent, d'occasions et d'énergie sur ce que personne ne regarde. La centième explication d'un soignant. L'onboarding improvisé entre deux urgences. Le patient qui décroche parce qu'il n'a pas compris son propre parcours.</p>
+      <p>Ces problèmes-là ne font pas de bruit. Pour les entendre, il faut les écouter. Nous, on les écoute. Parce qu'ils se réparent, et que la vidéo est souvent le bon outil pour le faire.</p>
+
+      <h3 class="serif-i">Consolider la maison de l'intérieur</h3>
+      <p>La communication et le marketing sont utiles&nbsp;: ils touchent en masse et créent des opportunités. Mais on oublie souvent l'information qui doit être transmise avec précision, une personne à la fois&nbsp;: au soignant qui arrive, au patient qui rentre chez lui, au prescripteur qui doit comprendre, au client qui déploie. C'est là que nous intervenons.</p>
+      <p>Nous croyons qu'il faut consolider la maison de l'intérieur avant de se tourner vers l'extérieur. Une équipe qui n'a plus à se répéter. Un patient qui se projette dans son parcours. Un prospect qui voit enfin ce qu'on fait pour lui. C'est là que la vidéo rapporte le plus, et c'est là qu'on l'utilise le moins.</p>
+      <p class="mf-key">Nous concevons la vidéo là où son absence vous coûte le plus&nbsp;: en argent, en manque à gagner, en énergie pour vos équipes.</p>
+
+      <h3 class="serif-i">Pourquoi «&nbsp;Silo&nbsp;»</h3>
+      <p>Travailler en silo a mauvaise réputation. On voudrait tout relier, tout mélanger.</p>
+      <p>À la ferme, on ne met pas toutes les récoltes dans le même silo. Chacune a le sien, et c'est comme ça qu'elle se conserve. Nous travaillons de la même façon&nbsp;: un sujet, un public, un usage à la fois. Chaque parcours vidéo est pensé pour son périmètre, et seulement pour lui.</p>
+      <p>Ceux qui veulent qu'une vidéo réponde à tout ne répondent jamais vraiment à chacun. Nous préférons regarder chaque sujet dans les yeux et lui répondre avec précision, parce que certains ont besoin d'une vidéo qui n'existe que pour eux.</p>
+
+      <h3 class="serif-i">Une conviction, avant un style</h3>
+      <p>Nous sommes un studio. Nous aimons le cadre juste, la lumière qui raconte et le rythme qui laisse le temps de comprendre. Ce soin n'est pas un décor. C'est lui qui fait qu'on regarde jusqu'au bout, qu'on retient, qu'on se sent considéré. Une équipe qui reçoit une vidéo soignée comprend qu'on a pris son métier au sérieux.</p>
+      <p>Mais avant de vous montrer ce que nous savons faire, nous voulons que vous sachiez pourquoi nous le faisons.</p>
+
+      <h3 class="serif-i">Notre terrain</h3>
+      <p>Nous travaillons uniquement avec les acteurs de la santé&nbsp;: hôpitaux, cliniques, EHPAD, laboratoires, MedTech, éditeurs de logiciels de santé, organismes de recherche. Nous connaissons leurs contraintes, leurs réglementations, leurs urgences et leurs lenteurs. C'est ce terrain que nous avons choisi, et c'est là que nous allons au bout de notre exigence.</p>
+
+      <h3 class="serif-i">Ce qu'on refuse</h3>
+      <p>Nous refusons la vidéo sans objectif et le contenu produit pour occuper l'espace. Nous refusons aussi l'avatar qui remplace un visage&nbsp;: nous filmons de vraies personnes. Si un outil à quelques euros par mois suffit pour ce que vous cherchez, prenez-le. Ce n'est pas nous.</p>
+      <p>Nous arrivons quand le problème est réel, et qu'il mérite d'être pensé, cadré et résolu avec la même rigueur que n'importe quel enjeu critique de votre organisation.</p>
+
+      <p class="mf-end"><span class="mk">Un silo à la fois.</span> <span class="mf-end-2">Et on le fait bien.</span></p>
+
+      <div class="mf-foot">
+        <span class="wordmark mf-sign" aria-hidden="true"><svg class="logo" viewBox="0 0 259 54" focusable="false"><use href="#silo-logo"/></svg></span>
+        <a class="hero-cta mf-cta" href="#constat">Explorer <span class="arr" aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+  </article>
+</dialog>
+<!-- Texte du manifeste repris MOT POUR MOT de Schmidt (seule la typographie française est appliquée : insécables
+     avant « : » et dans les guillemets). Ne pas le réécrire ni le raccourcir sans lui. -->
+
 <footer>
   <div class="in">
     <div class="top">
@@ -2132,7 +2277,7 @@ SILO.kb = "";
 SILO.kbUrl = "assets/kb.txt";
 
 /* Réponses guidées (mode hors ligne, sans IA). */
-SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples","reference","references","extraits","extrait","montrer","voir","travaux","videos"],"a":"Nos réalisations ne sont pas publiées : les parcours que nous produisons (protocoles, formations, démonstrations produit) circulent à l'intérieur des établissements et des entreprises de santé, ils appartiennent à nos clients et restent confidentiels. Sur demande, Schmidt Basile vous en montre des extraits en visio, sous accord de confidentialité : utilisez le bouton « Demander à voir des extraits » en bas de page ou le formulaire de session d'exploration. Les plans arrêtés de la section « Derrière Studio Silo » donnent une idée de la facture : dix ans de réalisation avant Studio Silo."},{"k":["studio","silo","agence","faites","quoi","presentation","presentez","proposez"],"a":"Studio Silo est une agence de stratégie vidéo dédiée aux acteurs de la santé. Nous réparons la transmission de l'information là où elle se perd : entre un service et un patient, entre un expert et une recrue, entre un produit et celui qui doit le prescrire. En complément de votre communication et de votre marketing : des parcours vidéo conçus pour un usage et une cible précis, validés et identiques pour tous."},{"k":["session","exploration","diagnostic","gratuit","gratuite","heure","rendez","reserver","reservation","commencer","premier","contact"],"a":"La session d'exploration dure une heure, elle est gratuite et sans support de vente. Premier temps : on écoute, feuille blanche, pour trouver les frictions telles que vous les vivez. Second temps : on restitue, croisé avec ce que nous savons de votre secteur. Une semaine plus tard, vous recevez le diagnostic chiffré, la Matrice de Colmatage et un plan de déploiement, que nous travaillions ensemble ou non. Le formulaire de la page suffit pour la réserver."},{"k":["prix","tarif","tarifs","cout","coute","couts","combien","budget","devis","mensualite","mensualites","facture"],"a":"Aucun tarif n'est communiqué avant le diagnostic : le prix se déduit de ce que la friction vous coûte réellement, pas du nombre de vidéos ni de nos journées, et il se règle en mensualités. Seule certitude : la session d'exploration est gratuite, et vous repartez avec le diagnostic chiffré."},{"k":["parcours","cinq","endroits","perd"],"a":"Nous travaillons sur cinq parcours où l'information se perd : le parcours patient, l'onboarding collaborateur / soignant, le parcours prescripteur, le déploiement client B2B et le support & SAV. Un directeur de clinique et un directeur commercial MedTech se reconnaissent chacun dans deux ou trois de ces lignes. Lequel vous ressemble ? Si votre cas n'est dans aucun des cinq, c'est fréquent : décrivez la friction en une phrase dans le formulaire, case « Autre », et le diagnostic partira de là."},{"k":["perimetre","definition","signifie","veut","dire","nom","pourquoi"],"a":"Un Silo est un périmètre d'intervention délimité, isolé pour être traité avec une efficacité maximale : un service, une force de vente, ou un objectif ultra-spécifique comme l'arrivée d'un nouveau soignant ou la mise en route d'un dispositif. Nous refusons le tout-en-un : chaque architecture visuelle est conçue exclusivement pour l'usage et la cible de son périmètre."},{"k":["matrice","colmatage","colmater","colmatee","rouge","vert","cartographie","tableau"],"a":"La Matrice de Colmatage pose vos parcours en lignes et vos frictions en colonnes. Rouge quand la friction fuit (du temps, de l'argent, de l'énergie), vert quand elle est colmatée par un parcours vidéo autonome. Elle est remise dès le diagnostic, sert de tableau de bord pendant toute la mission et décide de l'ordre des travaux : on ouvre toujours la case rouge qui coûte le plus cher."},{"k":["qara","conformite","conforme","inspection","13485","15189","reglementaire","reglementation","validation","valide","audit","tracable","opposable","preuve"],"a":"DPC pour les soignants, ISO 15189 pour les laboratoires d'analyses, ISO 13485 et FDA pour la MedTech, BPF pour les laboratoires pharmaceutiques : quatre noms, un seul principe. La formation de chaque collaborateur à ses activités est une obligation opposable en inspection. Un parcours vidéo validé QARA est un support figé, daté, traçable, et identique pour tout le monde. La validation intervient avant le moindre tournage."},{"k":["onboarding","integration","integrer","recrue","recrues","tuteur","tutrice","tuteurs","arrivant","arrivants","nouveaux","nouvelle","interimaire","turnover","infirmiere","soignant","cadre","idec","preceptrice","tutrices","remplace"],"a":"L'onboarding collaborateur / soignant remplace la dépendance à un tuteur disponible par un parcours autonome, identique pour chaque arrivée. Concrètement : le chariot d'urgence, le logiciel de prescription, le circuit du médicament ou le geste technique montrés une fois, correctement, pour tous, au lieu d'être réexpliqués de mémoire à chaque recrue par une tutrice qui a aussi ses patients.","p":"onboarding"},{"k":["patient","patients","sortie","consultation","traitement","examen","domicile","famille","proches","comprendre","compris","malade","pathologie","observance","aidant","annonce","retient","retenir"],"a":"Le parcours patient explique un traitement, un examen, un retour à domicile, dans les mots du patient et de ses proches. Il prend en charge la partie répétitive et standardisable de l'explication, consultable à son rythme et rejouable à la maison, en complément de la relation soignant-patient, jamais à sa place. Le contenu est validé cliniquement avant diffusion.","p":"patient"},{"k":["prescripteur","prescripteurs","medecin","medecins","prescrire","prescription","visite","visiteur","kam","projection","bloc","delegue","pharma","argumentaire","objection","projeter"],"a":"Le parcours prescripteur donne au médecin de quoi comprendre, se projeter et prescrire, sans dépendre d'une visite. Le chirurgien voit l'équipement dans son propre bloc, le praticien voit le parcours réel du point de vue de son patient. Les objections sont levées en amont, et l'argumentaire ne dépend plus de l'agenda d'un KAM ou d'un ingénieur d'application.","p":"prescripteur"},{"k":["deploiement","deployer","installer","installation","logiciel","client","clients","service","services","sites","ingenieur","application","formateur","bascule","dpi","site","equipe","formation"],"a":"Le déploiement client B2B installe un produit ou un logiciel dans un nouveau service sans y envoyer une équipe entière. Le déploiement type est filmé une fois, correctement : ce que fait l'équipe, dans quel ordre, avec quels écueils. Chaque nouveau site devient indépendant du calendrier de vos experts, et les équipes de nuit reçoivent la même formation que celles du matin.","p":"deploiement"},{"k":["support","hotline","ticket","tickets","niveau","panne","pannes","appels","appel","reclamation","technicien","sav","manipulation","depannage","questions","gestes"],"a":"Le support & SAV absorbe le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes. Un parcours de prise en main remis au moment du déploiement évite l'appel pour ce qui peut être montré, libère les techniciens de niveau 2 des tickets de niveau 1, et trace ce qui a été transmis au client.","p":"support"},{"k":["notoriete","social","sociaux","avatar","avatars","institutionnel","institutionnelle","marque","employeur","reseaux","linkedin","publicite"],"a":"La vidéo de notoriété, le contenu social ou le film institutionnel relèvent de votre communication, et nous ne cherchons pas à les remplacer : nous travaillons en complément. Studio Silo prend le relais là où l'information doit être transmise avec précision, une personne à la fois : vos équipes, vos gestes, vos lieux à l'écran, dans des parcours conçus pour un usage et une cible précis. Ce que nous refusons, c'est la vidéo sans objectif, celle qu'on produit parce qu'il faut du contenu. Si votre besoin est un film de marque ou du contenu pour les réseaux, nous vous le dirons franchement."},{"k":["basile","schmidt","fondateur","equipe","experience","derriere","vous","etes"],"a":"Derrière Studio Silo, Schmidt Basile : dix ans de réalisation vidéo, dont quatre ans à l'intérieur d'une entreprise de santé innovante, à produire des parcours pour les patients, les équipes opérationnelles et les soignants. D'abord au service de la communication, il a vu de l'intérieur que les demandes les plus pressantes venaient du terrain et que rien n'y répondait : Studio Silo est né pour y remédier, en complément de la communication et du marketing. Sa conviction : Studio Silo est d'abord une aide pour ceux qui sont sur le terrain, pour qu'ils retrouvent le temps de faire leur métier, ne s'épuisent plus à répéter les mêmes choses, réussissent à convaincre et n'aient plus peur d'être hors protocole."},{"k":["etapes","etape","duree","temps","delai","delais","immersion","conception","creation","livraison","suivi","methode","deroule","fonctionne"],"a":"Six étapes : Exploration (une session de diagnostic gratuite pour identifier les frictions et les chiffrer), Immersion (terrain, métier, contraintes réglementaires, supports existants), Conception (architecture du Silo, scénarios, validation QARA avant tournage), Création (tournage et montage avec un minimum de mobilisation de vos équipes), Livraison (des actifs prêts à diffuser, déclinés par canal), Suivi (mesure de l'usage réel, mises à jour au fil des évolutions produit et réglementaires, ouverture du Silo suivant). La durée dépend du périmètre : c'est l'un des livrables du diagnostic."},{"k":["tournage","tourner","filmer","filmez","filme","locaux","mobiliser","mobilisation","disponibilite","equipes","camera"],"a":"Oui, nous tournons chez vous, avec vos équipes, vos gestes et vos lieux, en mobilisant le minimum de temps de votre côté : les scénarios sont écrits et validés avant le tournage, et le soin de réalisation fait qu'un support est regardé jusqu'au bout. L'Immersion préalable sert précisément à organiser cela sans perturber le service."},{"k":["hopital","hopitaux","clinique","cliniques","ehpad","laboratoire","laboratoires","medtech","pharma","pharmaceutique","editeur","editeurs","secteur","secteurs","cible","cibles","travaillez"],"a":"Un seul secteur, neuf terrains : ceux qui forment du personnel soignant ou technique (hôpitaux et GHT, cliniques, EHPAD, laboratoires d'analyses), ceux qui déploient un produit ou un logiciel chez un client (MedTech, fabricants de dispositifs implantables et chirurgicaux, éditeurs de logiciels de santé), ceux qui doivent convaincre un prescripteur (laboratoires pharmaceutiques, MedTech) et ceux qui expliquent un sujet complexe à un patient (hôpitaux, cliniques, EHPAD, laboratoires, CRO)."},{"k":["contacter","mail","email","telephone","joindre","adresse","appeler","ecrire"],"a":"Vous pouvez écrire à schmidt.basile@studiosilo.fr ou appeler le +33 6 51 57 01 93. Le plus efficace reste de demander une session d'exploration via le formulaire de la page : une heure, gratuite, et vous repartez avec le diagnostic."},{"k":["chiffres","chiffre","source","sources","etude","etudes","prouve","prouvez","statistique","statistiques","litterature","donnees"],"a":"Chaque chiffre affiché sur la page renvoie vers l'étude ou le rapport d'origine, avec son périmètre réel (pays, population, année). Nous n'avançons aucun chiffre sans sa source : face à un public formé à la preuve, un chiffre non sourcé coûte plus cher qu'un chiffre absent. La section « Ce que dit la littérature » les regroupe par parcours."},{"k":["video","efficace","efficacite","retention","memoire","retenir","oublie","pourquoi","plutot","document","ecrit","papier","formation","elearning"],"a":"Un document écrit ne se regarde pas ; une explication orale ne se rejoue pas. Un parcours vidéo montre le geste, le lieu et le visage, une fois, correctement, et peut être revu à son rythme par chaque patient, chaque recrue, chaque service. Il rend l'information identique pour tous et traçable, là où le bouche-à-oreille change un peu à chaque fois."}];
+SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples","reference","references","extraits","extrait","montrer","voir","travaux","videos"],"a":"Nos réalisations ne sont pas publiées : les parcours que nous produisons (protocoles, formations, démonstrations produit) circulent à l'intérieur des établissements et des entreprises de santé, ils appartiennent à nos clients et restent confidentiels. Sur demande, Schmidt Basile vous en montre des extraits en visio, sous accord de confidentialité : utilisez le bouton « Demander à voir des extraits » en bas de page ou le formulaire de session d'exploration. Les plans arrêtés de la section « Derrière Studio Silo » donnent une idée de la facture : dix ans de réalisation avant Studio Silo."},{"k":["studio","silo","agence","faites","quoi","presentation","presentez","proposez"],"a":"Studio Silo est une agence de stratégie vidéo dédiée aux acteurs de la santé. Nous réparons la transmission de l'information là où elle se perd : entre un service et un patient, entre un expert et une recrue, entre un produit et celui qui doit le prescrire. En complément de votre communication et de votre marketing : des parcours vidéo conçus pour un usage et une cible précis, validés et identiques pour tous."},{"k":["session","exploration","diagnostic","gratuit","gratuite","heure","rendez","reserver","reservation","commencer","premier","contact"],"a":"La session d'exploration dure une heure, elle est gratuite et sans support de vente. Premier temps : on écoute, feuille blanche, pour trouver les frictions telles que vous les vivez. Second temps : on restitue, croisé avec ce que nous savons de votre secteur. Une semaine plus tard, vous recevez le diagnostic chiffré, la Matrice de Colmatage et un plan de déploiement, que nous travaillions ensemble ou non. Le formulaire de la page suffit pour la réserver."},{"k":["prix","tarif","tarifs","cout","coute","couts","combien","budget","devis","mensualite","mensualites","facture"],"a":"Aucun tarif n'est communiqué avant le diagnostic : le prix se déduit de ce que la friction vous coûte réellement, pas du nombre de vidéos ni de nos journées, et il se règle en mensualités. Seule certitude : la session d'exploration est gratuite, et vous repartez avec le diagnostic chiffré."},{"k":["parcours","cinq","endroits","perd"],"a":"Nous travaillons sur cinq parcours où l'information se perd : le parcours patient, l'onboarding collaborateur / soignant, le parcours prescripteur, le déploiement client B2B et le support & SAV. Un directeur de clinique et un directeur commercial MedTech se reconnaissent chacun dans deux ou trois de ces lignes. Lequel vous ressemble ? Si votre cas n'est dans aucun des cinq, c'est fréquent : décrivez la friction en une phrase dans le formulaire, case « Autre », et le diagnostic partira de là."},{"k":["perimetre","definition","signifie","veut","dire","nom","pourquoi","silo","ferme","recolte"],"a":"À la ferme, on ne met pas toutes les récoltes dans le même silo. Chacune a le sien, et c'est comme ça qu'elle se conserve. Nous travaillons de la même façon : un sujet, un public, un usage à la fois. Un Silo est un périmètre d'intervention délimité, isolé pour être traité avec une efficacité maximale : un service, une force de vente, ou un objectif ultra-spécifique comme l'arrivée d'un nouveau soignant ou la mise en route d'un dispositif. Nous refusons le tout-en-un : chaque architecture visuelle est conçue exclusivement pour l'usage et la cible de son périmètre. Le manifeste, en haut de la page, raconte pourquoi."},{"k":["manifeste","conviction","convictions","valeurs","vision","refusez","refuse"],"a":"Le manifeste tient en une conviction : « Nous croyons qu'il faut consolider la maison de l'intérieur avant de se tourner vers l'extérieur. » Et il dit ce que nous refusons : « Nous refusons la vidéo sans objectif et le contenu produit pour occuper l'espace. Nous refusons aussi l'avatar qui remplace un visage : nous filmons de vraies personnes. » Vous pouvez le lire en entier depuis le haut de la page."},{"k":["matrice","colmatage","colmater","colmatee","rouge","vert","cartographie","tableau"],"a":"La Matrice de Colmatage pose vos parcours en lignes et vos frictions en colonnes. Rouge quand la friction fuit (du temps, de l'argent, de l'énergie), vert quand elle est colmatée par un parcours vidéo autonome. Elle est remise dès le diagnostic, sert de tableau de bord pendant toute la mission et décide de l'ordre des travaux : on ouvre toujours la case rouge qui coûte le plus cher."},{"k":["qara","conformite","conforme","inspection","13485","15189","reglementaire","reglementation","validation","valide","audit","tracable","opposable","preuve"],"a":"DPC pour les soignants, ISO 15189 pour les laboratoires d'analyses, ISO 13485 et FDA pour la MedTech, BPF pour les laboratoires pharmaceutiques : quatre noms, un seul principe. La formation de chaque collaborateur à ses activités est une obligation opposable en inspection. Un parcours vidéo validé QARA est un support figé, daté, traçable, et identique pour tout le monde. La validation intervient avant le moindre tournage."},{"k":["onboarding","integration","integrer","recrue","recrues","tuteur","tutrice","tuteurs","arrivant","arrivants","nouveaux","nouvelle","interimaire","turnover","infirmiere","soignant","cadre","idec","preceptrice","tutrices","remplace"],"a":"L'onboarding collaborateur / soignant remplace la dépendance à un tuteur disponible par un parcours autonome, identique pour chaque arrivée. Concrètement : le chariot d'urgence, le logiciel de prescription, le circuit du médicament ou le geste technique montrés une fois, correctement, pour tous, au lieu d'être réexpliqués de mémoire à chaque recrue par une tutrice qui a aussi ses patients.","p":"onboarding"},{"k":["patient","patients","sortie","consultation","traitement","examen","domicile","famille","proches","comprendre","compris","malade","pathologie","observance","aidant","annonce","retient","retenir"],"a":"Le parcours patient explique un traitement, un examen, un retour à domicile, dans les mots du patient et de ses proches. Il prend en charge la partie répétitive et standardisable de l'explication, consultable à son rythme et rejouable à la maison, en complément de la relation soignant-patient, jamais à sa place. Le contenu est validé cliniquement avant diffusion.","p":"patient"},{"k":["prescripteur","prescripteurs","medecin","medecins","prescrire","prescription","visite","visiteur","kam","projection","bloc","delegue","pharma","argumentaire","objection","projeter"],"a":"Le parcours prescripteur donne au médecin de quoi comprendre, se projeter et prescrire, sans dépendre d'une visite. Le chirurgien voit l'équipement dans son propre bloc, le praticien voit le parcours réel du point de vue de son patient. Les objections sont levées en amont, et l'argumentaire ne dépend plus de l'agenda d'un KAM ou d'un ingénieur d'application.","p":"prescripteur"},{"k":["deploiement","deployer","installer","installation","logiciel","client","clients","service","services","sites","ingenieur","application","formateur","bascule","dpi","site","equipe","formation"],"a":"Le déploiement client B2B installe un produit ou un logiciel dans un nouveau service sans y envoyer une équipe entière. Le déploiement type est filmé une fois, correctement : ce que fait l'équipe, dans quel ordre, avec quels écueils. Chaque nouveau site devient indépendant du calendrier de vos experts, et les équipes de nuit reçoivent la même formation que celles du matin.","p":"deploiement"},{"k":["support","hotline","ticket","tickets","niveau","panne","pannes","appels","appel","reclamation","technicien","sav","manipulation","depannage","questions","gestes"],"a":"Le support & SAV absorbe le niveau 1 : les mêmes questions, les mêmes gestes, les mêmes pannes. Un parcours de prise en main remis au moment du déploiement évite l'appel pour ce qui peut être montré, libère les techniciens de niveau 2 des tickets de niveau 1, et trace ce qui a été transmis au client.","p":"support"},{"k":["notoriete","social","sociaux","avatar","avatars","institutionnel","institutionnelle","marque","employeur","reseaux","linkedin","publicite"],"a":"La vidéo de notoriété, le contenu social ou le film institutionnel relèvent de votre communication, et nous ne cherchons pas à les remplacer : nous travaillons en complément. Studio Silo prend le relais là où l'information doit être transmise avec précision, une personne à la fois : vos équipes, vos gestes, vos lieux à l'écran, dans des parcours conçus pour un usage et une cible précis. Ce que nous refusons, c'est la vidéo sans objectif, celle qu'on produit parce qu'il faut du contenu. Nous refusons aussi l'avatar qui remplace un visage : nous filmons de vraies personnes. Si votre besoin est un film de marque ou du contenu pour les réseaux, nous vous le dirons franchement."},{"k":["basile","schmidt","fondateur","equipe","experience","derriere","vous","etes"],"a":"Derrière Studio Silo, Schmidt Basile : dix ans de réalisation vidéo, dont quatre ans à l'intérieur d'une entreprise de santé innovante, à produire des parcours pour les patients, les équipes opérationnelles et les soignants. D'abord au service de la communication, il a vu de l'intérieur que les demandes les plus pressantes venaient du terrain et que rien n'y répondait : Studio Silo est né pour y remédier, en complément de la communication et du marketing. Sa conviction : Studio Silo est d'abord une aide pour ceux qui sont sur le terrain, pour qu'ils retrouvent le temps de faire leur métier, ne s'épuisent plus à répéter les mêmes choses, réussissent à convaincre et n'aient plus peur d'être hors protocole."},{"k":["etapes","etape","duree","temps","delai","delais","immersion","conception","creation","livraison","suivi","methode","deroule","fonctionne"],"a":"Six étapes : Exploration (une session de diagnostic gratuite pour identifier les frictions et les chiffrer), Immersion (terrain, métier, contraintes réglementaires, supports existants), Conception (architecture du Silo, scénarios, validation QARA avant tournage), Création (tournage et montage avec un minimum de mobilisation de vos équipes), Livraison (des actifs prêts à diffuser, déclinés par canal), Suivi (mesure de l'usage réel, mises à jour au fil des évolutions produit et réglementaires, ouverture du Silo suivant). La durée dépend du périmètre : c'est l'un des livrables du diagnostic."},{"k":["tournage","tourner","filmer","filmez","filme","locaux","mobiliser","mobilisation","disponibilite","equipes","camera"],"a":"Oui, nous tournons chez vous, avec vos équipes, vos gestes et vos lieux, en mobilisant le minimum de temps de votre côté : les scénarios sont écrits et validés avant le tournage, et le soin de réalisation fait qu'un support est regardé jusqu'au bout. L'Immersion préalable sert précisément à organiser cela sans perturber le service."},{"k":["hopital","hopitaux","clinique","cliniques","ehpad","laboratoire","laboratoires","medtech","pharma","pharmaceutique","editeur","editeurs","secteur","secteurs","cible","cibles","travaillez"],"a":"Un seul secteur, neuf terrains : ceux qui forment du personnel soignant ou technique (hôpitaux et GHT, cliniques, EHPAD, laboratoires d'analyses), ceux qui déploient un produit ou un logiciel chez un client (MedTech, fabricants de dispositifs implantables et chirurgicaux, éditeurs de logiciels de santé), ceux qui doivent convaincre un prescripteur (laboratoires pharmaceutiques, MedTech) et ceux qui expliquent un sujet complexe à un patient (hôpitaux, cliniques, EHPAD, laboratoires, CRO)."},{"k":["contacter","mail","email","telephone","joindre","adresse","appeler","ecrire"],"a":"Vous pouvez écrire à schmidt.basile@studiosilo.fr ou appeler le +33 6 51 57 01 93. Le plus efficace reste de demander une session d'exploration via le formulaire de la page : une heure, gratuite, et vous repartez avec le diagnostic."},{"k":["chiffres","chiffre","source","sources","etude","etudes","prouve","prouvez","statistique","statistiques","litterature","donnees"],"a":"Chaque chiffre affiché sur la page renvoie vers l'étude ou le rapport d'origine, avec son périmètre réel (pays, population, année). Nous n'avançons aucun chiffre sans sa source : face à un public formé à la preuve, un chiffre non sourcé coûte plus cher qu'un chiffre absent. La section « Ce que dit la littérature » les regroupe par parcours."},{"k":["video","efficace","efficacite","retention","memoire","retenir","oublie","pourquoi","plutot","document","ecrit","papier","formation","elearning"],"a":"Un document écrit ne se regarde pas ; une explication orale ne se rejoue pas. Un parcours vidéo montre le geste, le lieu et le visage, une fois, correctement, et peut être revu à son rythme par chaque patient, chaque recrue, chaque service. Il rend l'information identique pour tous et traçable, là où le bouche-à-oreille change un peu à chaque fois."}];
 </script>
 
 <script>
@@ -2847,6 +2992,68 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
     cm.addEventListener("click", e => { if (e.target === cm) closeCm(); });
     $(".cm-cta", cm).addEventListener("click", closeCm); // on referme avant d'aller à la méthode
   }
+
+  /* ---------- Manifeste : fenêtre de lecture ----------
+     Trois portes : le bouton du hero, tout lien <a href="#manifeste"> (scrollToId le laisse passer : aucun élément
+     ne porte cet id) et l'adresse studiosilo.fr/#manifeste (deepLink, lu et effacé au démarrage, rejoué ici).
+     Tant que la fenêtre est ouverte, l'adresse affiche #manifeste ; à la fermeture elle revient à ce qu'elle était,
+     sauf si « Explorer » vient d'écrire #constat. Échap est déjà géré par l'écouteur global keydown du script.
+     Sous try : une erreur ici masque le bouton et laisse l'initialisation aller jusqu'au verrou. */
+  try {
+    const mf = $("#mf-fenetre"), mfBtn = $("#mf-open"), mfTitle = $("#mf-title"), mfClose = $("#mf-close");
+    if (mf && mfBtn && mfTitle && mfClose && typeof mf.showModal === "function") {
+      let mfOpener = null, mfPrevHash = "", mfDown = null, mfLeaving = false;
+      const mfUrl = h => location.href.split("#")[0] + h; // adresse absolue : vaut aussi dans l'artefact (about:srcdoc)
+      // EB Garamond italique n'est chargée qu'au premier intertitre affiché : on la demande dès que l'intention se montre
+      const warmSerif = () => { try { if (document.fonts) document.fonts.load('italic 400 32px "EB Garamond"').catch(() => {}); } catch (e) {} };
+      ["pointerenter", "focus", "touchstart"].forEach(t => mfBtn.addEventListener(t, warmSerif, { once: true, passive: true }));
+      const openMf = opener => {
+        if (mf.open) return;
+        const other = document.querySelector("dialog[open]"); if (other) other.close(); // une seule fenêtre à la fois : Échap ferme la première trouvée
+        mfOpener = opener || null; mfLeaving = false;
+        warmSerif();
+        mf.showModal();
+        mf.scrollTop = 0;                        // chaque ouverture repart du titre
+        mfTitle.focus({ preventScroll: true });  // le titre, pas la croix : Espace, flèches et Page suiv. font défiler la lecture
+        mfPrevHash = location.hash === "#manifeste" ? "" : location.hash;
+        try { if (location.hash !== "#manifeste") history.replaceState(history.state, "", mfUrl("#manifeste")); } catch (e) {}
+      };
+      const closeMf = () => { if (mf.open) mf.close(); };
+      mf.addEventListener("close", () => {
+        if (mf.open) return; // « close » part à l'image suivante : s'il arrive après une réouverture, il ne défait rien
+        try { if (location.hash === "#manifeste") history.replaceState(history.state, "", mfUrl(mfPrevHash)); } catch (e) {}
+        // Le retour natif du focus a déjà eu lieu ; on ne complète que pour un lien profond (focus resté sur body), et pas si l'on part vers #constat
+        const a = document.activeElement;
+        if (!mfLeaving && (!a || a === document.body || mf.contains(a))) ((mfOpener && mfOpener.isConnected) ? mfOpener : mfBtn).focus({ preventScroll: true });
+        mfOpener = null; mfLeaving = false;
+      });
+      mfBtn.addEventListener("click", () => openMf(mfBtn));
+      mfClose.addEventListener("click", closeMf);
+      let mfUp = null;
+      mf.addEventListener("pointerdown", e => { mfDown = e.target; });
+      mf.addEventListener("pointerup", e => { mfUp = e.target; });
+      mf.addEventListener("click", e => {
+        // « Explorer » : on referme ; le gestionnaire global des ancres descend ensuite au constat et le déverrouille
+        if (e.target.closest('a[href^="#"]')) {
+          mfLeaving = true; closeMf();
+          // le hero passe en visibility:hidden : sans cela le focus tombe sur body et Tab repart du haut
+          setTimeout(() => { const t = document.querySelector("#constat h2"); if (t) { t.tabIndex = -1; t.focus({ preventScroll: true }); } }, 0);
+          return;
+        }
+        // clic dans le vide (voile, marges, bandeau) : ni sur la barre de défilement, ni au bout d'une sélection commencée dans le texte
+        if (e.target === mf && mfDown === mf && mfUp === mf && e.clientX < mf.clientWidth) closeMf();
+      });
+      // Tout lien <a href="#manifeste"> ailleurs dans la page ouvre la fenêtre. Le gestionnaire global passe avant et renonce
+      // (scrollToId renvoie false) ; Cmd/Ctrl/Maj-clic restent au navigateur (nouvel onglet, puis lien profond).
+      document.addEventListener("click", e => {
+        const a = e.target.closest && e.target.closest('a[href="#manifeste"]');
+        if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault(); openMf(a);
+      });
+      addEventListener("hashchange", () => { if (location.hash === "#manifeste") openMf(null); });
+      if (deepLink.toLowerCase() === "manifeste") openMf(null);
+    } else if (mfBtn) mfBtn.hidden = true; // sans <dialog>, pas de bouton mort dans le hero
+  } catch (err) { const b = $("#mf-open"); if (b && !$("#mf-fenetre[open]")) b.hidden = true; }
 
   applyParcours(current);
   if (current === "all") ask.classList.remove("chosen");
