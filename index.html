@@ -2691,7 +2691,10 @@ SILO.faq = [{"k":["realisation","realisations","portfolio","exemple","exemples",
   syncIntroNext(); // libellé initial selon la sélection mémorisée
   /* Verrou : on ne défile pas au-delà du bas de la dernière section atteinte par un bouton, une flèche, le rail ou le menu.
      (Toute navigation explicite passe par scrollToId, qui déverrouille la section visée.) */
-  let unlockedIdx = 0;
+  /* Le constat est ouvert d'emblée (choix de Schmidt) : on y descend à la molette ou au doigt, la plongée dans le silo
+     se joue au défilement ; « Descendre dans le silo » reste là pour qui préfère cliquer. Le parcours guidé reprend
+     à partir du constat : les sections suivantes s'ouvrent toujours par leur bouton de suite. */
+  let unlockedIdx = Math.min(1, panels.length - 1);
   /* Le verrou ne s'arme qu'à la toute dernière instruction du script. Si une initialisation lève avant
      (dialog non supporté, stockage refusé…), il n'existe simplement jamais : la page reste entièrement
      défilante, pied de page compris, au lieu de rester bloquée sur le hero. */
